@@ -1,81 +1,130 @@
 package Client;
 
-import java.util.Vector;
+import java.awt.event.KeyEvent;
 
+import javax.swing.ImageIcon;
 
-public class Tank extends Thread {
-	
-	int x, y;
-	gui mygui;
-	boolean forward = false;
-	boolean backward = false;
-	boolean leftward = false;
-	boolean rightward = false;
-	
-	// this ammo vector dynamically change, once an ammo goes out of battle field, remove that ammo
-	Vector<Ammo> ammoVt = new Vector<Ammo>();
-	
-	public Tank(gui mygui) {
-		this.x = 300;
-		this.y = 300;
-		this.mygui = mygui;	
-		this.start();
-	}
-	
-	
-	public void shoot() {
-		Ammo ammo = new Ammo(this);
-		ammoVt.add(ammo);
-	}
-	
-	
-	public void moveForward() {
-		try {
-			y -= 2;
-			this.sleep(5);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void moveBackward() {
-		try {
-			y += 2;
-			this.sleep(5);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void moveLeft() {
-		try {
-			x -= 2;
-			this.sleep(5);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void moveRight() {
-		try {
-			x += 2;
-			Thread.sleep(5);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-	
+public class Tank extends Entity {
 
-	public void run() {
-		while(true) {
-			if (forward == true) 
-				moveForward();
-			if(backward == true)
-				moveBackward();
-			if(leftward == true)
-				moveLeft();
-			if(rightward == true)
-				moveRight();
-		}
-	}
+    private final int START_Y = 280; 
+    private final int START_X = 270;
+
+    static final String imageDir = "images/tanks/";
+    static final String IMAGE_TANK_UP = imageDir + "blue/up1.png";
+    static final String IMAGE_TANK_RIGHT = imageDir + "blue/right1.png";
+    static final String IMAGE_TANK_DOWN = imageDir + "blue/down1.png";
+    static final String IMAGE_TANK_LEFT = imageDir + "blue/left1.png";
+    
+    static final int MAX_TANK_HEALTH = 10; 
+    
+    private int width;
+
+    public Tank() {
+    	type = "Tank";
+    	
+        setX(START_X);
+        setY(START_Y);
+        theta = 0;
+        dtheta = 0;
+        health = MAX_TANK_HEALTH;
+        
+        updateImage(theta);
+
+        ImageIcon ii = new ImageIcon(IMAGE_TANK_UP);
+        width = ii.getImage().getWidth(null); 
+        height = ii.getImage().getWidth(null); 
+
+    }
+    
+    public void updateImage(int theta) {
+    	String filename = null;
+    	if (theta == 0) {
+    		filename = IMAGE_TANK_UP;
+    	} else if (theta == 90) {
+    		filename = IMAGE_TANK_RIGHT;
+    	} else if (theta == 180) {
+    		filename = IMAGE_TANK_DOWN;
+    	} else if (theta == 270) {
+    		filename = IMAGE_TANK_LEFT;
+    	}
+    	ImageIcon ii = new ImageIcon(this.getClass().getResource(filename));
+    	this.setImage(ii.getImage());
+    }
+
+    public void update() {
+    	theta = wrapDegrees(theta + dtheta); 
+    	dtheta = 0;
+    	updateImage(theta);
+    	
+//    	System.out.println("THETA = " + theta);
+    	
+    	if (theta == 0) {
+    		y -= dp;
+    	} else if (theta == 180) {
+    		y += dp;
+    	} else if (theta == 90) {
+    		x += dp;
+    	} else if (theta == 270) {
+    		x -= dp;
+    	}
+    	
+        if (x <= 2) 
+            x = 2;
+        if (x >= Globals.BOARD_WIDTH - 2*width) { 
+            x = Globals.BOARD_WIDTH - 2*width;
+        }
+        
+        if (y < 0) {
+        	y = 0;
+        } else if (y >= Globals.BOARD_HEIGHT - 50) {
+        	y = Globals.BOARD_HEIGHT - 50;
+        }
+    }
+
+    
+    public int wrapDegrees(int d) {
+    	if (d < 0) {
+    		d += 360;
+    	} else if (d >= 360) {
+    		d -= 360;
+    	}
+    	return d;
+    }
+    
+    public void keyPressed(KeyEvent e) { 
+        int key = e.getKeyCode();
+        
+        if (key == KeyEvent.VK_UP) {
+        	dp = 2;
+        }
+        
+        if (key == KeyEvent.VK_DOWN) {
+        	dp = -2;
+        }
+    }
+
+    public void keyReleased(KeyEvent e) {
+        int key = e.getKeyCode();
+
+        if (key == KeyEvent.VK_UP)
+        {
+            dp = 0;
+        }
+
+        if (key == KeyEvent.VK_DOWN)
+        {
+            dp = 0;
+        }
+        
+      if (key == KeyEvent.VK_LEFT)
+      {
+    	  dtheta = -90;
+      }
+
+      if (key == KeyEvent.VK_RIGHT)
+      {
+    	  dtheta = 90;
+      }
+      
+    }
 }
