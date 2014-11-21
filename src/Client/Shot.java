@@ -12,10 +12,9 @@ public class Shot extends Entity {
     int shotSpeed = 4;
     int damage = 1;
     boolean exploding = false;
+    ImageIcon ii = new ImageIcon(this.getClass().getResource(IMAGE_SHOT));
 
     public Shot(int x, int y, int theta) {
-
-        ImageIcon ii = new ImageIcon(this.getClass().getResource(IMAGE_SHOT));
         setImage(ii.getImage());
         setX(x + H_SPACE);
         setY(y - V_SPACE);
