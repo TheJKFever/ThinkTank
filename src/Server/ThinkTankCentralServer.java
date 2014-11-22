@@ -23,9 +23,9 @@ import Exceptions.PortNotAvailalbeException;
 import Helper.Helper;
 
 public class ThinkTankCentralServer extends ServerSocket {
-	private static final int MAX_CAPACITY = 64; // per server
-	private static final int MAX_GAMES = 5; // per server
-	private static final int[] PORTS = {2300, 2301, 2302, 2303, 2304};
+	private final int MAX_CAPACITY = 64; // per server
+	private final int MAX_GAMES = 5; // per server
+	private final int[] PORTS = {2300, 2301, 2302, 2303, 2304};
 	private Map<Integer, ThinkTankGameServer> games;
 	private Vector<ServerThread> clients;
 	private Logger logger;
@@ -38,7 +38,7 @@ public class ThinkTankCentralServer extends ServerSocket {
 		clients = new Vector<ServerThread>();
 		capacity = new Semaphore(MAX_CAPACITY);
 		games = new HashMap<Integer, ThinkTankGameServer>();
-		try {
+		try { // Database Connection
 			Class.forName(DB.DRIVER);
 			db = DriverManager.getConnection(DB.ADDRESS + DB.NAME, DB.USER, DB.PASSWORD);
 		} catch (ClassNotFoundException e) {

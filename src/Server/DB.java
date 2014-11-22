@@ -6,11 +6,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class DB implements Runnable
 {
-	public static final String ADDRESS = "jdbc:mysql://localhost/";
-	public static final String NAME = "lab11";
-	public static final String DRIVER = "com.mysql.jdbc.Driver";
-	public static final String USER = "root";
-	public static final String PASSWORD = "root";
 	protected ReentrantLock queryLock;
 	public DB(ReentrantLock queryLock)
 	{

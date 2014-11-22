@@ -12,12 +12,12 @@ import Helper.Helper;
 
 public class ThinkTankGameServer extends ServerSocket {
 	private boolean waitingForPlayers;
-	private ThinkTankGame game;
+	private ThinkTank game;
 	private Logger logger;
 		
 	public ThinkTankGameServer(int port) throws IOException{
 		super(port);
-		game = new ThinkTankGame();
+		game = new ThinkTank();
 		listenForPlayers();		
 	}
 	

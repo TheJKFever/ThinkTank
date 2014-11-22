@@ -1,6 +1,8 @@
 package Server;
 
-public class ThinkTankGame {
+import Client.GameState;
+
+public class ThinkTank {
 	/* This should have:
 	 * update loop
 	 * render

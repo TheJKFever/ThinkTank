@@ -21,7 +21,7 @@ public class Shot extends Entity {
         this.theta = theta;
     }
     
-    public void update(Battle battle) {
+    public void update(BattleScreen battle) {
 //        Iterator it = battle.aliens.iterator();
         int shotX = getX();
         int shotY = getY();

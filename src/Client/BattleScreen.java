@@ -16,7 +16,7 @@ import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
-public class Battle extends JPanel implements Runnable {
+public class BattleScreen extends JPanel implements Runnable {
 
 	Dimension d;
 	Tank tank;
@@ -40,7 +40,7 @@ public class Battle extends JPanel implements Runnable {
 
 	private Thread animator;
 
-	public Battle() {
+	public BattleScreen() {
 		addKeyListener(new TAdapter());
 		setFocusable(true);
 		d = new Dimension(Globals.BOARD_WIDTH, Globals.BOARD_HEIGHT);

@@ -1,4 +1,4 @@
-package Client;
+package Client.Old;
 
 public class Ammo extends Thread {
 
