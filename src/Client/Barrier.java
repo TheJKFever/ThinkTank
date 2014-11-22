@@ -7,9 +7,9 @@ public class Barrier extends Entity {
 //	final String IMAGE_BARRIER = "images"
 	static final Color color = Color.orange;
 	
-    public Barrier(int x, int y, int width, int height, Game game) {
+    public Barrier(int x, int y, int width, int height, GameScreen gameScreen) {
     	type = "Barrier";
-    	this.game = game;
+    	this.gameScreen = gameScreen;
         setX(x);
         setY(y);
         setWidth(width);
@@ -18,7 +18,7 @@ public class Barrier extends Entity {
     }
 
 	public void update() {
-		for (Shot shot: game.shots) {
+		for (Shot shot: gameScreen.shots) {
 			if (collidesWith(shot.getRect())) {
 				hitBy(shot);
 			}

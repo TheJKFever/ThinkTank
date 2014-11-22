@@ -15,8 +15,8 @@ public class Shot extends Entity {
     int damage = 1;
     boolean exploding = false;
 
-    public Shot(int x, int y, int theta, Game game) {
-    	this.game = game;
+    public Shot(int x, int y, int theta, GameScreen gameScreen) {
+    	this.gameScreen = gameScreen;
         this.setX(x);
         this.y = y;
         
@@ -38,8 +38,7 @@ public class Shot extends Entity {
     	this.setHeight(ii.getImage().getHeight(null));
     }
     
-    public void update(BattleScreen battle) {
-//        Iterator it = battle.aliens.iterator();
+    public void update() {
         int shotX = getX();
         int shotY = getY();
         updatePosition();
@@ -53,12 +52,12 @@ public class Shot extends Entity {
             }
         } else if (theta == 180) {
         	y += shotSpeed;
-        	if (y > 550) { // TODO: FIX THIS TO BE SOME GLOBAL CONSTANT
+        	if (y > Globals.BOARD_HEIGHT) { // TODO: FIX THIS TO BE SOME GLOBAL CONSTANT
         		die();
         	}
         }  else if (theta == 90) {
         	x += shotSpeed;
-        	if (x > 600) { // TODO: FIX THIS TO BE SOME GLOBAL CONSTANT
+        	if (x > Globals.BOARD_WIDTH) { // TODO: FIX THIS TO BE SOME GLOBAL CONSTANT
         		die();
         	}
         }  else if (theta == 270) {
