@@ -91,7 +91,9 @@ public class ThinkTankGameServer extends ServerSocket {
 			// consider making this {"type": "command", "data": "new game"...
 			// instead of {"type": "new game", ...
 				case "event":
-					game.eventQueue.add(Helper.parseEvent(jsonData));
+					game.eventQ.add(Helper.parseEvent(jsonData));
+				case "chat":
+					
 				default:
 					logger.log(Level.INFO, "Parse error. did not understand message: " + data);
 			}			

@@ -7,6 +7,8 @@ import java.net.UnknownHostException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import Helper.Helper;
+
 public class ThinkTank extends JFrame {
 	private ThinkTankClient connection;
 	private CardLayout cardLayout = new CardLayout();
@@ -23,7 +25,7 @@ public class ThinkTank extends JFrame {
 
 	public ThinkTank(String host, int port) {
 		try {
-//			connection = new ThinkTankClient(this, host, port);
+			connection = new ThinkTankClient(this, host, port);
 
 			mainPanel = new JPanel();
 			mainPanel.setLayout(cardLayout);
@@ -50,32 +52,26 @@ public class ThinkTank extends JFrame {
 			gameScreen = new GameScreen(); 
 //			 gameOver = new GameOverScreen(); 
 
-//			 cards.add(mainMenu);
-//			 cards.add(stats);
-//			 cards.add(createProfile);
-//			 cards.add(createGame);
-//			 cards.add(waiting);
-//			 cards.add(joinGame);
-//			mainPanel.add(gameScreen);
+//			 mainPanel.add("mainMenu", mainMenu);
+//			 mainPanel.add("stats", stats);
+//			 mainPanel.add("createProfile", createProfile);
+//			 mainPanel.add("createGame", createGame);
+//			 mainPanel.add("waiting", waiting);
 			mainPanel.add("gameScreen", gameScreen);
+//			 mainPanel.add("joinGame", joinGame);
 			
 			
-//			 cards.add(gameOver);
+//			 mainPanel.add(gameOver);
 
 
 			// TODO: put all  of these in action listeners
-//			 cardLayout.show(mainMenu, "Main Menu");
-//			 cardLayout.show(stats, "Stats");
-//			 cardLayout.show(createProfile, "Create Profile");
-//			 cardLayout.show(createGame, "Create Game");
-//			 cardLayout.show(waiting, "Waiting");
-//			 cardLayout.show(joinGame, "Join Game");
-//			cardLayout.show(gameScreen, "gameScreen");
-			cardLayout.show(mainPanel, "gameScreen");
-//			 cardLayout.show(gameOver, "Game Over");
-
-			
-//			cardLayout.sh
+//			 cardLayout.show(mainMenu, "mainMenu");
+//			 cardLayout.show(stats, "stats");
+//			 cardLayout.show(createProfile, "createProfile");
+//			 cardLayout.show(createGame, "createGame");
+//			 cardLayout.show(waiting, "waiting");
+			cardLayout.show(gameScreen, "gameScreen");
+//			 cardLayout.show(joinGame, "joinGame");
 
 
 			// Global JFrame Settings
@@ -85,14 +81,11 @@ public class ThinkTank extends JFrame {
 			setLocationRelativeTo(null);
 			setVisible(true);
 			setResizable(false);
-		} catch(Exception e) {
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-//		} catch (UnknownHostException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
 	}
 
 	public static void main(String[] args) {
