@@ -15,25 +15,22 @@ public class Tank extends Entity {
     static final String IMAGE_TANK_DOWN = imageDir + "blue/down1.png";
     static final String IMAGE_TANK_LEFT = imageDir + "blue/left1.png";
     
-    static final int MAX_TANK_HEALTH = 10; 
+    static final int MAX_TANK_HEALTH = 10;
     
-    private int width;
-
-    public Tank() {
+    public Tank(Game game) {
     	type = "Tank";
-    	
+    	this.game = game;
         setX(START_X);
         setY(START_Y);
-        theta = 0;
-        dtheta = 0;
-        health = MAX_TANK_HEALTH;
+        this.theta = 0;
+        this.dtheta = 0;
+        this.health = MAX_TANK_HEALTH;
         
         updateImage(theta);
 
         ImageIcon ii = new ImageIcon(IMAGE_TANK_UP);
-        width = ii.getImage().getWidth(null); 
-        height = ii.getImage().getWidth(null); 
-
+        this.width = ii.getImage().getWidth(null); 
+        this.height = ii.getImage().getWidth(null); 
     }
     
     public void updateImage(int theta) {
@@ -56,8 +53,6 @@ public class Tank extends Entity {
     	dtheta = 0;
     	updateImage(theta);
     	
-//    	System.out.println("THETA = " + theta);
-    	
     	if (theta == 0) {
     		y -= dp;
     	} else if (theta == 180) {
@@ -79,6 +74,28 @@ public class Tank extends Entity {
         } else if (y >= Globals.BOARD_HEIGHT - 50) {
         	y = Globals.BOARD_HEIGHT - 50;
         }
+        
+        checkForCollisionWithShots();
+        checkForCollisionWithBrains();
+    }
+    
+    public void checkForCollisionWithBrains() {
+    	for (Brain brain: game.brains) {
+    		
+    		GameRect brainRect = brain.getRect();
+    		
+			if (collidesWith(brainRect)) {
+				if (theta == 0) {
+					this.y = brainRect.bottom; 
+				} else if (theta == 90) {
+					this.x = brainRect.left; 
+				} else if (theta == 180) {
+					this.y = brainRect.top; 
+				} else if (theta == 270) {
+					this.x = brainRect.right; 
+				}
+			}
+		}
     }
 
     

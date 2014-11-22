@@ -6,23 +6,39 @@ import javax.swing.ImageIcon;
 
 public class Shot extends Entity {
 
-    static final String IMAGE_SHOT = "images/shot.png";
+    static final String IMAGE_SHOT_UP = "images/bulletUp.png";
+    static final String IMAGE_SHOT_RIGHT = "images/bulletRight.png";
+    static final String IMAGE_SHOT_DOWN = "images/bulletDown.png";
+    static final String IMAGE_SHOT_LEFT = "images/bulletLeft.png";
+    
     private final int H_SPACE = 6;
     private final int V_SPACE = 1;
     int shotSpeed = 4;
     int damage = 1;
     boolean exploding = false;
 
-    public Shot(int x, int y, int theta) {
-
-        ImageIcon ii = new ImageIcon(this.getClass().getResource(IMAGE_SHOT));
-        setImage(ii.getImage());
+    public Shot(int x, int y, int theta, Game game) {
+    	this.game = game;
         setX(x + H_SPACE);
         setY(y - V_SPACE);
+        
         this.theta = theta;
+        
+        ImageIcon ii = null;
+        
+        if (theta == 0) {
+        	ii = new ImageIcon(this.getClass().getResource(IMAGE_SHOT_UP));
+        } else if (theta == 90) {
+        	ii = new ImageIcon(this.getClass().getResource(IMAGE_SHOT_RIGHT));
+        }  else if (theta == 180) {
+        	ii = new ImageIcon(this.getClass().getResource(IMAGE_SHOT_DOWN));
+        }  else if (theta == 270) {
+        	ii = new ImageIcon(this.getClass().getResource(IMAGE_SHOT_LEFT));
+        }
+        setImage(ii.getImage());
     }
     
-    public void update(Battle battle) {
+    public void update(Game game) {
 //        Iterator it = battle.aliens.iterator();
         int shotX = getX();
         int shotY = getY();

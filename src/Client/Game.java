@@ -16,7 +16,7 @@ import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
-public class Battle extends JPanel implements Runnable {
+public class Game extends JPanel implements Runnable {
 
 	Dimension d;
 	Tank tank;
@@ -40,7 +40,7 @@ public class Battle extends JPanel implements Runnable {
 
 	private Thread animator;
 
-	public Battle() {
+	public Game() {
 		addKeyListener(new TAdapter());
 		setFocusable(true);
 		d = new Dimension(Globals.BOARD_WIDTH, Globals.BOARD_HEIGHT);
@@ -62,12 +62,12 @@ public class Battle extends JPanel implements Runnable {
 		tanks = new ArrayList<Tank>();
 		shots = new ArrayList<Shot>();
 
-		brain1 = new Brain(1);
-		brain2 = new Brain(2);
+		brain1 = new Brain(1, this);
+		brain2 = new Brain(2, this);
 		brains.add(brain1);
 		brains.add(brain2);
 
-		tank = new Tank();
+		tank = new Tank(this);
 		tanks.add(tank);
 
 		// ImageIcon ii = new ImageIcon(this.getClass().getResource(enemypix));
@@ -357,12 +357,9 @@ public class Battle extends JPanel implements Runnable {
 
 			tank.keyPressed(e);
 
-			int x = tank.getX();
-			int y = tank.getY();
-
 			if (ingame) {
 				if (e.isAltDown()) {
-					shots.add(new Shot(x, y, tank.theta));
+					shots.add(new Shot(tank.x + tank.width/2, tank.y, tank.theta, tank.game));
 				}
 			}
 		}
