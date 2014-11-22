@@ -6,19 +6,36 @@ import javax.swing.ImageIcon;
 
 public class Shot extends Entity {
 
-    static final String IMAGE_SHOT = "images/shot.png";
-    private final int H_SPACE = 6;
-    private final int V_SPACE = 1;
+    static final String IMAGE_SHOT_UP = "images/bulletUp.png";
+    static final String IMAGE_SHOT_RIGHT = "images/bulletRight.png";
+    static final String IMAGE_SHOT_DOWN = "images/bulletDown.png";
+    static final String IMAGE_SHOT_LEFT = "images/bulletLeft.png";
+    
     int shotSpeed = 4;
     int damage = 1;
     boolean exploding = false;
-    ImageIcon ii = new ImageIcon(this.getClass().getResource(IMAGE_SHOT));
 
-    public Shot(int x, int y, int theta) {
-        setImage(ii.getImage());
-        setX(x + H_SPACE);
-        setY(y - V_SPACE);
+    public Shot(int x, int y, int theta, Game game) {
+    	this.game = game;
+        this.setX(x);
+        this.y = y;
+        
         this.theta = theta;
+        
+        ImageIcon ii = null;
+        
+        if (theta == 0) {
+        	ii = new ImageIcon(this.getClass().getResource(IMAGE_SHOT_UP));
+        } else if (theta == 90) {
+        	ii = new ImageIcon(this.getClass().getResource(IMAGE_SHOT_RIGHT));
+        }  else if (theta == 180) {
+        	ii = new ImageIcon(this.getClass().getResource(IMAGE_SHOT_DOWN));
+        }  else if (theta == 270) {
+        	ii = new ImageIcon(this.getClass().getResource(IMAGE_SHOT_LEFT));
+        }
+        setImage(ii.getImage());
+        this.setWidth(ii.getImage().getWidth(null));
+    	this.setHeight(ii.getImage().getHeight(null));
     }
     
     public void update(BattleScreen battle) {
@@ -26,26 +43,6 @@ public class Shot extends Entity {
         int shotX = getX();
         int shotY = getY();
         updatePosition();
-
-//        // check for collisions with aliens
-//        while (it.hasNext()) {
-//            Enemy enemy = (Enemy) it.next();
-//            int alienX = enemy.getX();
-//            int alienY = enemy.getY();
-//
-//            if (enemy.isVisible()) {
-//                if (shotX >= (alienX) && 
-//                    shotX <= (alienX + Globals.ALIEN_WIDTH) &&
-//                    shotY >= (alienY) &&
-//                    shotY <= (alienY+ Globals.ALIEN_HEIGHT) ) {
-//                        ImageIcon ii = new ImageIcon(getClass().getResource(battle.expl));
-//                        enemy.setImage(ii.getImage());
-//                        enemy.setDying(true);
-//                        battle.deaths++;
-//                        die();
-//                    }
-//            }
-//        }
     }
     
     public void updatePosition() {

@@ -31,7 +31,4 @@ public class ThinkTankClient extends Socket implements Runnable {
 	public void run() {
 		
 	}
-	
-	
-	
 }

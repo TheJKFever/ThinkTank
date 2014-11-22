@@ -19,6 +19,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import Client.Globals;
 import Exceptions.PortNotAvailalbeException;
 import Helper.Helper;
 
@@ -39,8 +40,8 @@ public class ThinkTankCentralServer extends ServerSocket {
 		capacity = new Semaphore(MAX_CAPACITY);
 		games = new HashMap<Integer, ThinkTankGameServer>();
 		try { // Database Connection
-			Class.forName(DB.DRIVER);
-			db = DriverManager.getConnection(DB.ADDRESS + DB.NAME, DB.USER, DB.PASSWORD);
+			Class.forName(Globals.Development.DB.DRIVER);
+			db = DriverManager.getConnection(Globals.Development.DB.ADDRESS + Globals.Development.DB.NAME, Globals.Development.DB.USER, Globals.Development.DB.PASSWORD);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -75,7 +76,6 @@ public class ThinkTankCentralServer extends ServerSocket {
 			game = new ThinkTankGameServer(port);
 			games.put(port, game);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
