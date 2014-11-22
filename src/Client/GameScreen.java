@@ -93,7 +93,7 @@ public class GameScreen extends JPanel implements Runnable {
 			sleep = Globals.DELAY - timeDiff;
 
 			if (sleep < 0)
-				sleep = 2;
+				sleep = 1;
 			try {
 				Thread.sleep(sleep);
 			} catch (InterruptedException e) {
@@ -150,18 +150,22 @@ public class GameScreen extends JPanel implements Runnable {
 	private class TAdapter extends KeyAdapter {
 
 		public void keyReleased(KeyEvent e) {
-			try {
-				GameScreen.this.eventQ.put(new GameEvent(e));
-			} catch (InterruptedException ie) {
-				ie.printStackTrace();
+			synchronized(eventQ) {
+				try {
+					GameScreen.this.eventQ.put(new GameEvent(e));
+				} catch (InterruptedException ie) {
+					ie.printStackTrace();
+				}
 			}
 		}
 		
 		public void keyPressed(KeyEvent e) {
-			try {
-				GameScreen.this.eventQ.put(new GameEvent(e));
-			} catch (InterruptedException ie) {
-				ie.printStackTrace();
+			synchronized(eventQ) {
+				try {
+					GameScreen.this.eventQ.put(new GameEvent(e));
+				} catch (InterruptedException ie) {
+					ie.printStackTrace();
+				}
 			}
 		}
 	}
