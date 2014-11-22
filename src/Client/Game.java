@@ -8,10 +8,10 @@ import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -25,15 +25,13 @@ public class Game extends JPanel implements Runnable {
 	ArrayList<Tank> tanks;
 	ArrayList<Barrier> barriers;
 	
+	ArrayBlockingQueue<GameEvent> eventQ = new ArrayBlockingQueue<GameEvent>(100);
+	
 	Brain brain1;
 	Brain brain2;
 	
 	int deaths = 0;
-
 	boolean ingame = true;
-	final String expl = "images/explosion.png";
-	final String enemypix = "images/enemy.png";
-	String gameOverMessage = "Game Over";
 	Renderer renderer;
 	
 	private Thread animator;
@@ -43,8 +41,6 @@ public class Game extends JPanel implements Runnable {
 		setFocusable(true);
 		d = new Dimension(Globals.BOARD_WIDTH, Globals.BOARD_HEIGHT);
 		setBackground(Color.black);
-
-		// TODO: IF THINGS STOP WORKING, LOOK HERE: gameInit();
 		setDoubleBuffered(true);
 		this.renderer = new Renderer(this);
 	}
@@ -56,7 +52,7 @@ public class Game extends JPanel implements Runnable {
 
 	public void gameInit() {
 		log("gameInit()...");
-		// enemies = new ArrayList<Enemy>();
+		
 		brains = new ArrayList<Brain>();
 		tanks = new ArrayList<Tank>();
 		shots = new ArrayList<Shot>();
@@ -76,7 +72,7 @@ public class Game extends JPanel implements Runnable {
 		barriers.add(new Barrier(400, 400, 100, 10, this));
 		barriers.add(new Barrier(150, 150, 10, 200, this));
 		barriers.add(new Barrier(250, 250, 10, 100, this));
-		barriers.add(new Barrier(350, 250, 10, 200, this));
+//		barriers.add(new Barrier(350, 250, 10, 200, this));
 
 		if (animator == null || !ingame) {
 			animator = new Thread(this);
@@ -85,15 +81,14 @@ public class Game extends JPanel implements Runnable {
 	}
 
 	public void run() {
-
 		long beforeTime, timeDiff, sleep;
 		beforeTime = System.currentTimeMillis();
 
 		while (ingame) {
 			processInput();
-			repaint();
 			update();
-
+			repaint();
+			
 			timeDiff = System.currentTimeMillis() - beforeTime;
 			sleep = Globals.DELAY - timeDiff;
 
@@ -106,7 +101,6 @@ public class Game extends JPanel implements Runnable {
 			}
 			beforeTime = System.currentTimeMillis();
 		}
-		gameOver();
 	}
 	
 	public void paint(Graphics g) {
@@ -114,21 +108,19 @@ public class Game extends JPanel implements Runnable {
 		this.renderer.render(g);
 	}
 	
-	public void processInput() {
-	
-	}
-	
 	public void update() {
 		// tanks
-		for (Tank t : tanks) {
+		for (Tank t: tanks) {
 			t.update();
 		}
-
 		// brains
-		for (Brain b : brains) {
-			b.update(shots);
+		for (Brain b: brains) {
+			b.update();
 		}
-
+		// barriers 
+		for (Barrier b: barriers) {
+			b.update();
+		}
 		// shots
 		for (int i = (shots.size() - 1); i >= 0; i--) {
 			Shot shot = shots.get(i);
@@ -138,27 +130,38 @@ public class Game extends JPanel implements Runnable {
 				shot.update(this);
 			}
 		}
-		// barriers 
-		// ... nothing to do
 	}
 	
-	public void gameOver() {
-		this.renderer.renderGameOver();
+	public void processInput() {
+		synchronized(eventQ) {
+			for (GameEvent gameEvent: eventQ) {
+				if (gameEvent.type == "KeyEvent") {
+					if (gameEvent.keyEvent.getID() == KeyEvent.KEY_RELEASED) {
+						tank.keyReleased(gameEvent.keyEvent);
+					} else if (gameEvent.keyEvent.getID() == KeyEvent.KEY_PRESSED) {
+						tank.keyPressed(gameEvent.keyEvent);
+					}
+				}
+			}
+			eventQ.clear();
+		}
 	}
 	
 	private class TAdapter extends KeyAdapter {
 
 		public void keyReleased(KeyEvent e) {
-			tank.keyReleased(e);
+			try {
+				Game.this.eventQ.put(new GameEvent(e));
+			} catch (InterruptedException ie) {
+				ie.printStackTrace();
+			}
 		}
 		
 		public void keyPressed(KeyEvent e) {
-			tank.keyPressed(e);
-
-			if (ingame) {
-				if (e.isAltDown()) {
-					shots.add(new Shot(tank.x + tank.width/2, tank.y, tank.theta, tank.game));
-				}
+			try {
+				Game.this.eventQ.put(new GameEvent(e));
+			} catch (InterruptedException ie) {
+				ie.printStackTrace();
 			}
 		}
 	}

@@ -19,11 +19,11 @@ public abstract class Entity {
     int dp;
     int prevX;
     int prevY;
-    int theta = 0;
+    int theta;
     int dtheta;
     
-    int height;
-    int width;
+    private int height;
+    private int width;
     
     int health;
     String type;
@@ -32,8 +32,6 @@ public abstract class Entity {
     public Entity() {
         visible = true;
     }
-    
-//    public abstract void update();
 
     public void die() {
         visible = false;
@@ -59,17 +57,34 @@ public abstract class Entity {
         this.x = x;
     }
 
-    public void setY(int y) {
-        this.y = y;
-    }
-    public int getY() {
-        return y;
-    }
-
     public int getX() {
         return x;
     }
 
+    public int getY() {
+        return y;
+    }
+    
+    public void setY(int y) {
+        this.y = y;
+    }
+    
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+    
     public void setDying(boolean dying) {
         this.dying = dying;
     }
@@ -100,7 +115,7 @@ public abstract class Entity {
 	}
 	
 	public GameRect getRect() {
-		return new GameRect(this.x, this.y, this.width, this.height);
+		return new GameRect(this.getX(), this.getY(), this.getWidth(), this.getHeight());
 	}
 	
 	public boolean collidesWith(GameRect other) {
@@ -121,6 +136,9 @@ public abstract class Entity {
 			xCollision = true;
 		}
 		
+        log("MY X: " + my.x + " Y: " + my.y + " WIDTH: " + my.width + " HEIGHT: " + my.height);
+        log("OT X: " + other.x + " Y: " + other.y + " WIDTH: " + other.width + " HEIGHT: " + other.height);
+
 		return (xCollision && yCollision);
 	}
 	

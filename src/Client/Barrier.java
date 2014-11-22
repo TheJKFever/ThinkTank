@@ -1,7 +1,6 @@
 package Client;
 
 import java.awt.Color;
-
 import javax.swing.ImageIcon;
 
 public class Barrier extends Entity {
@@ -11,10 +10,20 @@ public class Barrier extends Entity {
     public Barrier(int x, int y, int width, int height, Game game) {
     	type = "Barrier";
     	this.game = game;
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+        setX(x);
+        setY(y);
+        setWidth(width);
+        setHeight(height);
+        this.health = Integer.MAX_VALUE;
     }
 
+	public void update() {
+		for (Shot shot: game.shots) {
+			if (collidesWith(shot.getRect())) {
+				hitBy(shot);
+			}
+		}
+//        log("BARRIER X: " + this.x + " Y: " + this.y + " WIDTH: " + this.getWidth() + " HEIGHT: " + this.getHeight());
+//        checkForCollisionWithShots();
+	}
 }

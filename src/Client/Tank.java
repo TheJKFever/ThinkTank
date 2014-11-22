@@ -18,6 +18,8 @@ public class Tank extends Entity {
     
     static final int MAX_TANK_HEALTH = 10;
     
+    public boolean firing;
+    
     public Tank(Game game) {
     	type = "Tank";
     	this.game = game;
@@ -26,12 +28,15 @@ public class Tank extends Entity {
         this.theta = 0;
         this.dtheta = 0;
         this.health = MAX_TANK_HEALTH;
+        this.firing = false;
         
         updateImage(theta);
 
-        ImageIcon ii = new ImageIcon(IMAGE_TANK_UP);
-        this.width = ii.getImage().getWidth(null); 
-        this.height = ii.getImage().getWidth(null); 
+//        ImageIcon ii = new ImageIcon(IMAGE_TANK_UP);
+//        this.width = ii.getImage().getWidth(null); 
+//        this.height = ii.getImage().getWidth(null);
+        this.setWidth(16);
+        this.setHeight(16);
     }
     
     public void updateImage(int theta) {
@@ -57,31 +62,61 @@ public class Tank extends Entity {
     	prevY = y;
     	prevX = x;
     	
+    	// apply movement
     	if (theta == 0) {
-    		y -= dp;
+    		setY(getY() - dp);
     	} else if (theta == 180) {
-    		y += dp;
+    		setY(getY() + dp);
     	} else if (theta == 90) {
-    		x += dp;
+    		setX(getX() + dp);
     	} else if (theta == 270) {
-    		x -= dp;
+    		setX(getX() - dp);
     	}
     	
+    	// check for collision with walls
         if (x <= 2) 
-            x = 2;
-        if (x >= Globals.BOARD_WIDTH - 2*width) { 
-            x = Globals.BOARD_WIDTH - 2*width;
+            setX(2);
+        if (x >= Globals.BOARD_WIDTH - getWidth()) { 
+        	setX(Globals.BOARD_WIDTH - getWidth());
         }
         
         if (y < 0) {
-        	y = 0;
+        	setY(0);
         } else if (y >= Globals.BOARD_HEIGHT - 50) {
-        	y = Globals.BOARD_HEIGHT - 50;
+        	setY(Globals.BOARD_HEIGHT - 50);
         }
         
         checkForCollisionWithShots();
         checkForCollisionWithObstacles(game.brains);
         checkForCollisionWithObstacles(game.barriers);
+        
+        if (this.firing) {
+        	fireShot();
+        }
+        
+//        log("TANK X: " + this.x + " Y: " + this.y + " WIDTH: " + this.getWidth() + " HEIGHT: " + this.getHeight());
+    }
+    
+    public void fireShot() {
+    	int shotX = 0;
+    	int shotY = 0;
+    	
+    	if (theta == 0) {
+    		shotX = this.x + this.getWidth()/2;
+    		shotY = this.y;
+    	} else if (theta == 90) {
+    		shotX = this.x + this.getWidth();
+    		shotY = this.y + this.getHeight()/2;
+    	} else if (theta == 180) {
+    		shotX = this.x + this.getWidth()/2;
+    		shotY = this.y + this.getHeight();
+    	} else if (theta == 270) {
+    		shotX = this.x;
+    		shotY = this.y + this.getWidth()/2;
+    	}
+    	
+    	game.shots.add(new Shot(shotX, shotY, this.theta, this.game));
+    	this.firing = false;
     }
     
     public void keyPressed(KeyEvent e) { 
@@ -111,5 +146,31 @@ public class Tank extends Entity {
 		if (key == KeyEvent.VK_RIGHT) {
 			  dtheta = 90;
 		}
+		
+        if (key == KeyEvent.VK_ALT) {
+			this.firing = true;
+		}
     }
+    
+    public boolean collidesWith(GameRect other) {
+		boolean yCollision = false;
+		boolean xCollision = false;
+		
+		GameRect my = this.getRect();
+		
+		if (my.top <= other.bottom && my.top >= other.top) {
+			yCollision = true;
+		} else if (my.bottom >= other.top && my.bottom <= other.bottom) {
+			yCollision = true;
+		}
+
+		if (my.right >= other.left && my.right <= other.right) {
+			xCollision = true;
+		} else if (my.left <= other.right && my.left >= other.left) {
+			xCollision = true;
+		}
+		
+		
+		return (xCollision && yCollision);
+	}
 }

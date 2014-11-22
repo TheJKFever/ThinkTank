@@ -19,28 +19,30 @@ public class Brain extends Entity {
 		
 		if (team == 1) {
 			ii = new ImageIcon(this.getClass().getResource(IMAGE_BRAIN));
-			width = ii.getImage().getWidth(null); 
-	        height = ii.getImage().getWidth(null);
-			this.y = Globals.BOARD_HEIGHT - (height + 20);		
+//			setWidth(ii.getImage().getWidth(null)); 
+			setWidth(89);
+			setHeight(88);
+//	        height = ii.getImage().getWidth(null);
+			this.y = Globals.BOARD_HEIGHT - (this.getHeight() + 20);		
 		} else if (team == 2) {
 			ii = new ImageIcon(this.getClass().getResource(IMAGE_BRAIN_ENEMY));
-			width = ii.getImage().getWidth(null); 
-	        height = ii.getImage().getWidth(null);
+//			width = ii.getImage().getWidth(null); 
+//	        height = ii.getImage().getWidth(null);
+			setWidth(89);
+			setHeight(88);
 	        this.y = 0;
 		}
 		this.setImage(ii.getImage());
-        this.x = Globals.BOARD_WIDTH/2 - width/2;
+        this.x = Globals.BOARD_WIDTH/2 - getWidth()/2;
 	}
 	
-	public void update(ArrayList<Shot> shots) {
-		for (Shot shot: shots) {
-			if (shot.x >= this.x && 
-				shot.x <= (this.x + this.width) &&
-				shot.y >= this.y && 
-				shot.y <= (this.y + this.height)) {
-				hitBy(shot);
-			}
-		}
+	public void update() {
+//		for (Shot shot: game.shots) {
+//			if (collidesWith(shot.getRect())) {
+//				hitBy(shot);
+//			}
+//		}
+        checkForCollisionWithShots();
 	}
 
 }

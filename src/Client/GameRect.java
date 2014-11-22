@@ -5,9 +5,9 @@ public class GameRect {
 	
 	public GameRect(int x, int y, int width, int height) {
 		this.x = x;
-		this.y = x;
+		this.y = y;
 		this.width = width;
-		this.height  = height;
+		this.height = height;
 		this.top = y;
 		this.bottom = y + height;
 		this.left = x;

@@ -11,16 +11,14 @@ public class Shot extends Entity {
     static final String IMAGE_SHOT_DOWN = "images/bulletDown.png";
     static final String IMAGE_SHOT_LEFT = "images/bulletLeft.png";
     
-    private final int H_SPACE = 6;
-    private final int V_SPACE = 1;
     int shotSpeed = 4;
     int damage = 1;
     boolean exploding = false;
 
     public Shot(int x, int y, int theta, Game game) {
     	this.game = game;
-        setX(x + H_SPACE);
-        setY(y - V_SPACE);
+        this.setX(x);
+        this.y = y;
         
         this.theta = theta;
         
@@ -36,33 +34,12 @@ public class Shot extends Entity {
         	ii = new ImageIcon(this.getClass().getResource(IMAGE_SHOT_LEFT));
         }
         setImage(ii.getImage());
+        this.setWidth(ii.getImage().getWidth(null));
+    	this.setHeight(ii.getImage().getHeight(null));
     }
     
-    public void update(Game game) {
-//        Iterator it = battle.aliens.iterator();
-        int shotX = getX();
-        int shotY = getY();
+    public void update(Game game) {        
         updatePosition();
-
-//        // check for collisions with aliens
-//        while (it.hasNext()) {
-//            Enemy enemy = (Enemy) it.next();
-//            int alienX = enemy.getX();
-//            int alienY = enemy.getY();
-//
-//            if (enemy.isVisible()) {
-//                if (shotX >= (alienX) && 
-//                    shotX <= (alienX + Globals.ALIEN_WIDTH) &&
-//                    shotY >= (alienY) &&
-//                    shotY <= (alienY+ Globals.ALIEN_HEIGHT) ) {
-//                        ImageIcon ii = new ImageIcon(getClass().getResource(battle.expl));
-//                        enemy.setImage(ii.getImage());
-//                        enemy.setDying(true);
-//                        battle.deaths++;
-//                        die();
-//                    }
-//            }
-//        }
     }
     
     public void updatePosition() {
