@@ -2,6 +2,7 @@ package Client;
 
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
@@ -16,6 +17,8 @@ public abstract class Entity {
     int dx;
     int dy;
     int dp;
+    int prevX;
+    int prevY;
     int theta = 0;
     int dtheta;
     
@@ -75,12 +78,6 @@ public abstract class Entity {
         return this.dying;
     }
     
-    public void log(String msg) {
-    	if (Globals.DEBUG) {
-    		System.out.println(msg);
-    	}
-    }
-    
     public void checkForCollisionWithShots() {
 		for (Shot shot: game.shots) {
 			if (shot.x >= this.x && 
@@ -125,5 +122,49 @@ public abstract class Entity {
 		}
 		
 		return (xCollision && yCollision);
+	}
+	
+    public void resetPositionOnCollision(GameRect rect) {
+    	int deltaY = y - prevY;
+    	int deltaX = x -  prevX;
+    	
+    	if (deltaY != 0) {
+			if (deltaY > 0) {
+				this.y = rect.top - 10;
+			} else {
+				this.y = rect.bottom + 10;
+			}
+    	} else if (deltaX != 0) {
+			if (deltaX > 0) {
+				this.x = rect.left - 10;
+			} else {
+				this.x = rect.right + 10;	
+			}
+		}
+    }
+    
+	public void checkForCollisionWithObstacles(ArrayList<? extends Entity> obstacles) {
+    	for (Entity obstacle: obstacles) {
+    		
+    		GameRect rect = obstacle.getRect();
+			if (collidesWith(rect)) {
+				resetPositionOnCollision(rect);
+			}
+		}
+    }
+
+    public int wrapDegrees(int d) {
+    	if (d < 0) {
+    		d += 360;
+    	} else if (d >= 360) {
+    		d -= 360;
+    	}
+    	return d;
+    }
+    
+	public void log(String msg) {
+		if (Globals.DEBUG) {
+			System.out.println(msg);
+		}
 	}
 }

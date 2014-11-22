@@ -1,6 +1,7 @@
 package Client;
 
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
@@ -53,6 +54,9 @@ public class Tank extends Entity {
     	dtheta = 0;
     	updateImage(theta);
     	
+    	prevY = y;
+    	prevX = x;
+    	
     	if (theta == 0) {
     		y -= dp;
     	} else if (theta == 180) {
@@ -76,36 +80,8 @@ public class Tank extends Entity {
         }
         
         checkForCollisionWithShots();
-        checkForCollisionWithBrains();
-    }
-    
-    public void checkForCollisionWithBrains() {
-    	for (Brain brain: game.brains) {
-    		
-    		GameRect brainRect = brain.getRect();
-    		
-			if (collidesWith(brainRect)) {
-				if (theta == 0) {
-					this.y = brainRect.bottom; 
-				} else if (theta == 90) {
-					this.x = brainRect.left; 
-				} else if (theta == 180) {
-					this.y = brainRect.top; 
-				} else if (theta == 270) {
-					this.x = brainRect.right; 
-				}
-			}
-		}
-    }
-
-    
-    public int wrapDegrees(int d) {
-    	if (d < 0) {
-    		d += 360;
-    	} else if (d >= 360) {
-    		d -= 360;
-    	}
-    	return d;
+        checkForCollisionWithObstacles(game.brains);
+        checkForCollisionWithObstacles(game.barriers);
     }
     
     public void keyPressed(KeyEvent e) { 
@@ -123,25 +99,17 @@ public class Tank extends Entity {
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
 
-        if (key == KeyEvent.VK_UP)
-        {
+        if (key == KeyEvent.VK_UP) {
             dp = 0;
         }
-
-        if (key == KeyEvent.VK_DOWN)
-        {
+        if (key == KeyEvent.VK_DOWN) {
             dp = 0;
         }
-        
-      if (key == KeyEvent.VK_LEFT)
-      {
-    	  dtheta = -90;
-      }
-
-      if (key == KeyEvent.VK_RIGHT)
-      {
-    	  dtheta = 90;
-      }
-      
+        if (key == KeyEvent.VK_LEFT) {
+			  dtheta = -90;
+        }
+		if (key == KeyEvent.VK_RIGHT) {
+			  dtheta = 90;
+		}
     }
 }
