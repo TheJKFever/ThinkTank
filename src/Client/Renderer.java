@@ -9,23 +9,23 @@ import java.util.ArrayList;
 
 public class Renderer {
 	
-	Game game;
+	GameScreen gameScreen;
 	
-	public Renderer(Game g) {
-		this.game = g;
+	public Renderer(GameScreen g) {
+		this.gameScreen = g;
 	}
 	
 	public void render(Graphics g) {
 		g.setColor(Color.black);
-		g.fillRect(0, 0, game.d.width, game.d.height);
+		g.fillRect(0, 0, gameScreen.d.width, gameScreen.d.height);
 		g.setColor(Color.green);
 	
-		if (game.ingame) {
+		if (gameScreen.ingame) {
 			drawBarriers(g);
 //			drawEntities(g, game.brains);
 			drawBrains(g);
-			drawEntities(g, game.tanks);
-			drawEntities(g, game.shots);
+			drawEntities(g, gameScreen.tanks);
+			drawEntities(g, gameScreen.shots);
 		}
 	
 		Toolkit.getDefaultToolkit().sync();
@@ -33,17 +33,17 @@ public class Renderer {
 	}
 
 	public void drawBarriers(Graphics g) {
-		for (Barrier barrier: game.barriers) {
+		for (Barrier barrier: gameScreen.barriers) {
 			g.setColor(Barrier.color);
 			g.fillRect(barrier.x, barrier.y, barrier.getWidth(), barrier.getHeight());
 		}
 	}
 	
 	public void drawBrains(Graphics g) {
-		for (Brain brain: game.brains) {
+		for (Brain brain: gameScreen.brains) {
 		
 			if (brain.isVisible()) {
-				g.drawImage(brain.getImage(), brain.x, brain.y, game);
+				g.drawImage(brain.getImage(), brain.x, brain.y, gameScreen);
 			}
 			if (brain.isDying()) {
 				brain.die();
@@ -57,7 +57,7 @@ public class Renderer {
 				g.fillRect(20, 20, brain.health, 20);
 	
 				Font small = new Font("Helvetica", Font.BOLD, 14);
-				FontMetrics metr = game.getFontMetrics(small);
+				FontMetrics metr = gameScreen.getFontMetrics(small);
 				g.setColor(Color.white);
 				g.setFont(small);
 				g.drawString("Brain" + brain.team, 140, 20);
@@ -68,7 +68,7 @@ public class Renderer {
 				g.fillRect(600, 20, brain.health, 20);
 	
 				Font small = new Font("Helvetica", Font.BOLD, 14);
-				FontMetrics metr = game.getFontMetrics(small);
+				FontMetrics metr = gameScreen.getFontMetrics(small);
 				g.setColor(Color.white);
 				g.setFont(small);
 				g.drawString("Brain" + brain.team, 740, 20);
@@ -79,7 +79,7 @@ public class Renderer {
 	public void drawEntities(Graphics g, ArrayList<? extends Entity> entities) {
 		for (Entity e : entities) {
 			if (e.isVisible()) {
-				g.drawImage(e.getImage(), e.x, e.y, game);
+				g.drawImage(e.getImage(), e.x, e.y, gameScreen);
 			}
 			if (e.isDying()) {
 				e.die();

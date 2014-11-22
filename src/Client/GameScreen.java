@@ -16,7 +16,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
-public class Game extends JPanel implements Runnable {
+public class GameScreen extends JPanel implements Runnable {
 
 	Dimension d;
 	Tank tank;
@@ -36,7 +36,7 @@ public class Game extends JPanel implements Runnable {
 	
 	private Thread animator;
 
-	public Game() {
+	public GameScreen() {
 		addKeyListener(new TAdapter());
 		setFocusable(true);
 		d = new Dimension(Globals.BOARD_WIDTH, Globals.BOARD_HEIGHT);
@@ -127,7 +127,7 @@ public class Game extends JPanel implements Runnable {
 			if (!shot.isVisible()) {
 				shots.remove(i);
 			} else {
-				shot.update(this);
+				shot.update();
 			}
 		}
 	}
@@ -151,7 +151,7 @@ public class Game extends JPanel implements Runnable {
 
 		public void keyReleased(KeyEvent e) {
 			try {
-				Game.this.eventQ.put(new GameEvent(e));
+				GameScreen.this.eventQ.put(new GameEvent(e));
 			} catch (InterruptedException ie) {
 				ie.printStackTrace();
 			}
@@ -159,7 +159,7 @@ public class Game extends JPanel implements Runnable {
 		
 		public void keyPressed(KeyEvent e) {
 			try {
-				Game.this.eventQ.put(new GameEvent(e));
+				GameScreen.this.eventQ.put(new GameEvent(e));
 			} catch (InterruptedException ie) {
 				ie.printStackTrace();
 			}

@@ -27,7 +27,7 @@ public abstract class Entity {
     
     int health;
     String type;
-    Game game;
+    GameScreen gameScreen;
     
     public Entity() {
         visible = true;
@@ -94,7 +94,7 @@ public abstract class Entity {
     }
     
     public void checkForCollisionWithShots() {
-		for (Shot shot: game.shots) {
+		for (Shot shot: gameScreen.shots) {
 			if (shot.x >= this.x && 
 				shot.x <= (this.x + this.width) &&
 				shot.y >= this.y && 

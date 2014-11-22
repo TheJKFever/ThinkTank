@@ -20,9 +20,9 @@ public class Tank extends Entity {
     
     public boolean firing;
     
-    public Tank(Game game) {
+    public Tank(GameScreen gameScreen) {
     	type = "Tank";
-    	this.game = game;
+    	this.gameScreen = gameScreen;
         setX(START_X);
         setY(START_Y);
         this.theta = 0;
@@ -87,8 +87,8 @@ public class Tank extends Entity {
         }
         
         checkForCollisionWithShots();
-        checkForCollisionWithObstacles(game.brains);
-        checkForCollisionWithObstacles(game.barriers);
+        checkForCollisionWithObstacles(gameScreen.brains);
+        checkForCollisionWithObstacles(gameScreen.barriers);
         
         if (this.firing) {
         	fireShot();
@@ -115,7 +115,7 @@ public class Tank extends Entity {
     		shotY = this.y + this.getWidth()/2;
     	}
     	
-    	game.shots.add(new Shot(shotX, shotY, this.theta, this.game));
+    	gameScreen.shots.add(new Shot(shotX, shotY, this.theta, this.gameScreen));
     	this.firing = false;
     }
     

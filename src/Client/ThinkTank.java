@@ -10,27 +10,26 @@ import javax.swing.JPanel;
 public class ThinkTank extends JFrame {
 	private ThinkTankClient connection;
 	private CardLayout cardLayout = new CardLayout();
-	private JPanel cards;
+	private JPanel mainPanel;
 	//	private MainMenuScreen mainMenu;
 	//	private StatsScreen stats;
 	//	private CreateProfileScreen createProfile;
 	//	private CreateGameScreen createGame;
 	//	private WaitingScreen waiting;
 	//	private JoinGameScreen joinGame;
-	private BattleScreen battle;
+	private GameScreen gameScreen;
 	//	private GameOverScreen gameOver;
 	
 
 	public ThinkTank(String host, int port) {
 		try {
-			connection = new ThinkTankClient(this, host, port);
+//			connection = new ThinkTankClient(this, host, port);
 
-			cards = new JPanel();
-			cards.setLayout(cardLayout);
+			mainPanel = new JPanel();
+			mainPanel.setLayout(cardLayout);
+			add(mainPanel);
 
 			// TODO: Create homepage button
-
-
 
 			/* SCREENS:
 			 * Main Menu
@@ -48,7 +47,7 @@ public class ThinkTank extends JFrame {
 //			 createGame = new CreateGameScreen(); 
 //			 waiting = new WaitingScreen(); 
 //			 joinGame = new JoinGameScreen(); 
-			battle = new BattleScreen(); 
+			gameScreen = new GameScreen(); 
 //			 gameOver = new GameOverScreen(); 
 
 //			 cards.add(mainMenu);
@@ -57,7 +56,10 @@ public class ThinkTank extends JFrame {
 //			 cards.add(createGame);
 //			 cards.add(waiting);
 //			 cards.add(joinGame);
-			cards.add(battle);
+//			mainPanel.add(gameScreen);
+			mainPanel.add("gameScreen", gameScreen);
+			
+			
 //			 cards.add(gameOver);
 
 
@@ -68,10 +70,13 @@ public class ThinkTank extends JFrame {
 //			 cardLayout.show(createGame, "Create Game");
 //			 cardLayout.show(waiting, "Waiting");
 //			 cardLayout.show(joinGame, "Join Game");
-			cardLayout.show(battle, "Battle");
+//			cardLayout.show(gameScreen, "gameScreen");
+			cardLayout.show(mainPanel, "gameScreen");
 //			 cardLayout.show(gameOver, "Game Over");
 
-			add(cards);
+			
+//			cardLayout.sh
+
 
 			// Global JFrame Settings
 			setTitle("Think Tank");
@@ -80,11 +85,14 @@ public class ThinkTank extends JFrame {
 			setLocationRelativeTo(null);
 			setVisible(true);
 			setResizable(false);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
+//		} catch (UnknownHostException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	public static void main(String[] args) {
