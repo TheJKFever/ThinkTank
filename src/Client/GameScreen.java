@@ -17,7 +17,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 public class GameScreen extends JPanel implements Runnable {
-
+	JPanel chatPanel;
 	Dimension d;
 	Tank tank;
 	ArrayList<Shot> shots;

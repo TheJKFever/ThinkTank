@@ -93,7 +93,7 @@ public class ThinkTankGameServer extends ServerSocket {
 				case "event":
 					game.eventQ.add(Helper.parseEvent(jsonData));
 				case "chat":
-					
+					sendMessage();
 				default:
 					logger.log(Level.INFO, "Parse error. did not understand message: " + data);
 			}			
@@ -109,7 +109,6 @@ public class ThinkTankGameServer extends ServerSocket {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
 		}
 	}
 }
