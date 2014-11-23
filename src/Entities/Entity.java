@@ -1,10 +1,11 @@
-package Client;
+package Entities;
 
 import java.awt.Image;
-import java.awt.Rectangle;
-import java.util.ArrayList;
+import java.util.Vector;
 
-import javax.swing.ImageIcon;
+import Client.GameRect;
+import Client.GameState;
+import Client.Globals;
 
 public abstract class Entity {
 
@@ -12,22 +13,11 @@ public abstract class Entity {
     Image image;
     boolean dying;
     
-    int x;
-    int y;
-    int dx;
-    int dy;
-    int dp;
-    int prevX;
-    int prevY;
-    int theta;
-    int dtheta;
+    public int x, y, dx, dy, dp, prevX, prevY, theta, dtheta, height, width;
     
-    private int height;
-    private int width;
-    
-    int health;
+    public int health;
     String type;
-    GameScreen gameScreen;
+    GameState gs;
     
     public Entity() {
         visible = true;
@@ -94,7 +84,7 @@ public abstract class Entity {
     }
     
     public void checkForCollisionWithShots() {
-		for (Shot shot: gameScreen.shots) {
+		for (Shot shot: gs.shots) {
 			if (shot.x >= this.x && 
 				shot.x <= (this.x + this.width) &&
 				shot.y >= this.y && 
@@ -161,7 +151,7 @@ public abstract class Entity {
 		}
     }
     
-	public void checkForCollisionWithObstacles(ArrayList<? extends Entity> obstacles) {
+	public void checkForCollisionWithObstacles(Vector<? extends Entity> obstacles) {
     	for (Entity obstacle: obstacles) {
     		
     		GameRect rect = obstacle.getRect();

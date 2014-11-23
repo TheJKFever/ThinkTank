@@ -16,14 +16,16 @@ import java.util.concurrent.ArrayBlockingQueue;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
+import Entities.Barrier;
+import Entities.Brain;
+import Entities.Shot;
+import Entities.Tank;
+
 public class GameScreen extends JPanel implements Runnable {
 	JPanel chatPanel;
+	public GameState gs;
 	Dimension d;
 	Tank tank;
-	ArrayList<Shot> shots;
-	ArrayList<Brain> brains;
-	ArrayList<Tank> tanks;
-	ArrayList<Barrier> barriers;
 	
 	ArrayBlockingQueue<GameEvent> eventQ = new ArrayBlockingQueue<GameEvent>(100);
 	
@@ -37,6 +39,7 @@ public class GameScreen extends JPanel implements Runnable {
 	private Thread animator;
 
 	public GameScreen() {
+		gs = new GameState();
 		addKeyListener(new TAdapter());
 		setFocusable(true);
 		d = new Dimension(Globals.BOARD_WIDTH, Globals.BOARD_HEIGHT);
@@ -52,27 +55,17 @@ public class GameScreen extends JPanel implements Runnable {
 
 	public void gameInit() {
 		log("gameInit()...");
-		
-		brains = new ArrayList<Brain>();
-		tanks = new ArrayList<Tank>();
-		shots = new ArrayList<Shot>();
-		barriers = new ArrayList<Barrier>();
 
-		brain1 = new Brain(1, this);
-		brain2 = new Brain(2, this);
-		brains.add(brain1);
-		brains.add(brain2);
-
-		tank = new Tank(this);
-		tanks.add(tank);
+		tank = new Tank(this.gs);
+		gs.tanks.add(tank);
 		
-		barriers.add(new Barrier(100, 100, 300, 10, this));
-		barriers.add(new Barrier(200, 200, 200, 10, this));
-		barriers.add(new Barrier(300, 300, 400, 10, this));
-		barriers.add(new Barrier(400, 400, 100, 10, this));
-		barriers.add(new Barrier(150, 150, 10, 200, this));
-		barriers.add(new Barrier(250, 250, 10, 100, this));
-//		barriers.add(new Barrier(350, 250, 10, 200, this));
+		gs.barriers.add(new Barrier(100, 100, 300, 10, this.gs));
+		gs.barriers.add(new Barrier(200, 200, 200, 10, this.gs));
+		gs.barriers.add(new Barrier(300, 300, 400, 10, this.gs));
+		gs.barriers.add(new Barrier(400, 400, 100, 10, this.gs));
+		gs.barriers.add(new Barrier(150, 150, 10, 200, this.gs));
+		gs.barriers.add(new Barrier(250, 250, 10, 100, this.gs));
+//		gs.barriers.add(new Barrier(350, 250, 10, 200, this.gs));
 
 		if (animator == null || !ingame) {
 			animator = new Thread(this);
@@ -110,22 +103,22 @@ public class GameScreen extends JPanel implements Runnable {
 	
 	public void update() {
 		// tanks
-		for (Tank t: tanks) {
+		for (Tank t: gs.tanks) {
 			t.update();
 		}
 		// brains
-		for (Brain b: brains) {
+		for (Brain b: gs.brains) {
 			b.update();
 		}
 		// barriers 
-		for (Barrier b: barriers) {
+		for (Barrier b: gs.barriers) {
 			b.update();
 		}
 		// shots
-		for (int i = (shots.size() - 1); i >= 0; i--) {
-			Shot shot = shots.get(i);
+		for (int i = (gs.shots.size() - 1); i >= 0; i--) {
+			Shot shot = gs.shots.get(i);
 			if (!shot.isVisible()) {
-				shots.remove(i);
+				gs.shots.remove(i);
 			} else {
 				shot.update();
 			}

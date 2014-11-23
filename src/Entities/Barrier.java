@@ -1,15 +1,16 @@
-package Client;
+package Entities;
 
 import java.awt.Color;
-import javax.swing.ImageIcon;
+
+import Client.GameState;
 
 public class Barrier extends Entity {
 //	final String IMAGE_BARRIER = "images"
-	static final Color color = Color.orange;
+	public static final Color color = Color.orange;
 	
-    public Barrier(int x, int y, int width, int height, GameScreen gameScreen) {
+    public Barrier(int x, int y, int width, int height, GameState gs) {
     	type = "Barrier";
-    	this.gameScreen = gameScreen;
+    	this.gs = gs;
         setX(x);
         setY(y);
         setWidth(width);
@@ -18,7 +19,7 @@ public class Barrier extends Entity {
     }
 
 	public void update() {
-		for (Shot shot: gameScreen.shots) {
+		for (Shot shot: gs.shots) {
 			if (collidesWith(shot.getRect())) {
 				hitBy(shot);
 			}

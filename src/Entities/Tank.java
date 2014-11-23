@@ -1,9 +1,12 @@
-package Client;
+package Entities;
 
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
+
+import Client.GameRect;
+import Client.GameState;
+import Client.Globals;
 
 public class Tank extends Entity {
 
@@ -20,9 +23,9 @@ public class Tank extends Entity {
     
     public boolean firing;
     
-    public Tank(GameScreen gameScreen) {
+    public Tank(GameState gs) {
     	type = "Tank";
-    	this.gameScreen = gameScreen;
+    	this.gs = gs;
         setX(START_X);
         setY(START_Y);
         this.theta = 0;
@@ -50,7 +53,7 @@ public class Tank extends Entity {
     	} else if (theta == 270) {
     		filename = IMAGE_TANK_LEFT;
     	}
-    	ImageIcon ii = new ImageIcon(this.getClass().getResource(filename));
+    	ImageIcon ii = new ImageIcon(filename);
     	this.setImage(ii.getImage());
     }
 
@@ -87,8 +90,8 @@ public class Tank extends Entity {
         }
         
         checkForCollisionWithShots();
-        checkForCollisionWithObstacles(gameScreen.brains);
-        checkForCollisionWithObstacles(gameScreen.barriers);
+        checkForCollisionWithObstacles(gs.brains);
+        checkForCollisionWithObstacles(gs.barriers);
         
         if (this.firing) {
         	fireShot();
@@ -115,7 +118,7 @@ public class Tank extends Entity {
     		shotY = this.y + this.getWidth()/2;
     	}
     	
-    	gameScreen.shots.add(new Shot(shotX, shotY, this.theta, this.gameScreen));
+    	gs.shots.add(new Shot(shotX, shotY, this.theta, this.gs));
     	this.firing = false;
     }
     
@@ -147,7 +150,7 @@ public class Tank extends Entity {
 			  dtheta = 90;
 		}
 		
-        if (key == KeyEvent.VK_ALT) {
+        if (key == KeyEvent.VK_SPACE) {
 			this.firing = true;
 		}
     }

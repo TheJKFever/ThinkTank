@@ -1,8 +1,9 @@
-package Client;
-
-import java.util.Iterator;
+package Entities;
 
 import javax.swing.ImageIcon;
+
+import Client.GameState;
+import Client.Globals;
 
 public class Shot extends Entity {
 
@@ -15,8 +16,8 @@ public class Shot extends Entity {
     int damage = 1;
     boolean exploding = false;
 
-    public Shot(int x, int y, int theta, GameScreen gameScreen) {
-    	this.gameScreen = gameScreen;
+    public Shot(int x, int y, int theta, GameState gs) {
+    	this.gs = gs;
         this.setX(x);
         this.y = y;
         
@@ -25,13 +26,13 @@ public class Shot extends Entity {
         ImageIcon ii = null;
         
         if (theta == 0) {
-        	ii = new ImageIcon(this.getClass().getResource(IMAGE_SHOT_UP));
+        	ii = new ImageIcon(IMAGE_SHOT_UP);
         } else if (theta == 90) {
-        	ii = new ImageIcon(this.getClass().getResource(IMAGE_SHOT_RIGHT));
+        	ii = new ImageIcon(IMAGE_SHOT_RIGHT);
         }  else if (theta == 180) {
-        	ii = new ImageIcon(this.getClass().getResource(IMAGE_SHOT_DOWN));
+        	ii = new ImageIcon(IMAGE_SHOT_DOWN);
         }  else if (theta == 270) {
-        	ii = new ImageIcon(this.getClass().getResource(IMAGE_SHOT_LEFT));
+        	ii = new ImageIcon(IMAGE_SHOT_LEFT);
         }
         setImage(ii.getImage());
         this.setWidth(ii.getImage().getWidth(null));

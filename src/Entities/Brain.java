@@ -1,31 +1,32 @@
-package Client;
-
-import java.util.ArrayList;
+package Entities;
 
 import javax.swing.ImageIcon;
 
+import Client.GameState;
+import Client.Globals;
+
 public class Brain extends Entity {
-	int team;
+	public int team;
 	int MAX_BRAIN_HEALTH = 100;
 	static String IMAGE_BRAIN = "images/brain3D.png";
 	static String IMAGE_BRAIN_ENEMY = "images/brain3DEnemy.png";
 	
-	public Brain(int team, GameScreen gameScreen) {
-		this.gameScreen = gameScreen;
+	public Brain(int team, GameState gs) {
 		this.type = "Brain";
+		this.gs = gs;
 		this.team = team;
 		this.health = MAX_BRAIN_HEALTH;	
 		ImageIcon ii = null;
 		
 		if (team == 1) {
-			ii = new ImageIcon(this.getClass().getResource(IMAGE_BRAIN));
+			ii = new ImageIcon(IMAGE_BRAIN);
 //			setWidth(ii.getImage().getWidth(null)); 
 			setWidth(89);
 			setHeight(88);
 //	        height = ii.getImage().getWidth(null);
 			this.y = Globals.BOARD_HEIGHT - (this.getHeight() + 20);		
 		} else if (team == 2) {
-			ii = new ImageIcon(this.getClass().getResource(IMAGE_BRAIN_ENEMY));
+			ii = new ImageIcon(IMAGE_BRAIN_ENEMY);
 //			width = ii.getImage().getWidth(null); 
 //	        height = ii.getImage().getWidth(null);
 			setWidth(89);
@@ -44,5 +45,4 @@ public class Brain extends Entity {
 //		}
         checkForCollisionWithShots();
 	}
-
 }

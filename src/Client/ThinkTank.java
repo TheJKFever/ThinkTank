@@ -65,13 +65,13 @@ public class ThinkTank extends JFrame {
 
 
 			// TODO: put all  of these in action listeners
-//			 cardLayout.show(mainMenu, "mainMenu");
-//			 cardLayout.show(stats, "stats");
-//			 cardLayout.show(createProfile, "createProfile");
-//			 cardLayout.show(createGame, "createGame");
-//			 cardLayout.show(waiting, "waiting");
-			cardLayout.show(gameScreen, "gameScreen");
-//			 cardLayout.show(joinGame, "joinGame");
+//			 cardLayout.show(mainPanel, "mainMenu");
+//			 cardLayout.show(mainPanel, "stats");
+//			 cardLayout.show(mainPanel, "createProfile");
+//			 cardLayout.show(mainPanel, "createGame");
+//			 cardLayout.show(mainPanel, "waiting");
+			cardLayout.show(mainPanel, "gameScreen");
+//			 cardLayout.show(mainPanel, "joinGame");
 
 
 			// Global JFrame Settings
