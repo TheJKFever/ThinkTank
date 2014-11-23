@@ -5,7 +5,11 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Toolkit;
-import java.util.ArrayList;
+import java.util.Vector;
+
+import Entities.Barrier;
+import Entities.Brain;
+import Entities.Entity;
 
 public class Renderer {
 	
@@ -24,8 +28,8 @@ public class Renderer {
 			drawBarriers(g);
 //			drawEntities(g, game.brains);
 			drawBrains(g);
-			drawEntities(g, gameScreen.tanks);
-			drawEntities(g, gameScreen.shots);
+			drawEntities(g, gameScreen.gs.tanks);
+			drawEntities(g, gameScreen.gs.shots);
 		}
 	
 		Toolkit.getDefaultToolkit().sync();
@@ -33,14 +37,14 @@ public class Renderer {
 	}
 
 	public void drawBarriers(Graphics g) {
-		for (Barrier barrier: gameScreen.barriers) {
+		for (Barrier barrier: gameScreen.gs.barriers) {
 			g.setColor(Barrier.color);
 			g.fillRect(barrier.x, barrier.y, barrier.getWidth(), barrier.getHeight());
 		}
 	}
 	
 	public void drawBrains(Graphics g) {
-		for (Brain brain: gameScreen.brains) {
+		for (Brain brain: gameScreen.gs.brains) {
 		
 			if (brain.isVisible()) {
 				g.drawImage(brain.getImage(), brain.x, brain.y, gameScreen);
@@ -76,7 +80,7 @@ public class Renderer {
 		}
 	}
 	
-	public void drawEntities(Graphics g, ArrayList<? extends Entity> entities) {
+	public void drawEntities(Graphics g, Vector<? extends Entity> entities) {
 		for (Entity e : entities) {
 			if (e.isVisible()) {
 				g.drawImage(e.getImage(), e.x, e.y, gameScreen);

@@ -22,7 +22,10 @@ public abstract class ServerThread extends Thread {
 		}
 	}
 	
-	public abstract void send(String data);
+	public void send(String data) {
+		out.println(data);
+		out.flush();
+	}
 	
 	public abstract void received(String data);
 	
