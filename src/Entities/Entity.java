@@ -3,9 +3,9 @@ package Entities;
 import java.awt.Image;
 import java.util.Vector;
 
-import Client.GameRect;
-import Client.GameState;
-import Client.Globals;
+import Game.Rect;
+import Game.GameState;
+import Game.Globals;
 
 public abstract class Entity {
 
@@ -104,15 +104,15 @@ public abstract class Entity {
 		shot.dying = true;
 	}
 	
-	public GameRect getRect() {
-		return new GameRect(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+	public Rect getRect() {
+		return new Rect(this.getX(), this.getY(), this.getWidth(), this.getHeight());
 	}
 	
-	public boolean collidesWith(GameRect other) {
+	public boolean collidesWith(Rect other) {
 		boolean yCollision = false;
 		boolean xCollision = false;
 		
-		GameRect my = this.getRect();
+		Rect my = this.getRect();
 		
 		if (my.top <= other.bottom && my.top >= other.top) {
 			yCollision = true;
@@ -132,7 +132,7 @@ public abstract class Entity {
 		return (xCollision && yCollision);
 	}
 	
-    public void resetPositionOnCollision(GameRect rect) {
+    public void resetPositionOnCollision(Rect rect) {
     	int deltaY = y - prevY;
     	int deltaX = x -  prevX;
     	
@@ -154,7 +154,7 @@ public abstract class Entity {
 	public void checkForCollisionWithObstacles(Vector<? extends Entity> obstacles) {
     	for (Entity obstacle: obstacles) {
     		
-    		GameRect rect = obstacle.getRect();
+    		Rect rect = obstacle.getRect();
 			if (collidesWith(rect)) {
 				resetPositionOnCollision(rect);
 			}

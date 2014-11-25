@@ -6,17 +6,19 @@ import java.net.Socket;
 import java.util.Vector;
 import java.util.logging.Logger;
 
+import Game.Globals;
+import Game.ServerEngine;
 import Helper.Helper;
 
-public class ThinkTankGameServer extends ServerSocket {
+public class GameServer extends ServerSocket {
 	private boolean waitingForPlayers;
-	private GameEngine game;
+	private ServerEngine game;
 	private Logger logger;
-	private Vector<PlayerThread> players;
+	private Vector<ConnectionToClient> players;
 		
-	public ThinkTankGameServer(int port) throws IOException{
+	public GameServer(int port) throws IOException{
 		super(port);
-		game = new GameEngine();
+		game = new ServerEngine();
 		listenForPlayers();
 	}
 	
@@ -26,7 +28,7 @@ public class ThinkTankGameServer extends ServerSocket {
 		while(waitingForPlayers) {
 			try {
 				Socket player = this.accept();
-				addPlayer(new PlayerThread(player, team%2+1));
+				addPlayer(new ConnectionToClient(player, team%2+1));
 				team++;
 			} catch(IOException ioe) {
 				ioe.printStackTrace();
@@ -41,7 +43,7 @@ public class ThinkTankGameServer extends ServerSocket {
 		game.start();
 	}
 
-	public void addPlayer(PlayerThread player) {
+	public void addPlayer(ConnectionToClient player) {
 		players.addElement(player);
 		switch(player.team) {
 		case 1:
@@ -53,21 +55,19 @@ public class ThinkTankGameServer extends ServerSocket {
 			if (game.gs.team1.players.size()>1) waitingForPlayers = false;
 			break;
 		default:
-			int nonExistantTeam = player.team;
+			int nonExistentTeam = player.team;
 			player.team = (int)(Math.ceil(Math.random()*2));
-			player.send(Helper.Jsonify("warning", "Team " + nonExistantTeam + " does not exist, assigned player to team " + player.team));
+			player.send(Helper.Jsonify("warning", "Team " + nonExistentTeam + " does not exist, assigned player to team " + player.team));
 			addPlayer(player);
 		}
 		player.start();
 	}
 	
 	// TODO: create a playerExited method for onDispose of Client
-
-	
 	
 	public static void main(String[] args) {
 		try {
-			ThinkTankGameServer server = new ThinkTankGameServer(3000);
+			GameServer server = new GameServer(Globals.Development.GAME_PORT);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

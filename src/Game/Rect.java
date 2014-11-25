@@ -1,9 +1,9 @@
-package Client;
+package Game;
 
-public class GameRect {
+public class Rect {
 	public int x, y, width, height, top, bottom, left, right;
 	
-	public GameRect(int x, int y, int width, int height) {
+	public Rect(int x, int y, int width, int height) {
 		this.x = x;
 		this.y = y;
 		this.width = width;

@@ -5,6 +5,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
 
+import Game.Globals;
+
 public class Server {
 	
 	Vector<ChatThread> chatVt = new Vector<ChatThread>();
@@ -36,6 +38,6 @@ public class Server {
 	}
 	
 	public static void main(String[] args) {
-		new Server(6789);
+		new Server(Globals.CHAT_PORT);
 	}
 }

@@ -10,26 +10,28 @@ import java.util.Vector;
 import Entities.Barrier;
 import Entities.Brain;
 import Entities.Entity;
+import Game.ClientEngine;
+import Game.Globals;
 
 public class Renderer {
 	
-	GameScreen gameScreen;
+	ClientEngine clientEngine;
 	
-	public Renderer(GameScreen g) {
-		this.gameScreen = g;
+	public Renderer(ClientEngine g) {
+		this.clientEngine = g;
 	}
 	
 	public void render(Graphics g) {
 		g.setColor(Color.black);
-		g.fillRect(0, 0, gameScreen.d.width, gameScreen.d.height);
+		g.fillRect(0, 0, Game.Globals.BOARD_WIDTH, Game.Globals.BOARD_HEIGHT);
 		g.setColor(Color.green);
 	
-		if (gameScreen.ingame) {
+		if (clientEngine.ingame) {
 			drawBarriers(g);
 //			drawEntities(g, game.brains);
 			drawBrains(g);
-			drawEntities(g, gameScreen.gs.tanks);
-			drawEntities(g, gameScreen.gs.shots);
+			drawEntities(g, clientEngine.gs.tanks);
+			drawEntities(g, clientEngine.gs.shots);
 		}
 	
 		Toolkit.getDefaultToolkit().sync();
@@ -37,17 +39,17 @@ public class Renderer {
 	}
 
 	public void drawBarriers(Graphics g) {
-		for (Barrier barrier: gameScreen.gs.barriers) {
+		for (Barrier barrier: clientEngine.gs.barriers) {
 			g.setColor(Barrier.color);
 			g.fillRect(barrier.x, barrier.y, barrier.getWidth(), barrier.getHeight());
 		}
 	}
 	
 	public void drawBrains(Graphics g) {
-		for (Brain brain: gameScreen.gs.brains) {
+		for (Brain brain: clientEngine.gs.brains) {
 		
 			if (brain.isVisible()) {
-				g.drawImage(brain.getImage(), brain.x, brain.y, gameScreen);
+				g.drawImage(brain.getImage(), brain.x, brain.y, clientEngine);
 			}
 			if (brain.isDying()) {
 				brain.die();
@@ -61,7 +63,7 @@ public class Renderer {
 				g.fillRect(20, 20, brain.health, 20);
 	
 				Font small = new Font("Helvetica", Font.BOLD, 14);
-				FontMetrics metr = gameScreen.getFontMetrics(small);
+				FontMetrics metr = clientEngine.getFontMetrics(small);
 				g.setColor(Color.white);
 				g.setFont(small);
 				g.drawString("Brain" + brain.team, 140, 20);
@@ -72,7 +74,7 @@ public class Renderer {
 				g.fillRect(600, 20, brain.health, 20);
 	
 				Font small = new Font("Helvetica", Font.BOLD, 14);
-				FontMetrics metr = gameScreen.getFontMetrics(small);
+				FontMetrics metr = clientEngine.getFontMetrics(small);
 				g.setColor(Color.white);
 				g.setFont(small);
 				g.drawString("Brain" + brain.team, 740, 20);
@@ -83,7 +85,7 @@ public class Renderer {
 	public void drawEntities(Graphics g, Vector<? extends Entity> entities) {
 		for (Entity e : entities) {
 			if (e.isVisible()) {
-				g.drawImage(e.getImage(), e.x, e.y, gameScreen);
+				g.drawImage(e.getImage(), e.x, e.y, clientEngine);
 			}
 			if (e.isDying()) {
 				e.die();

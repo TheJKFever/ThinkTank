@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class Heartbeat extends Thread{
+public class Heartbeat extends Thread {
 	private PrintWriter out;
 
 	public Heartbeat(Socket connection){

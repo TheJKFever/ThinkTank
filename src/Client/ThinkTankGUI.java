@@ -8,9 +8,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import Helper.Helper;
+import Game.ClientEngine;
+import Game.Globals;
 
-public class ThinkTank extends JFrame {
-	private ThinkTankClient connection;
+public class ThinkTankGUI extends JFrame {
+	private ConnectionToServer connection;
 	private CardLayout cardLayout = new CardLayout();
 	private JPanel mainPanel;
 	//	private MainMenuScreen mainMenu;
@@ -19,14 +21,17 @@ public class ThinkTank extends JFrame {
 	//	private CreateGameScreen createGame;
 	//	private WaitingScreen waiting;
 	//	private JoinGameScreen joinGame;
-	private GameScreen gameScreen;
+	private ClientEngine clientEngine;
 	//	private GameOverScreen gameOver;
 	
 
-	public ThinkTank(String host, int port) {
+	public ThinkTankGUI(String host, int port) {
 		try {
-			connection = new ThinkTankClient(this, host, port);
-
+			connection = new ConnectionToServer(this, host, port);
+			
+			// client needs to have a unique id
+			// client needs to have a specific tank that it controls
+			// tank needs to belong to specific client/player
 			mainPanel = new JPanel();
 			mainPanel.setLayout(cardLayout);
 			add(mainPanel);
@@ -49,7 +54,7 @@ public class ThinkTank extends JFrame {
 //			 createGame = new CreateGameScreen(); 
 //			 waiting = new WaitingScreen(); 
 //			 joinGame = new JoinGameScreen(); 
-			gameScreen = new GameScreen(); 
+			clientEngine = new ClientEngine(); 
 //			 gameOver = new GameOverScreen(); 
 
 //			 mainPanel.add("mainMenu", mainMenu);
@@ -57,7 +62,7 @@ public class ThinkTank extends JFrame {
 //			 mainPanel.add("createProfile", createProfile);
 //			 mainPanel.add("createGame", createGame);
 //			 mainPanel.add("waiting", waiting);
-			mainPanel.add("gameScreen", gameScreen);
+			mainPanel.add("gameScreen", clientEngine);
 //			 mainPanel.add("joinGame", joinGame);
 			
 			
@@ -89,6 +94,6 @@ public class ThinkTank extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		ThinkTank game = new ThinkTank(Globals.Development.HOST, Globals.Development.PORT);
+		ThinkTankGUI gui = new ThinkTankGUI(Globals.Development.HOST, Globals.Development.GAME_PORT);
 	}
 }

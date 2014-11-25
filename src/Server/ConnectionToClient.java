@@ -8,19 +8,19 @@ import org.json.simple.JSONObject;
 
 import Helper.Helper;
 
-public class PlayerThread extends ServerThread {
+public class ConnectionToClient extends ServerThread {
 	private static int ID = 0;
 	public int team;
 	public int id;
 	
-	public PlayerThread(Socket client, int team) {
+	public ConnectionToClient(Socket client, int team) {
 		super(client);
 		this.team = team;
 		this.id = ID++;
 	}
 
 	@Override
-	public void received(String data) {
+	public void processIncomingData(String data) {
 	/*		Format of JSON data
 	 * 		{
 	 * 		  "timestamp": 0nanoseconds0,
@@ -48,7 +48,7 @@ public class PlayerThread extends ServerThread {
 		String dataFromPlayer;
 		try {
 			while ((dataFromPlayer = in.readLine()) != null) {
-				received(dataFromPlayer);
+				processIncomingData(dataFromPlayer);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

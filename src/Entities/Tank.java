@@ -4,14 +4,13 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
 
-import Client.GameRect;
-import Client.GameState;
-import Client.Globals;
+import Game.Player;
+import Game.Rect;
+import Game.GameState;
+import Game.Globals;
+import Game.Team;
 
 public class Tank extends Entity {
-
-    private final int START_Y = 280; 
-    private final int START_X = 270;
 
     static final String imageDir = "images/tanks/";
     static final String IMAGE_TANK_UP = imageDir + "blue/up1.png";
@@ -20,28 +19,40 @@ public class Tank extends Entity {
     static final String IMAGE_TANK_LEFT = imageDir + "blue/left1.png";
     
     static final int MAX_TANK_HEALTH = 10;
+    static final int TANK_HEIGHT = 16;
+    static final int TANK_WIDTH = 16;
+    
+    static final int TANK_SPAWN_X  = 0;
+    static final int TANK_SPAWN_Y  = 0;
+    public int tankNum;
     
     public boolean firing;
+    Team team;
+    Player player;
     
-    public Tank(GameState gs) {
-    	type = "Tank";
+    public Tank(int tankNum, Player p, GameState gs) {
+    	this.tankNum = tankNum;
+    	this.player = p;
+    	this.team = player.team;
     	this.gs = gs;
-        setX(START_X);
-        setY(START_Y);
         this.theta = 0;
         this.dtheta = 0;
         this.health = MAX_TANK_HEALTH;
         this.firing = false;
-        
+        spawn();
         updateImage(theta);
-
-//        ImageIcon ii = new ImageIcon(IMAGE_TANK_UP);
-//        this.width = ii.getImage().getWidth(null); 
-//        this.height = ii.getImage().getWidth(null);
-        this.setWidth(16);
-        this.setHeight(16);
+        this.setWidth(TANK_HEIGHT);
+        this.setHeight(TANK_WIDTH);
     }
     
+    public void spawn() {
+    	this.x = TANK_SPAWN_X + (50 * this.tankNum);
+    	if (team.teamNumber == 1) {
+    		this.y = TANK_SPAWN_Y;
+    	} else {
+    		this.y = Globals.BOARD_HEIGHT - TANK_SPAWN_Y;
+    	}
+    }
     public void updateImage(int theta) {
     	String filename = null;
     	if (theta == 0) {
@@ -105,17 +116,17 @@ public class Tank extends Entity {
     	int shotY = 0;
     	
     	if (theta == 0) {
-    		shotX = this.x + this.getWidth()/2;
-    		shotY = this.y;
+    		shotX = this.x + this.getWidth()/2 - Shot.SHOT_WIDTH_VERTICAL/2;
+    		shotY = this.y - Shot.SHOT_HEIGHT_VERTICAL;
     	} else if (theta == 90) {
     		shotX = this.x + this.getWidth();
-    		shotY = this.y + this.getHeight()/2;
+    		shotY = this.y + this.getHeight()/2 - Shot.SHOT_HEIGHT_HORIZONTAL/2;
     	} else if (theta == 180) {
-    		shotX = this.x + this.getWidth()/2;
+    		shotX = this.x + this.getWidth()/2 - Shot.SHOT_WIDTH_VERTICAL/2;
     		shotY = this.y + this.getHeight();
     	} else if (theta == 270) {
-    		shotX = this.x;
-    		shotY = this.y + this.getWidth()/2;
+    		shotX = this.x - Shot.SHOT_WIDTH_HORIZONTAL;
+    		shotY = this.y + this.getHeight()/2 - Shot.SHOT_HEIGHT_HORIZONTAL/2;
     	}
     	
     	gs.shots.add(new Shot(shotX, shotY, this.theta, this.gs));
@@ -155,11 +166,11 @@ public class Tank extends Entity {
 		}
     }
     
-    public boolean collidesWith(GameRect other) {
+    public boolean collidesWith(Rect other) {
 		boolean yCollision = false;
 		boolean xCollision = false;
 		
-		GameRect my = this.getRect();
+		Rect my = this.getRect();
 		
 		if (my.top <= other.bottom && my.top >= other.top) {
 			yCollision = true;

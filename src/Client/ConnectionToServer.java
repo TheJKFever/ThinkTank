@@ -13,15 +13,15 @@ import org.json.simple.JSONObject;
 
 import Helper.Helper;
 
-public class ThinkTankClient extends Socket implements Runnable {
+public class ConnectionToServer extends Socket implements Runnable {
 	public BufferedReader in;
 	public PrintWriter out;
-	public ThinkTank game;
+	public ThinkTankGUI gui;
 	private Logger logger;
 	
-	public ThinkTankClient(ThinkTank game, String host, int port) throws UnknownHostException, IOException {
+	public ConnectionToServer(ThinkTankGUI gui, String host, int port) throws UnknownHostException, IOException {
 		super(host, port);
-		this.game = game;
+		this.gui = gui;
 		in = new BufferedReader(new InputStreamReader(getInputStream()));
 		out = new PrintWriter(getOutputStream());
 		logger = Logger.getLogger("Client");
@@ -32,9 +32,10 @@ public class ThinkTankClient extends Socket implements Runnable {
 		JSONObject jsonData = Helper.parse(data);
 		String type = (String)jsonData.get("type");
 		switch(type) {
-		// consider making this {"type": "command", "data": "new game"...
-		// instead of {"type": "new game", ...
-			case "game update": 
+			case "game update":
+			gui.gameEngine.serverEventQ.add(jsonData);
+			case "chat":
+//				gui.chatPanel.
 			default:
 				logger.log(Level.INFO, "Parse error. did not understand message: " + data);
 		}

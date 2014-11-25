@@ -2,7 +2,7 @@ package Entities;
 
 import java.awt.Color;
 
-import Client.GameState;
+import Game.GameState;
 
 public class Barrier extends Entity {
 //	final String IMAGE_BARRIER = "images"

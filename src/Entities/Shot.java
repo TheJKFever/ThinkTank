@@ -2,8 +2,8 @@ package Entities;
 
 import javax.swing.ImageIcon;
 
-import Client.GameState;
-import Client.Globals;
+import Game.GameState;
+import Game.Globals;
 
 public class Shot extends Entity {
 
@@ -11,6 +11,10 @@ public class Shot extends Entity {
     static final String IMAGE_SHOT_RIGHT = "images/bulletRight.png";
     static final String IMAGE_SHOT_DOWN = "images/bulletDown.png";
     static final String IMAGE_SHOT_LEFT = "images/bulletLeft.png";
+    static final int SHOT_WIDTH_VERTICAL = 13;
+    static final int SHOT_HEIGHT_VERTICAL = 16;
+    static final int SHOT_WIDTH_HORIZONTAL = 16;
+    static final int SHOT_HEIGHT_HORIZONTAL = 13;
     
     int shotSpeed = 4;
     int damage = 1;

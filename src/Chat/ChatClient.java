@@ -21,6 +21,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import Game.Globals;
+
 public class ChatClient extends JFrame implements Runnable {
 	
 	JPanel generalPanel;
@@ -185,7 +187,7 @@ public class ChatClient extends JFrame implements Runnable {
 		Scanner scan = new Scanner(System.in);
 		System.out.println("IP: ");
 		String ip = scan.nextLine();
-		new ChatClient(ip, 6789);
+		new ChatClient(ip, Globals.CHAT_PORT);
 	}
 
 }

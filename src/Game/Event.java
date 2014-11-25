@@ -1,22 +1,22 @@
-package Client;
+package Game;
 
 import java.awt.event.KeyEvent;
 
-public class GameEvent {
+public class Event {
 	
-	String type;
-	String message;
-	KeyEvent keyEvent; // change to EventObject ?
-	long timestamp;
+	public String type;
+	public String message;
+	public KeyEvent keyEvent; // change to EventObject ?
+	public long timestamp;
 	
-	public GameEvent(KeyEvent e) {
+	public Event(KeyEvent e) {
 		this.keyEvent = e;
 		this.timestamp = System.nanoTime();
 		this.type = "KeyEvent";
 		this.message = null;
 	}
 	
-	public GameEvent(String message) {
+	public Event(String message) {
 		this.keyEvent = null;
 		this.timestamp = System.nanoTime();
 		this.type = "Message";

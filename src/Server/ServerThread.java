@@ -27,11 +27,11 @@ public abstract class ServerThread extends Thread {
 		out.flush();
 	}
 	
-	public abstract void received(String data);
+	public abstract void processIncomingData(String data);
 	
 	public abstract void listen();
 	
 	public void run() {
 		listen();
-	};
+	}
 }

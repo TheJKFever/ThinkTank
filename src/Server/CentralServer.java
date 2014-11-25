@@ -19,29 +19,36 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import Client.Globals;
-import Exceptions.PortNotAvailalbeException;
+import Exceptions.PortNotAvailableException;
+import Game.Globals;
 import Helper.Helper;
 
-public class ThinkTankCentralServer extends ServerSocket {
+public class CentralServer extends ServerSocket {
 	private final int MAX_CAPACITY = 64; // per server
 	private final int MAX_GAMES = 5; // per server
 	private final int[] PORTS = {2300, 2301, 2302, 2303, 2304};
-	private Map<Integer, ThinkTankGameServer> games;
+	private Map<Integer, GameServer> games;
 	private Vector<ServerThread> clients;
 	private Logger logger;
 	private Connection db; // TODO: connect to DB for stats
 	private Semaphore capacity;
 	
 	/* Create a server on port <port> that will listen for incoming requests */
-	public ThinkTankCentralServer(int port) throws IOException {
+	public CentralServer(int port) throws IOException {
 		super(port);
+		
 		clients = new Vector<ServerThread>();
 		capacity = new Semaphore(MAX_CAPACITY);
-		games = new HashMap<Integer, ThinkTankGameServer>();
-		try { // Database Connection
+		games = new HashMap<Integer, GameServer>();
+		
+		// Database Connection
+		try { 
 			Class.forName(Globals.Development.DB.DRIVER);
-			db = DriverManager.getConnection(Globals.Development.DB.ADDRESS + Globals.Development.DB.NAME, Globals.Development.DB.USER, Globals.Development.DB.PASSWORD);
+			db = DriverManager.getConnection(
+				Globals.Development.DB.ADDRESS + Globals.Development.DB.NAME, 
+				Globals.Development.DB.USER, 
+				Globals.Development.DB.PASSWORD
+			);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -51,29 +58,29 @@ public class ThinkTankCentralServer extends ServerSocket {
 		listenForConnections();
 	}
 	
-	public int newGame() throws PortNotAvailalbeException {
-		if (games.size()<MAX_GAMES) {
+	public int newGame() throws PortNotAvailableException {
+		if (games.size() >= MAX_GAMES) {
 			logger.log(Level.SEVERE, "Cannot start new game. server has reached max game capacity: " + MAX_GAMES);
 			return -1;
 		}
-		for (int port:PORTS) {
+		for (int port: PORTS) {
 			try {
 				newGame(port);
 				return port;
-			} catch (PortNotAvailalbeException e) {}
+			} catch (PortNotAvailableException e) {}
 		}
 		logger.log(Level.SEVERE, "Cannot start new game. All available ports are taken by server");
-		throw new PortNotAvailalbeException("Cannot start new game. All available ports are taken by server");
+		throw new PortNotAvailableException("Cannot start new game. All available ports are taken by server");
 	}
 	
-	public void newGame(int port) throws PortNotAvailalbeException {
+	public void newGame(int port) throws PortNotAvailableException {
 		if (games.containsKey(port)) {
 			logger.log(Level.SEVERE, "Game already running on port: " + port);
-			throw new PortNotAvailalbeException("Game already running on port: " + port);
+			throw new PortNotAvailableException("Game already running on port: " + port);
 		}
-		ThinkTankGameServer game;
+		GameServer game;
 		try {
-			game = new ThinkTankGameServer(port);
+			game = new GameServer(port);
 			games.put(port, game);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -114,8 +121,10 @@ public class ThinkTankCentralServer extends ServerSocket {
 			out.flush();
 		}
 		
-		public void received(String data) {
-	// TODO Parse all possible messages
+		@Override
+		public void processIncomingData(String data) {
+			
+			// TODO Parse all possible messages
 			JSONObject jsonData = Helper.parse(data);
 			String type = (String)jsonData.get("type");
 			switch(type) {
@@ -126,20 +135,33 @@ public class ThinkTankCentralServer extends ServerSocket {
 				try {
 					portOfNewGame = newGame();
 					send(Helper.Jsonify("response", portOfNewGame, true));
-				} catch (PortNotAvailalbeException pnae) {
+				} catch (PortNotAvailableException pnae) {
 					send(Helper.Jsonify("response", pnae.getMessage(), false));
 				}
 				default:
 					logger.log(Level.INFO, "Parse error. did not understand message: " + data);
 			}
 		}
+		
+//		public void received(String data) {
+//			Message = this.protocolParser.parse(data);
+//			if (type 1) {
+//				// respond to type 1
+//			} else if (type 2) {
+////				respond to type 2
+//			} else if (type 3) {
+////				respond to type 3
+//			} else  {
+//				logger.log(Level.INFO, "Parse error. did not understand message: " + data);
+//			}
+//		}
 
 		public void listen() {
 			// Listen for messages from client
 			String dataFromClient;
 			try {
 				while ((dataFromClient = in.readLine()) != null) {
-					received(dataFromClient);
+					processIncomingData(dataFromClient);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
