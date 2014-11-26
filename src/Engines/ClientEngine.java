@@ -3,12 +3,13 @@ package Engines;
 import java.awt.event.KeyEvent;
 import java.util.concurrent.ArrayBlockingQueue;
 
-import Client.ConnectionToGameServer;
+//import Client.ConnectionToGameServer;
 import Client.UserInputHandler;
 import Game.Event;
 import Game.GameState;
 import Game.Globals;
 import Game.Player;
+import Game.SimpleKeyEvent;
 import Screens.GamePanel;
 import Screens.GameScreen;
 
@@ -88,7 +89,7 @@ public class ClientEngine implements Runnable {
 		synchronized(eventQ) {
 			for (Event event: eventQ) {
 				if (event.type == "key event") {
-					KeyEvent ke = ((KeyEvent)event.data);
+					SimpleKeyEvent ke = ((SimpleKeyEvent)event.data);
 					if (ke.getID() == KeyEvent.KEY_RELEASED) {
 						player.tank.keyReleased(ke);
 					} else if (ke.getID() == KeyEvent.KEY_PRESSED) {

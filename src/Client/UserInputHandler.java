@@ -15,10 +15,10 @@ public class UserInputHandler extends KeyAdapter {
 		this.gameScreen = gs;
 	}
 	
-	public void keyReleased(KeyEvent e) {
+	public void keyReleased(KeyEvent ke) {
 		synchronized(gameScreen.engine.eventQ) {
 			try {
-				Event event = new Event("key event", e);
+				Event event = new Event("key event", ke);
 				gameScreen.engine.eventQ.put(event);
 				// TODO: add to gameConnection's send queue to avoid waiting
 				gameScreen.gameConnection.sendEvent(event);
@@ -29,11 +29,11 @@ public class UserInputHandler extends KeyAdapter {
 		}
 	}
 	
-	public void keyPressed(KeyEvent e) {
+	public void keyPressed(KeyEvent ke) {
 		synchronized(gameScreen.engine.eventQ) {
 			try {
-				Event event = new Event("key event", e);
-				gameScreen.engine.eventQ.put(new Event("key event", e));
+				Event event = new Event("key event", ke);
+				gameScreen.engine.eventQ.put(new Event("key event", ke));
 				// TODO: add to gameConnection's send queue to avoid waiting
 				gameScreen.gameConnection.sendEvent(event);
 			} catch (InterruptedException ie) {

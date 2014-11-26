@@ -7,6 +7,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import Game.Event;
 import Game.GameState;
 import Game.Globals;
+import Game.SimpleKeyEvent;
 import Server.GameServerConnectionToClient;
 
 public class ServerEngine implements Runnable {
@@ -17,17 +18,17 @@ public class ServerEngine implements Runnable {
 	private Thread engineThread;
 
 	public ServerEngine(Vector<GameServerConnectionToClient> clientConnections) {
-		System.out.println("SERVERENGINE: CONSTRUCTOR");
+		log("SERVERENGINE: CONSTRUCTOR");
 		this.clients = clientConnections;
 		this.gameState = new GameState();	
 		engineThread = new Thread(this);
-		System.out.println("SERVER ENGINE: INITIAL GAME STATE");
-		System.out.println(gameState);
+		log("SERVER ENGINE: INITIAL GAME STATE");
+		log(gameState.toString());
 	}
 	
 	
 	public void run() {
-		System.out.println("GSCONNECTIONTOCLIENT: RUN()");
+		log("GSCONNECTIONTOCLIENT: RUN()");
 		long beforeTime, timeDiff, sleep;
 		beforeTime = System.currentTimeMillis();
 		
@@ -49,40 +50,42 @@ public class ServerEngine implements Runnable {
 			try {
 				Thread.sleep(sleep);
 			} catch (InterruptedException e) {
-				System.out.println("interrupted");
+				log("interrupted");
 			}
 			beforeTime = System.currentTimeMillis();
 		}
 	}
 	
 	public void broadcastGameState() {
-		System.out.println("GAMESERVER: BROADCAST GAME STATE");
-		System.out.println(gameState);
+		log("GAMESERVER: BROADCAST GAME STATE");
+		log(gameState.toString());
 		for (GameServerConnectionToClient client: clients) {
 			client.sendEvent(new Event("game update", gameState));
 		}
 	}
 
 	private void startGame() {
-		System.out.println("GAMESERVER: START GAME");
+		log("GAMESERVER: START GAME");
 		for (GameServerConnectionToClient client:clients) {
 			client.sendEvent(new Event("start game"));
 		}
 	}
 
 	public void processInputFromClients() {
-		System.out.println("GAMESERVER: PROCESSINPUTFROMCLIENTS");
+		log("GAMESERVER: PROCESSINPUTFROMCLIENTS");
 		synchronized(eventQ) {
 			for (Event event: eventQ) {
 				switch(event.type) {
 					case "key event":
-						KeyEvent ke = ((KeyEvent)event.data);
+						SimpleKeyEvent ke = ((SimpleKeyEvent)event.data);
 						if (ke.getID() == KeyEvent.KEY_RELEASED) {
 							event.player.tank.keyReleased(ke);
 						} else if (ke.getID() == KeyEvent.KEY_PRESSED) {
 							event.player.tank.keyPressed(ke);
 						}
 					break;
+					default:
+						log("SERVER ENGINE: DID NOT RECOGNIZE EVENT:\n" + event);
 					// handle others...
 				}
 			}

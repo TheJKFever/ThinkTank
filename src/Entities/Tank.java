@@ -7,6 +7,7 @@ import Game.Player;
 import Game.Rect;
 import Game.GameState;
 import Game.Globals;
+import Game.SimpleKeyEvent;
 import Game.Team;
 
 public class Tank extends Entity implements Serializable  {
@@ -134,7 +135,7 @@ public class Tank extends Entity implements Serializable  {
     	this.firing = false;
     }
     
-    public void keyPressed(KeyEvent e) { 
+    public void keyPressed(SimpleKeyEvent e) { 
         int key = e.getKeyCode();
         
         if (key == KeyEvent.VK_UP) {
@@ -146,7 +147,7 @@ public class Tank extends Entity implements Serializable  {
         }
     }
 
-    public void keyReleased(KeyEvent e) {
+    public void keyReleased(SimpleKeyEvent e) {
         int key = e.getKeyCode();
 
         if (key == KeyEvent.VK_UP) {

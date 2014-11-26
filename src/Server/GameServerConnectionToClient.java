@@ -30,7 +30,8 @@ public class GameServerConnectionToClient extends ServerThread {
 	@Override
 	public void receive(Object obj) {
 		if (Globals.DEBUG) System.out.println("GSCONNECTIONTOCLIENT: RECEIVING");
-		Event event = (Event)obj;
+		Event event = (Event) obj;
+		System.out.println("RECEIVED EVENT:\n" + event);
 		event.player = player;
 		switch(event.type) {
 			case "key event":
