@@ -1,13 +1,13 @@
 package Server;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -15,22 +15,17 @@ import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
 import Exceptions.PortNotAvailableException;
 import Game.Event;
 import Game.Globals;
-import Helper.Helper;
 
 public class CentralServer extends ServerSocket {
+	private static Logger logger = Logger.getLogger("CentralServer.log");;
 	private final int MAX_CAPACITY = 64; // per server
 	private final int MAX_GAMES = 5; // per server
 	private final int[] PORTS = {2300, 2301, 2302, 2303, 2304};
 	private Map<Integer, GameServer> games;
 	private Vector<ServerThread> clients;
-	private Logger logger;
 	private Connection db; // TODO: connect to DB for stats
 	private Semaphore capacity;
 	
@@ -45,17 +40,14 @@ public class CentralServer extends ServerSocket {
 		// Database Connection
 		try { 
 			Class.forName(Globals.Development.DB.DRIVER);
-			db = DriverManager.getConnection(
-				Globals.Development.DB.ADDRESS + Globals.Development.DB.NAME, 
-				Globals.Development.DB.USER, 
-				Globals.Development.DB.PASSWORD
-			);
+//			db = DriverManager.getConnection(
+//				Globals.Development.DB.ADDRESS + Globals.Development.DB.NAME, 
+//				Globals.Development.DB.USER, 
+//				Globals.Development.DB.PASSWORD
+//			);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
-		logger = Logger.getLogger("Server.log");
 		listenForConnections();
 	}
 	
@@ -135,7 +127,7 @@ public class CentralServer extends ServerSocket {
 			switch(event.type) {
 			// consider making this {"type": "command", "data": "new game"...
 			// instead of {"type": "new game", ...
-				case "new game": 
+				case "new game":
 					int portOfNewGame;
 					try {
 						portOfNewGame = newGame();
@@ -143,6 +135,11 @@ public class CentralServer extends ServerSocket {
 					} catch (PortNotAvailableException pnae) {
 						sendEvent(new Event("new game", -1));
 					}
+					break;
+				case "join game":
+					System.out.println(games.keySet());
+//					int port = Collections.list(games.keySet().iterator());
+					sendEvent(new Event("join game", 2300));
 				default:
 					logger.log(Level.INFO, "Parse error. did not understand message: " + event);
 			}
@@ -166,6 +163,7 @@ public class CentralServer extends ServerSocket {
 	public static void main(String[] args) {
 		try {
 			CentralServer server = new CentralServer(Globals.Development.SERVER_PORT);
+			System.out.println("CENTRAL SERVER IS RUNNING");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

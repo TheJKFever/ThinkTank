@@ -1,11 +1,13 @@
 package Entities;
 
 import java.awt.Color;
+import java.io.Serializable;
 
 import Game.GameState;
 
-public class Barrier extends Entity {
-//	final String IMAGE_BARRIER = "images"
+public class Barrier extends Entity implements Serializable  {
+	private static final long serialVersionUID = -1039864192350379044L;
+	//	final String IMAGE_BARRIER = "images"
 	public static final Color color = Color.orange;
 	
     public Barrier(int x, int y, int width, int height, GameState gs) {

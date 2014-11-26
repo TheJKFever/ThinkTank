@@ -1,12 +1,14 @@
 package Entities;
 
+import java.io.Serializable;
+
 import javax.swing.ImageIcon;
 
 import Game.GameState;
 import Game.Globals;
 import Game.Team;
 
-public class Brain extends Entity {
+public class Brain extends Entity implements Serializable  {
 	int MAX_BRAIN_HEALTH = 100;
 	static String IMAGE_BRAIN = "images/brain3D.png";
 	static String IMAGE_BRAIN_ENEMY = "images/brain3DEnemy.png";

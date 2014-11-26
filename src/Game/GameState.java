@@ -1,5 +1,6 @@
 package Game;
 
+import java.io.Serializable;
 import java.util.Vector;
 
 import Entities.Barrier;
@@ -8,9 +9,10 @@ import Entities.Shot;
 import Entities.Tank;
 import Server.ConnectionToClient;
 
-public class GameState {
-	// TODO: these should probably all be private with getters, and no setters
-	public Team[] teams = new Team[2];
+public class GameState implements Serializable {
+	
+	private static final long serialVersionUID = 9118715319749588761L;
+	public Team[] teams;
 	public Vector<Brain> brains;
 	public Vector<Player> players;
 	public Vector<Shot> shots;
@@ -21,17 +23,29 @@ public class GameState {
 	
 	public GameState() {
 		barriers = new Vector<Barrier>();
+		brains = new Vector<Brain>();
 		shots = new Vector<Shot>();
+		players = new Vector<Player>();
+		tanks = new Vector<Tank>();
+		teams = new Team[2];
 		
-		// create teams and brains
-		for (int i = 1; i <= teams.length; i++) {
-			teams[i] = new Team(i, this);
+//		// create teams and brains
+//		teams[0] = new Team(1, this);
+//		Brain b = new Brain(teams[0], this);
+//		teams[0].brain = b;
+//		brains.add(b);	
+//		teams[1] = new Team(2, this);
+//		b = new Brain(teams[1], this);
+//		teams[1].brain = b;
+//		brains.add(b);	
+		
+		for (int i=0; i < teams.length; i++) {
+			teams[i] = new Team(i+1, this);
 			Brain b = new Brain(teams[i], this);
 			teams[i].brain = b;
 			brains.add(b);	
 		} // TODO: make all the same style
 		
-		// adds barriers, thought pools
 		setUpMap();
 	}
 	
@@ -41,6 +55,7 @@ public class GameState {
 	}
 	
 	public void setUpMap() {
+		// TODO: adds barriers, thought pools
 		barriers.add(new Barrier(100, 100, 300, 10, this));
 		barriers.add(new Barrier(200, 200, 200, 10, this));
 		barriers.add(new Barrier(300, 300, 400, 10, this));

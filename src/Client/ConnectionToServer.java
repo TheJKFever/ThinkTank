@@ -1,36 +1,26 @@
 package Client;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.json.simple.JSONObject;
 
 import Game.Event;
-import Game.Player;
-import Helper.Helper;
 
 public abstract class ConnectionToServer extends Socket implements Runnable {
 	public ObjectInputStream in;
 	public ObjectOutputStream out;
-	private Logger logger;
 	
 	public ConnectionToServer(String host, int port) throws UnknownHostException, IOException {
 		super(host, port);
-		in = new ObjectInputStream(getInputStream());
 		out = new ObjectOutputStream(getOutputStream());
-		logger = Logger.getLogger("Client");
+		in = new ObjectInputStream(getInputStream());
 	}
 	
 	public abstract void receive(Object obj);
 	
-	public void send(Object obj) {
+	private void send(Object obj) {
 		try {
 			out.writeObject(obj);
 			out.flush();
@@ -40,7 +30,7 @@ public abstract class ConnectionToServer extends Socket implements Runnable {
 	}
 
 	public void sendEvent(Event event) {
-		send(event.serialize());
+		send(event);
 	}
 	
 	private void listen() {

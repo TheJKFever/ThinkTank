@@ -2,22 +2,18 @@ package Server;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.logging.Level;
-
-import org.json.simple.JSONObject;
 
 import Game.Event;
 import Game.Player;
-import Helper.Helper;
 
 public class ConnectionToClient extends ServerThread {
 	private static int ID = 0;
 	public Player player;
-	public GameServer game;
+	public GameServer gameServer;
 	
 	public ConnectionToClient(GameServer game, Socket client) {
 		super(client);
-		this.game = game;
+		this.gameServer = game;
 	}
 
 	public void assignPlayer(Player p) {
@@ -28,15 +24,12 @@ public class ConnectionToClient extends ServerThread {
 	@Override
 	public void receive(Object obj) {
 		Event event = (Event)obj;
+		event.player = player;
 		switch(event.type) {
-		// consider making this {"type": "command", "data": "new game"...
-		// instead of {"type": "new game", ...
 			case "key event":
-				
-//				game.eventQ.add(Helper.parseEvent(jsonData));
+				gameServer.engine.eventQ.add(event);
 			case "chat":
 //				sendMessage();
-			case "new game":
 			default:
 //				logger.log(Level.INFO, "Parse error. did not understand message: " + data);
 		}			

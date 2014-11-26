@@ -1,13 +1,16 @@
 package Entities;
 
+import java.io.Serializable;
+
 import javax.swing.ImageIcon;
 
 import Game.GameState;
 import Game.Globals;
 
-public class Shot extends Entity {
+public class Shot extends Entity implements Serializable  {
 
-    static final String IMAGE_SHOT_UP = "images/bulletUp.png";
+	private static final long serialVersionUID = -5027836598744895479L;
+	static final String IMAGE_SHOT_UP = "images/bulletUp.png";
     static final String IMAGE_SHOT_RIGHT = "images/bulletRight.png";
     static final String IMAGE_SHOT_DOWN = "images/bulletDown.png";
     static final String IMAGE_SHOT_LEFT = "images/bulletLeft.png";

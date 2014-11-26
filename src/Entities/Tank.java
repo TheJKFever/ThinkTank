@@ -1,6 +1,7 @@
 package Entities;
 
 import java.awt.event.KeyEvent;
+import java.io.Serializable;
 
 import javax.swing.ImageIcon;
 
@@ -10,9 +11,10 @@ import Game.GameState;
 import Game.Globals;
 import Game.Team;
 
-public class Tank extends Entity {
+public class Tank extends Entity implements Serializable  {
 
-    static final String imageDir = "images/tanks/";
+	private static final long serialVersionUID = 4397815103071777225L;
+	static final String imageDir = "images/tanks/";
     static final String IMAGE_TANK_UP = imageDir + "blue/up1.png";
     static final String IMAGE_TANK_RIGHT = imageDir + "blue/right1.png";
     static final String IMAGE_TANK_DOWN = imageDir + "blue/down1.png";

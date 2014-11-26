@@ -1,8 +1,6 @@
 package Server;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -16,8 +14,8 @@ public abstract class ServerThread extends Thread {
 	
 	public ServerThread(Socket connection) {
 		try {
-			in = new ObjectInputStream(connection.getInputStream());
 			out = new ObjectOutputStream(connection.getOutputStream());
+			in = new ObjectInputStream(connection.getInputStream());
 //			hb = new Heartbeat(connection);
 //			hb.start();
 		} catch (IOException e) {
@@ -35,7 +33,7 @@ public abstract class ServerThread extends Thread {
 	}
 	
 	public void sendEvent(Event event) {
-		send(event.Jsonify());
+		send(event);
 	}
 	
 	public abstract void receive(Object data);

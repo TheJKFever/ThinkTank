@@ -1,15 +1,13 @@
 package Game;
 
-import java.awt.event.KeyEvent;
 import java.io.Serializable;
-
-import Helper.Helper;
 
 public class Event implements Serializable {
 	
 	private static final long serialVersionUID = 7395547026975140049L;
 	public String type;
 	public Object data;
+	public Player player;
 	public long timestamp;
 	
 	public Event(String type) {
@@ -23,11 +21,8 @@ public class Event implements Serializable {
 		this.timestamp = System.nanoTime();
 	}
 	
-	public String Jsonify() {
-		return Helper.Jsonify(timestamp, type, data);
+	public String toString() {
+		return ("timestamp: " + timestamp +", type: " + type + ", data: " + data);
 	}
 	
-	public Object serialize() {
-		return null; // TODO: FINISH
-	}
 }

@@ -12,9 +12,9 @@ import Game.ServerEngine;
 import Game.Team;
 
 public class GameServer extends ServerSocket {
+	private static Logger logger = Logger.getLogger("GameServer.log");;
 	private static int ID=0;
-	private ServerEngine engine;
-	private Logger logger;
+	public ServerEngine engine;
 	private Vector<ConnectionToClient> clients;
 	public String name;
 		
