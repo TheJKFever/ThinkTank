@@ -6,9 +6,11 @@ import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.Semaphore;
@@ -20,11 +22,11 @@ import Game.Event;
 import Game.Globals;
 
 public class CentralServer extends ServerSocket {
-	private static Logger logger = Logger.getLogger("CentralServer.log");;
+	private static Logger logger = Logger.getLogger("CentralServer.log");
 	private final int MAX_CAPACITY = 64; // per server
 	private final int MAX_GAMES = 5; // per server
 	private final int[] PORTS = {2300, 2301, 2302, 2303, 2304};
-	private Map<Integer, GameServer> games;
+	public Map<Integer, GameServer> games;
 	private Vector<ServerThread> clients;
 	private Connection db; // TODO: connect to DB for stats
 	private Semaphore capacity;
@@ -52,29 +54,43 @@ public class CentralServer extends ServerSocket {
 	}
 	
 	public int newGame() throws PortNotAvailableException {
+		System.out.println("IN CENRTAL SERVER NEWGAME()");
 		if (games.size() >= MAX_GAMES) {
+			System.out.println("MAX CAPACITY REACHED");
 			logger.log(Level.SEVERE, "Cannot start new game. server has reached max game capacity: " + MAX_GAMES);
 			return -1;
 		}
 		for (int port: PORTS) {
 			try {
+				System.out.println("TRYING PORT: " + port);
 				newGame(port);
 				return port;
-			} catch (PortNotAvailableException e) {}
+			} catch (PortNotAvailableException e) {
+				System.out.println("THIS PORT NOT AVAIALABLE: " + port);
+				e.printStackTrace();
+			}
 		}
+		System.out.println("ALL PORTS TAKEN, COULD NOT START GAME");
 		logger.log(Level.SEVERE, "Cannot start new game. All available ports are taken by server");
 		throw new PortNotAvailableException("Cannot start new game. All available ports are taken by server");
 	}
 	
 	public void newGame(int port) throws PortNotAvailableException {
+		System.out.println("IN CENTRAL SERVER NEWGAME(INT)");
 		if (games.containsKey(port)) {
+			System.out.println("GAMES ALREADY USING PORT: " + port);
 			logger.log(Level.SEVERE, "Game already running on port: " + port);
 			throw new PortNotAvailableException("Game already running on port: " + port);
 		}
-		GameServer game;
+		GameServer gameServer;
 		try {
-			game = new GameServer(port);
-			games.put(port, game);
+			System.out.println("ABOUT TO CREATE GAME SERVER");
+			gameServer = new GameServer(port);
+			System.out.println("CREATED GAME SERVER");
+			gameServer.thread.start();
+			System.out.println("STARTED GAME SERVER THREAD");
+			games.put(port, gameServer);
+			System.out.println("ADDED TO GAMESERVER TO GAMES MAP");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -82,7 +98,7 @@ public class CentralServer extends ServerSocket {
 
 	public boolean validate(Socket connection) {
 		if (!capacity.tryAcquire()) { // give a permit to each client up to max_capacity
-			logger.log(Level.SEVERE, "Server has reaced max capacity: " + MAX_CAPACITY);
+			logger.log(Level.SEVERE, "Server has reached max capacity: " + MAX_CAPACITY);
 			return false;
 			// throw new ServerAtMaxCapacityException("Server has reach ed max capacity: " + MAX_CAPACITY);
 		}
@@ -94,70 +110,16 @@ public class CentralServer extends ServerSocket {
 		while(!this.isClosed()) {
 			// Listen for clients signing onto server
 			try {
-				Socket connection = this.accept();
-				if (validate(connection)) {
-					CentralServerThread serverThread = new CentralServerThread(connection);
-					clients.addElement(serverThread);
-					serverThread.start();
+				Socket socket = this.accept();
+				if (validate(socket)) {
+					CentralServerConnectionToClient csConnection = new CentralServerConnectionToClient(socket, this);
+					clients.addElement(csConnection);
+					csConnection.start();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}		
-	}
-	
-	public class CentralServerThread extends ServerThread {
-		public CentralServerThread(Socket connection) {
-			super(connection);
-		}
-		
-		public void send(Object obj) {
-			try {
-				out.writeObject(obj);
-				out.flush();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		@Override
-		public void receive(Object obj) {
-			Event event = (Event)obj;
-			switch(event.type) {
-			// consider making this {"type": "command", "data": "new game"...
-			// instead of {"type": "new game", ...
-				case "new game":
-					int portOfNewGame;
-					try {
-						portOfNewGame = newGame();
-						sendEvent(new Event("new game", portOfNewGame));
-					} catch (PortNotAvailableException pnae) {
-						sendEvent(new Event("new game", -1));
-					}
-					break;
-				case "join game":
-					System.out.println(games.keySet());
-//					int port = Collections.list(games.keySet().iterator());
-					sendEvent(new Event("join game", 2300));
-				default:
-					logger.log(Level.INFO, "Parse error. did not understand message: " + event);
-			}
-		}
-		
-		public void listen() {
-			// Listen for messages from client
-			Object dataFromClient;
-			try {
-				while ((dataFromClient = in.readObject()) != null) {
-					receive(dataFromClient);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 	
 	public static void main(String[] args) {

@@ -34,7 +34,7 @@ public class ThinkTankGUI extends JFrame {
 		try {
 			setTitle("Think Tank");
 			setDefaultCloseOperation(EXIT_ON_CLOSE);
-			setSize(Globals.BOARD_WIDTH, Globals.BOARD_HEIGHT);
+			setSize(Globals.GUI_WIDTH, Globals.GUI_HEIGHT);
 			setLocationRelativeTo(null);
 			setVisible(true);
 			setResizable(false);
@@ -99,30 +99,35 @@ public class ThinkTankGUI extends JFrame {
 	}
 
 	public void startNewGame() {
+		System.out.println("GUI: START NEW GAME CLICKED");
 		centralConnection.sendEvent(new Event("new game"));
 		cardLayout.show(mainPanel, "waiting");
 	}
 	
 	public void joinGame() {
+		System.out.println("GUI: joinGame()");
 		// Go to lobby
 		// Select available game
 		// get port from that game
 		centralConnection.sendEvent(new Event("join game"));
-//		joinGame(port);
 	}
 	
 	public void joinGame(int port) {
+		System.out.println("GUI: joinGame(port)");
 		// make connection to game server
 		// store connection in gameScreen
 		// if connection made go to waiting screen
 		if (gameScreen.connectToGameServer(Globals.Development.HOST, port)) {
+			System.out.println("GUI: gameScreen connected to game server");
 			cardLayout.show(mainPanel, "waiting");
+			gameScreen.gameConnection.thread.start();
 		} else {
 			throw new RuntimeException("Could not create game in joinGame");
 		}
 	}
 
 	public void startGame() {
+		System.out.println("GUI: STARTGAME()");
 		cardLayout.show(mainPanel, "gameScreen");
 	}
 

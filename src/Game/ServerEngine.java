@@ -4,16 +4,17 @@ import java.awt.event.KeyEvent;
 import java.util.Vector;
 import java.util.concurrent.ArrayBlockingQueue;
 
-import Server.ConnectionToClient;
+import Server.GameServerConnectionToClient;
 
 public class ServerEngine implements Runnable {
 	
 	public GameState gs;
-	Vector<ConnectionToClient> clients;
-	public ArrayBlockingQueue<Event> eventQ = new ArrayBlockingQueue<Event>(100);	// TODO: could possibly not be adding over 100 events
+	Vector<GameServerConnectionToClient> clients;
+	public ArrayBlockingQueue<Event> eventQ = new ArrayBlockingQueue<Event>(1000);	// TODO: could possibly not be adding over 100 events
 	private Thread engineThread;
 
-	public ServerEngine(Vector<ConnectionToClient> clientConnections) {
+	public ServerEngine(Vector<GameServerConnectionToClient> clientConnections) {
+		System.out.println("SERVERENGINE: CONSTRUCTOR");
 		this.clients = clientConnections;
 		this.gs = new GameState();
 		
@@ -22,9 +23,9 @@ public class ServerEngine implements Runnable {
 	
 	
 	public void run() {
+		System.out.println("GSCONNECTIONTOCLIENT: RUN()");
 		gs.inGame = true;
-		// TODO: implement
-		// clients should be on the waiting page, send a signal to start game, maybe put this in engine start
+		
 		broadcastGameState();
 		startGame();
 		
@@ -36,19 +37,22 @@ public class ServerEngine implements Runnable {
 	}
 	
 	private void startGame() {
-		for (ConnectionToClient client:clients) {
+		System.out.println("GAMESERVER: START GAME");
+		for (GameServerConnectionToClient client:clients) {
 			client.sendEvent(new Event("start game"));
 		}
 	}
 
 
 	public void broadcastGameState() {
-		for (ConnectionToClient client:clients) {
+		System.out.println("GAMESERVER: BROADCAST GAME STATE");
+		for (GameServerConnectionToClient client:clients) {
 			client.sendEvent(new Event("game update", gs));
 		}
 	}
 	
 	public void processInputFromClients() {
+		System.out.println("GAMESERVER: PROCESSINPUTFROMCLIENTS");
 		synchronized(eventQ) {
 			for (Event event: eventQ) {
 				switch(event.type) {
@@ -59,6 +63,8 @@ public class ServerEngine implements Runnable {
 						} else if (ke.getID() == KeyEvent.KEY_PRESSED) {
 							event.player.tank.keyPressed(ke);
 						}
+					break;
+					// handle others...
 				}
 			}
 			eventQ.clear();

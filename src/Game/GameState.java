@@ -7,7 +7,7 @@ import Entities.Barrier;
 import Entities.Brain;
 import Entities.Shot;
 import Entities.Tank;
-import Server.ConnectionToClient;
+import Server.GameServerConnectionToClient;
 
 public class GameState implements Serializable {
 	
@@ -22,6 +22,8 @@ public class GameState implements Serializable {
 	public boolean inGame = false;
 	
 	public GameState() {
+		System.out.println("GAMESTATE: CONSTRUCTOR");
+		
 		barriers = new Vector<Barrier>();
 		brains = new Vector<Brain>();
 		shots = new Vector<Shot>();
@@ -29,16 +31,7 @@ public class GameState implements Serializable {
 		tanks = new Vector<Tank>();
 		teams = new Team[2];
 		
-//		// create teams and brains
-//		teams[0] = new Team(1, this);
-//		Brain b = new Brain(teams[0], this);
-//		teams[0].brain = b;
-//		brains.add(b);	
-//		teams[1] = new Team(2, this);
-//		b = new Brain(teams[1], this);
-//		teams[1].brain = b;
-//		brains.add(b);	
-		
+		// create teams with brains
 		for (int i=0; i < teams.length; i++) {
 			teams[i] = new Team(i+1, this);
 			Brain b = new Brain(teams[i], this);
@@ -50,11 +43,25 @@ public class GameState implements Serializable {
 	}
 	
 	public boolean playable() {
-		if (teams[0].players.size()>0 && teams[1].players.size()>0) return true;
-		return false;
+		System.out.println("GAMESTATE: PLAYABLE()?");
+		if (teams!= null) {
+			System.out.println("GAMESTATE: TEAM 1 SIZE" + teams[0].players.size() + " TEAM 2 SIZE" + teams[1].players.size());
+		} else {
+			System.out.println("GAMESTATE: .teams is NULL");
+		}
+		if (teams != null && 
+			teams[0].players.size() > 0 && 
+			teams[1].players.size() > 0) {
+			System.out.println("GAMESTATE: YES, PLAYABLE");
+				return true;
+		} else {	
+			System.out.println("GAMESTATE: NO, PLAYABLE");
+			return false;
+		}
 	}
 	
 	public void setUpMap() {
+		System.out.println("GAMESTATE: SETUPMAP()");
 		// TODO: adds barriers, thought pools
 		barriers.add(new Barrier(100, 100, 300, 10, this));
 		barriers.add(new Barrier(200, 200, 200, 10, this));
@@ -67,6 +74,8 @@ public class GameState implements Serializable {
 	}
 	
 	public void update() {
+		System.out.println("GAMESTATE: UPDATE");
+		
 		// tanks
 		for (Tank t: tanks) {
 			t.update();

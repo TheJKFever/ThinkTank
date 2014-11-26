@@ -23,6 +23,7 @@ public class ClientEngine implements Runnable {
 	private GameScreen gameScreen;
 
 	public ClientEngine(GameScreen gameScreen) {
+		System.out.println("ClientEngine: IN CONSTRUCTOR");
 		this.gameScreen = gameScreen;
 		this.gamePanel = gameScreen.gamePanel;
 		engineThread = new Thread(this);
@@ -33,6 +34,7 @@ public class ClientEngine implements Runnable {
 	}
 
 	public void run() {
+		System.out.println("CLIENT ENGINE THREAD STARTED");
 		long beforeTime, timeDiff, sleep;
 		beforeTime = System.currentTimeMillis();
 		

@@ -13,6 +13,7 @@ public abstract class ServerThread extends Thread {
 	public ObjectOutputStream out;	
 	
 	public ServerThread(Socket connection) {
+		System.out.println("SERVERTHREAD: IN CONSTRUCTOR");
 		try {
 			out = new ObjectOutputStream(connection.getOutputStream());
 			in = new ObjectInputStream(connection.getInputStream());
