@@ -131,7 +131,7 @@ public class CentralServer extends ServerSocket {
 		
 		@Override
 		public void receive(Object obj) {
-			Event event = Event.deserialize(obj);
+			Event event = (Event)obj;
 			switch(event.type) {
 			// consider making this {"type": "command", "data": "new game"...
 			// instead of {"type": "new game", ...
@@ -144,18 +144,20 @@ public class CentralServer extends ServerSocket {
 						sendEvent(new Event("new game", -1));
 					}
 				default:
-					logger.log(Level.INFO, "Parse error. did not understand message: " + data);
+					logger.log(Level.INFO, "Parse error. did not understand message: " + event);
 			}
 		}
 		
 		public void listen() {
 			// Listen for messages from client
-			String dataFromClient;
+			Object dataFromClient;
 			try {
-				while ((dataFromClient = in.readLine()) != null) {
+				while ((dataFromClient = in.readObject()) != null) {
 					receive(dataFromClient);
 				}
 			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
 		}

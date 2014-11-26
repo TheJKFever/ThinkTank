@@ -12,6 +12,7 @@ import Client.ConnectionToGameServer;
 import Screens.GameScreen;
 
 public class ClientEngine implements Runnable {
+	
 	public GameState gs;
 	ArrayBlockingQueue<Event> eventQ = new ArrayBlockingQueue<Event>(100);	
 	GamePanel gamePanel;

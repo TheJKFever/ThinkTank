@@ -18,21 +18,21 @@ public class ConnectionToGameServer extends ConnectionToServer {
 	
 	public void receive(Object obj) {
 		// TODO Parse all possible messages
-		Event event = Event.deserialize(obj);
+		Event event = (Event)obj;
 		switch(event.type) {
 		case "game update":
-			gameScreen.engine.eventQ.add(jsonData);
+			gameScreen.engine.eventQ.add(event);
 		case "chat":
 //			gui.chatPanel.
 		case "assign player":
-			engine.player = (Player)event.data;
+			gameScreen.engine.player = (Player)event.data;
 		case "start game":
 			// display gamescreen
 			// tell gameEngine to start
 			gameScreen.gui.startGame();
 			gameScreen.engine.startGame();
 		default:
-			logger.log(Level.INFO, "Parse error. did not understand message: " + data);
+			logger.log(Level.INFO, "Parse error. did not understand message: " + event);
 		}
 	}
 }

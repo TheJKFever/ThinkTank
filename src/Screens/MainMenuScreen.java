@@ -14,7 +14,6 @@ public class MainMenuScreen extends JPanel {
 	public JButton startNewBtn, joinGameBtn, createProfileBtn, statsBtn, loginBtn, logoutBtn;
 	private ThinkTankGUI gui;
 	
-	
 	public MainMenuScreen(ThinkTankGUI gui) {
 		this.gui = gui;
 		
@@ -34,17 +33,8 @@ public class MainMenuScreen extends JPanel {
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
-		startNewBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				gui.startNewGame();
-			}
-		});
-		joinGameBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				gui.joinGame();
-			}
-		});
-		
+		startNewBtn.addActionListener(new StartGameListener(gui));
+		joinGameBtn.addActionListener(new JoinGameListener(gui));
 		
 		this.add(startNewBtn);
 		this.add(joinGameBtn);
@@ -54,6 +44,25 @@ public class MainMenuScreen extends JPanel {
 		} else {
 			this.add(createProfileBtn);
 			this.add(loginBtn);
+		}
+	}
+	
+	public class StartGameListener implements ActionListener {
+		public ThinkTankGUI gui;
+		public StartGameListener(ThinkTankGUI gui) {
+			this.gui = gui;
+		}
+		public void actionPerformed(ActionEvent arg0) {
+			gui.startNewGame();
+		}
+	}
+	public class JoinGameListener implements ActionListener {
+		public ThinkTankGUI gui;
+		public JoinGameListener(ThinkTankGUI gui) {
+			this.gui = gui;
+		}
+		public void actionPerformed(ActionEvent arg0) {
+			gui.joinGame();
 		}
 	}
 }

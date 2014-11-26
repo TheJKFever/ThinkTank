@@ -16,7 +16,7 @@ public class ConnectionToCentralServer extends ConnectionToServer {
 	
 	public void receive(Object obj) {
 		// TODO Parse all possible messages
-		Event event = Event.deserialize(obj);
+		Event event = (Event)obj;
 		switch(event.type) {
 			case "new game":
 				int port = (int)event.data;
@@ -24,9 +24,8 @@ public class ConnectionToCentralServer extends ConnectionToServer {
 				else {
 					gui.joinGame(port);
 				}
-				
 			default:
-				logger.log(Level.INFO, "Parse error. did not understand message: " + data);
+				logger.log(Level.INFO, "Parse error. did not understand message: " + event);
 		}
 	}
 
