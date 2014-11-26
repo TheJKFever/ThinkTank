@@ -2,7 +2,8 @@ package Client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -12,42 +13,45 @@ import java.util.logging.Logger;
 import org.json.simple.JSONObject;
 
 import Game.Event;
+import Game.Player;
 import Helper.Helper;
 
 public class ConnectionToServer extends Socket implements Runnable {
-	public BufferedReader in;
-	public PrintWriter out;
+	public ObjectInputStream in;
+	public ObjectOutputStream out;
 	public ThinkTankGUI gui;
 	private Logger logger;
 	
 	public ConnectionToServer(ThinkTankGUI gui, String host, int port) throws UnknownHostException, IOException {
 		super(host, port);
 		this.gui = gui;
-		in = new BufferedReader(new InputStreamReader(getInputStream()));
-		out = new PrintWriter(getOutputStream());
+		in = new ObjectInputStream(getInputStream());
+		out = new ObjectOutputStream(getOutputStream());
 		logger = Logger.getLogger("Client");
 	}
 	
-	public void received(String obj) {
+	public void receive(Object obj) {
 		// TODO Parse all possible messages
-		JSONObject jsonData = Helper.parse(obj);
-		String type = (String)jsonData.get("type");
-		switch(type) {
+		Event event = Event.deserialize(obj);
+		switch(event.type) {
 			case "game update":
-				gui.gameEngine.serverEventQ.add(jsonData);
+				gui.clientEngine.serverEventQ.add(jsonData);
 			case "chat":
 //				gui.chatPanel.
 			case "assign player":
-				String player = (String)jsonData.get("data");
-				
+				gui.clientEngine.player = (Player)event.data;
 			default:
 				logger.log(Level.INFO, "Parse error. did not understand message: " + data);
 		}
 	}
 	
-	public void send(String data) {
-		out.println(data);
-		out.flush();
+	public void send(Object obj) {
+		try {
+			out.writeObject(obj);
+			out.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void sendEvent(Event event) {
@@ -59,7 +63,7 @@ public class ConnectionToServer extends Socket implements Runnable {
 		String dataFromServer;
 		try {
 			while ((dataFromServer = in.readLine()) != null) {
-				received(dataFromServer);
+				receive(dataFromServer);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

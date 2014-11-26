@@ -21,9 +21,8 @@ public class ThinkTankGUI extends JFrame {
 	//	private CreateGameScreen createGame;
 	//	private WaitingScreen waiting;
 	//	private JoinGameScreen joinGame;
-	private ClientEngine clientEngine;
+	public ClientEngine clientEngine;
 	//	private GameOverScreen gameOver;
-	
 
 	public ThinkTankGUI(String host, int port) {
 		try {

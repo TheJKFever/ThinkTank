@@ -36,6 +36,7 @@ public class Tank extends Entity {
     	this.player = p;
     	this.team = player.team;
     	this.gs = gs;
+        gs.tanks.addElement(this);
         this.theta = 0;
         this.dtheta = 0;
         this.health = MAX_TANK_HEALTH;

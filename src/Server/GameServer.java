@@ -9,60 +9,38 @@ import java.util.logging.Logger;
 import Game.Globals;
 import Game.Player;
 import Game.ServerEngine;
-import Helper.Helper;
+import Game.Team;
 
 public class GameServer extends ServerSocket {
-	private boolean waitingForPlayers;
-	private ServerEngine game;
+	private ServerEngine engine;
 	private Logger logger;
 	private Vector<ConnectionToClient> clients;
 		
 	public GameServer(int port) throws IOException{
 		super(port);
-		game = new ServerEngine(clients);
+		engine = new ServerEngine(clients);
 		listenForClients();
 	}
 	
 	private void listenForClients() {
-		waitingForPlayers = true;
 		int team=0;
-		while(waitingForPlayers) {
+		while(!engine.gs.playable()) {
 			try {
 				Socket client = this.accept();
-				addPlayer(new ConnectionToClient(client, team%2+1));
+				addPlayer(client, team%2+1);
 				team++;
 			} catch(IOException ioe) {
 				ioe.printStackTrace();
 			}
 		}
-		startGame();
-	}
-	
-	public void startGame() {
-		// TODO: implement
-		// clients should be on the waiting page, send a signal to start game
-		game.start();
+		engine.start(); // starts engineThread, and sets gs.inGame
 	}
 
-	public void addPlayer(ConnectionToClient client) {
+	public void addPlayer(Socket socket, int team) {
+		ConnectionToClient client = new ConnectionToClient(this, socket);
 		clients.addElement(client);
-		switch(client.team) {
-		case 1:
-			Player p = game.gs.teams[0].newPlayer();
-			client.assignPlayer(p);
-			if (game.gs.teams[1].players.size()>0) waitingForPlayers = false;
-			break;
-		case 2:
-			Player p = game.gs.teams[1].newPlayer();
-			client.assignPlayer(p);
-			if (game.gs.teams[0].players.size()>0) waitingForPlayers = false;
-			break;
-		default:
-			int nonExistentTeam = client.team;
-			client.team = (int)(Math.ceil(Math.random()*2));
-			client.send(Helper.Jsonify("warning", "Team " + nonExistentTeam + " does not exist, assigned player to team " + client.team));
-			addPlayer(client);
-		}
+		Player p = engine.gs.teams[team-1].newPlayer(); // Creates new player and adds to gameState
+		client.assignPlayer(p); // tells client which player is his
 		client.start();
 	}
 	

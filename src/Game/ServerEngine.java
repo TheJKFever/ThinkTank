@@ -10,8 +10,6 @@ public class ServerEngine implements Runnable {
 	public GameState gs;
 	Vector<ConnectionToClient> clients;
 	ArrayBlockingQueue<Event> eventQ = new ArrayBlockingQueue<Event>(100);	
-	
-	public boolean ingame = true;
 	private Thread engineThread;
 
 	public ServerEngine(Vector<ConnectionToClient> clientConnections) {
@@ -19,14 +17,16 @@ public class ServerEngine implements Runnable {
 		this.gs = new GameState();
 		
 		engineThread = new Thread(this);
-		engineThread.start();
 	}
 	
 	
 	public void run() {
+		gs.inGame = true;
+		// TODO: implement
+		// clients should be on the waiting page, send a signal to start game, maybe put this in engine start
 		broadcastGameState();
 		
-		while (ingame) {
+		while (gs.inGame) {
 			processInputsFromClients();
 			gs.update();
 			broadcastGameState();
@@ -64,10 +64,8 @@ public class ServerEngine implements Runnable {
 			System.out.println(msg);
 		}
 	}
-
-
+	
 	public void start() {
-		// TODO Auto-generated method stub
-		
+		engineThread.start();
 	}
 }

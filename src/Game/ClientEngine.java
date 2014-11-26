@@ -8,6 +8,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 import javax.swing.JPanel;
 
+import Chat.ChatClient;
 import Client.ConnectionToServer;
 import Client.Renderer;
 
@@ -15,9 +16,10 @@ public class ClientEngine extends JPanel implements Runnable {
 	JPanel chatPanel;
 	public GameState gs;
 	ArrayBlockingQueue<Event> eventQ = new ArrayBlockingQueue<Event>(100);	
+	public ChatClient chat; daf;dkjsalk;jfjkfsdajlk <-- fix this
 	Renderer renderer;
 	ConnectionToServer conn;
-	public boolean ingame = true;
+	public Player player;
 	
 	private Thread engineThread;
 
@@ -35,9 +37,9 @@ public class ClientEngine extends JPanel implements Runnable {
 
 	public void gameInit() {
 		this.renderer = new Renderer(this);
-		addKeyListener(new GameInputHandler());
+		addKeyListener(new GameInputHandler()); // TODO: this could be a problem cause could send data before game start
 
-		if (engineThread == null || !ingame) {
+		if (engineThread == null || !gs.inGame) {
 			engineThread = new Thread(this);
 			engineThread.start();
 		}
@@ -47,7 +49,7 @@ public class ClientEngine extends JPanel implements Runnable {
 		long beforeTime, timeDiff, sleep;
 		beforeTime = System.currentTimeMillis();
 
-		while (ingame) {
+		while (gs.inGame) {
 			// non-blocking?
 			gs = conn.getGameStateFromServer();
 			//for Event in internalEventQ:
@@ -78,11 +80,12 @@ public class ClientEngine extends JPanel implements Runnable {
 	public void processInput() {
 		synchronized(eventQ) {
 			for (Event event: eventQ) {
-				if (event.type == "KeyEvent") {
-					if (event.keyEvent.getID() == KeyEvent.KEY_RELEASED) {
-						tank.keyReleased(event.keyEvent);
-					} else if (event.keyEvent.getID() == KeyEvent.KEY_PRESSED) {
-						tank.keyPressed(event.keyEvent);
+				if (event.type == "key event") {
+					KeyEvent ke = ((KeyEvent)event.data);
+					if (ke.getID() == KeyEvent.KEY_RELEASED) {
+						player.tank.keyReleased(ke);
+					} else if (ke.getID() == KeyEvent.KEY_PRESSED) {
+						player.tank.keyPressed(ke);
 					}
 				}
 			}

@@ -25,9 +25,9 @@ public abstract class ServerThread extends Thread {
 		}
 	}
 	
-	public void send(String data) {
+	public void send(Object obj) {
 		try {
-			out.writeObject(data);
+			out.writeObject(obj);
 			out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -32,4 +32,8 @@ public class Event implements Serializable {
 	public String Jsonify() {
 		return Helper.Jsonify(timestamp, type, data);
 	}
+	
+	public Object serialize() {
+		return null; // TODO: FINISH
+	}
 }

@@ -13,9 +13,11 @@ import Helper.Helper;
 public class ConnectionToClient extends ServerThread {
 	private static int ID = 0;
 	public Player player;
+	public GameServer game;
 	
-	public ConnectionToClient(Socket client, int team) {
+	public ConnectionToClient(GameServer game, Socket client) {
 		super(client);
+		this.game = game;
 	}
 
 	public void assignPlayer(Player p) {
@@ -38,7 +40,8 @@ public class ConnectionToClient extends ServerThread {
 		switch(type) {
 		// consider making this {"type": "command", "data": "new game"...
 		// instead of {"type": "new game", ...
-			case "event":
+			case "key event":
+				
 //				game.eventQ.add(Helper.parseEvent(jsonData));
 			case "chat":
 //				sendMessage();
@@ -51,7 +54,7 @@ public class ConnectionToClient extends ServerThread {
 	public void listen() {
 		String dataFromPlayer;
 		try {
-			while ((dataFromPlayer = in.readLine()) != null) {
+			while ((dataFromPlayer = in.readObject()) != null) {
 				processIncomingData(dataFromPlayer);
 			}
 		} catch (IOException e) {
