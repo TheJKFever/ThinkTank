@@ -6,6 +6,7 @@ import java.net.UnknownHostException;
 import java.util.logging.Logger;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import Game.Event;
@@ -38,6 +39,21 @@ public class ThinkTankGUI extends JFrame {
 			setLocationRelativeTo(null);
 			setVisible(true);
 			setResizable(false);
+			this.addWindowListener(new java.awt.event.WindowAdapter() {
+			    @Override
+			    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+			    	try {
+			    		centralConnection.close();
+				    	if (gameScreen.gameConnection!=null) {
+				    		gameScreen.gameConnection.thread.interrupt();
+				    		gameScreen.gameConnection.close();
+				    	}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+		            System.exit(0);
+			    }
+			});
 
 			System.out.println("host: " + host + " and port: " + port);
 			centralConnection = new ConnectionToCentralServer(this, host, port); // Connects to central server

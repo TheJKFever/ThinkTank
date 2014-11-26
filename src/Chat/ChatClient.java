@@ -4,10 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
@@ -21,11 +20,11 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import Client.ConnectionToGameServer;
+import Game.Event;
 import Game.Globals;
 
-public class ChatClient extends JFrame implements Runnable {
-	
-	JPanel generalPanel;
+public class ChatClient extends JPanel {
 	
 	JPanel chatPanel,topPanel, centerPanel, bottomPanel, inputPanel, loginPanel;
 	JPanel hostNamePanel, playerNamePanel;
@@ -41,19 +40,14 @@ public class ChatClient extends JFrame implements Runnable {
 	JTextArea ta;
 	JButton sendBtn;
 	
-	PrintWriter pw;
-	BufferedReader br;
+	ObjectOutputStream out;
+	ObjectInputStream in;
 	
 	String name;
-	int index;
-
 	
 	public void configureGUI() {
-	
-		setSize(300,200);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		generalPanel = new JPanel(new CardLayout());
+
+		setLayout(new CardLayout());
 		
 		
 //		/***** Login Panel *******/
@@ -122,72 +116,40 @@ public class ChatClient extends JFrame implements Runnable {
 		sendBtn = new JButton("Send");
 		inputPanel.add(sendBtn, BorderLayout.EAST);
 		chatPanel.add(inputPanel, BorderLayout.SOUTH);
-		generalPanel.add(chatPanel,"chat");
-		
-
-		add(generalPanel);
-		setVisible(true);
+		add(chatPanel,"chat");
 	}
 	
+	public void receivedMessage(String message) {
+		if (message.substring(0,1).equalsIgnoreCase("i")) { // TODO: <-- what's this 
+			String[] split = message.split(":");
+			this.name +=split[1];
+			this.repaint();
+		}
+		else {
+			ta.append(message);
+		}
+	}
 	
-	public ChatClient(String hostName, int port) {
-		super();
-		this.name = "Player ";
-		this.setTitle(name);
+	public ChatClient(ConnectionToGameServer gameConnection) {
+//		this.name = gameConnection.gameScreen.engine.player.username;
+		// TODO: uncomment above, once username is implemented
+		this.name = "IMPLEMENT USERNAME";
 		configureGUI();
-		
-		try {
-			Socket s = new Socket(hostName, port);
-			
-			// wrap socket into pw and br
-			pw = new PrintWriter(s.getOutputStream());
-			br = new BufferedReader(new InputStreamReader(s.getInputStream()));
-			Thread t = new Thread(this);
-			t.start();
-			
-			// This is where the client send sth out
-			sendBtn.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					String newMessage = "["+ChatClient.this.name+"]"+"\t"+tf.getText();
-					tf.setText("");
-					String oldMessage = ta.getText();
-					ta.setText(oldMessage+"\n"+newMessage);
-					pw.println(newMessage);
-					pw.flush();
-				}
-			});
-			
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
+		sendBtn.addActionListener(new SendBtnListener(gameConnection));
 	}
 	
-	public void run() {
-		while (true) {
-			try {
-				String message = br.readLine();
-				if(message.substring(0,1).equalsIgnoreCase("i")) {
-					String[] split = message.split(":");
-					this.name +=split[1];
-					this.setTitle(name);
-					this.repaint();
-				}
-				else
-					ta.setText(ta.getText()+"\n"+ message);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	public static void main(String[] args) {
-		Scanner scan = new Scanner(System.in);
-		System.out.println("IP: ");
-		String ip = scan.nextLine();
-		new ChatClient(ip, Globals.CHAT_PORT);
-	}
+	public class SendBtnListener implements ActionListener {
+		private ConnectionToGameServer gameConnection;
 
+		public SendBtnListener(ConnectionToGameServer gameConnection) {
+			this.gameConnection = gameConnection;
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			String message = "["+ChatClient.this.name+"]"+"\t"+tf.getText();
+			tf.setText("");
+			ta.append(message);
+			gameConnection.sendEvent(new Event("chat", message));
+		}
+	}		
 }

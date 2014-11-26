@@ -27,7 +27,7 @@ public class CentralServer extends ServerSocket {
 	private final int MAX_GAMES = 5; // per server
 	private final int[] PORTS = {2300, 2301, 2302, 2303, 2304};
 	public Map<Integer, GameServer> games;
-	private Vector<ServerThread> clients;
+	private Vector<CentralServerConnectionToClient> clients;
 	private Connection db; // TODO: connect to DB for stats
 	private Semaphore capacity;
 	
@@ -35,13 +35,14 @@ public class CentralServer extends ServerSocket {
 	public CentralServer(int port) throws IOException {
 		super(port);
 		
-		clients = new Vector<ServerThread>();
+		clients = new Vector<CentralServerConnectionToClient>();
 		capacity = new Semaphore(MAX_CAPACITY);
 		games = new HashMap<Integer, GameServer>();
 		
 		// Database Connection
 		try { 
 			Class.forName(Globals.Development.DB.DRIVER);
+			// TODO: setup database on production server
 //			db = DriverManager.getConnection(
 //				Globals.Development.DB.ADDRESS + Globals.Development.DB.NAME, 
 //				Globals.Development.DB.USER, 
@@ -54,19 +55,19 @@ public class CentralServer extends ServerSocket {
 	}
 	
 	public int newGame() throws PortNotAvailableException {
-		System.out.println("IN CENRTAL SERVER NEWGAME()");
+		if (Globals.DEBUG) System.out.println("IN CENRTAL SERVER NEWGAME()");
 		if (games.size() >= MAX_GAMES) {
-			System.out.println("MAX CAPACITY REACHED");
+			if (Globals.DEBUG) System.out.println("MAX CAPACITY REACHED");
 			logger.log(Level.SEVERE, "Cannot start new game. server has reached max game capacity: " + MAX_GAMES);
 			return -1;
 		}
 		for (int port: PORTS) {
 			try {
-				System.out.println("TRYING PORT: " + port);
+				if (Globals.DEBUG) System.out.println("TRYING PORT: " + port);
 				newGame(port);
 				return port;
 			} catch (PortNotAvailableException e) {
-				System.out.println("THIS PORT NOT AVAIALABLE: " + port);
+				if (Globals.DEBUG) System.out.println("THIS PORT NOT AVAIALABLE: " + port);
 				e.printStackTrace();
 			}
 		}
@@ -84,13 +85,13 @@ public class CentralServer extends ServerSocket {
 		}
 		GameServer gameServer;
 		try {
-			System.out.println("ABOUT TO CREATE GAME SERVER");
+			if (Globals.DEBUG) System.out.println("ABOUT TO CREATE GAME SERVER");
 			gameServer = new GameServer(port);
-			System.out.println("CREATED GAME SERVER");
+			if (Globals.DEBUG) System.out.println("CREATED GAME SERVER");
 			gameServer.thread.start();
-			System.out.println("STARTED GAME SERVER THREAD");
+			if (Globals.DEBUG) System.out.println("STARTED GAME SERVER THREAD");
 			games.put(port, gameServer);
-			System.out.println("ADDED TO GAMESERVER TO GAMES MAP");
+			if (Globals.DEBUG) System.out.println("ADDED TO GAMESERVER TO GAMES MAP");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -103,7 +104,16 @@ public class CentralServer extends ServerSocket {
 			// throw new ServerAtMaxCapacityException("Server has reach ed max capacity: " + MAX_CAPACITY);
 		}
 		return true;
-		// TODO: make sure to release the permit when the client signs off			
+		// TODO: make sure to release the permit when the client signs off
+	}
+	
+	public void release(CentralServerConnectionToClient thread) {
+		System.out.println("releasing connection to client from central server");
+		thread.interrupt();
+		System.out.println("interupted thread");
+		boolean removed = clients.remove(thread);
+		System.out.println("removed thread from vector: " + removed);
+		capacity.release();
 	}
 
 	public void listenForConnections() {

@@ -17,7 +17,9 @@ public class GameScreen extends JPanel {
 	
 	private static final long serialVersionUID = -1188091035895129077L;
 
-	public JPanel chatPanel, utilityBar, sidePanel;
+	ChatClient chatPanel;
+
+	public JPanel utilityBar, sidePanel;
 
 	public ThinkTankGUI gui;
 	public ChatClient chat; //	TODO: <-- fix this
@@ -32,7 +34,7 @@ public class GameScreen extends JPanel {
 		this.gui = gui;
 		setLayout(new BorderLayout());
 		gamePanel = new GamePanel(this);
-		chatPanel = new JPanel();
+		chatPanel = new ChatClient(gameConnection);
 		sidePanel = new JPanel();
 		sidePanel.setPreferredSize(new Dimension(200, 600));
 		sidePanel.add(chatPanel);

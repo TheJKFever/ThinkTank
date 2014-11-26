@@ -1,5 +1,6 @@
 package Server;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -17,16 +18,6 @@ public class CentralServerConnectionToClient extends ServerThread {
 	public CentralServerConnectionToClient(Socket connection, CentralServer cs) {
 		super(connection);
 		this.centralServer = cs;
-	}
-		
-	public void send(Object obj) {
-		try {
-			out.writeObject(obj);
-			out.flush();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 		
 	@Override
@@ -47,6 +38,7 @@ public class CentralServerConnectionToClient extends ServerThread {
 				}
 				break;
 			case "join game":
+				// TODO: this should send a list of games with their ports back to the client
 				List<Integer> activePorts = new ArrayList<Integer>(centralServer.games.keySet());
 				System.out.println("PRINTING ACTIVE PORTS");
 				for (Integer i: activePorts) {
@@ -55,6 +47,20 @@ public class CentralServerConnectionToClient extends ServerThread {
 				port = activePorts.get(0);
 				sendEvent(new Event("join game", port));
 				System.out.println("TOLD CLIENT TO JOIN GAME ON PORT " + port);
+				break;
+			case "create profile":
+				// TODO:
+				break;
+			case "login":
+				// TODO:
+				// Login login = (Login)event.data;
+				// check Database if login.username and login.password exist
+				break;
+			case "logout":
+				// TODO:
+				break;
+			case "get stats":
+				// TODO: get stats from database for username
 				break;
 			default:
 				logger.log(Level.INFO, "Parse error. did not understand message: " + event);
@@ -68,6 +74,8 @@ public class CentralServerConnectionToClient extends ServerThread {
 			while ((dataFromClient = in.readObject()) != null) {
 				receive(dataFromClient);
 			}
+		} catch (EOFException eof) {
+			centralServer.release(this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {

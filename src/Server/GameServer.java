@@ -21,11 +21,11 @@ public class GameServer extends ServerSocket implements Runnable {
 		
 	public GameServer(int port) throws IOException{
 		super(port);
-		System.out.println("CREATED SOCKET");
+		if (Globals.DEBUG) System.out.println("CREATED SOCKET");
 		clients = new Vector<GameServerConnectionToClient>();
-		System.out.println("CREATED CLIENTS");
+		if (Globals.DEBUG) System.out.println("CREATED CLIENTS");
 		engine = new ServerEngine(clients);
-		System.out.println("CREATED ENGINE");
+		if (Globals.DEBUG) System.out.println("CREATED ENGINE");
 		name = "" + ID++;
 		this.thread = new Thread(this);
 	}
@@ -36,7 +36,7 @@ public class GameServer extends ServerSocket implements Runnable {
 	}
 	
 	private void listenForClients() {
-		System.out.println("GAMESERVER: LISTENING FOR CLIENTS");
+		if (Globals.DEBUG) System.out.println("GAMESERVER: LISTENING FOR CLIENTS");
 		int teamNumber = 0;
 		while(!engine.gameState.playable()) {
 			try {
@@ -50,7 +50,7 @@ public class GameServer extends ServerSocket implements Runnable {
 		
 		engine.start(); // starts engineThread, and sets gs.inGame
 		 
-		// keep listening so even more players can join, event after min join
+		// keep listening so even more players can join, even after min join
 		while(true) {
 			try {
 				Socket client = this.accept();
@@ -71,13 +71,13 @@ public class GameServer extends ServerSocket implements Runnable {
 		client.start();
 	}
 	
-	// TODO: create a playerExited method for onDispose of Client
-	
-//	public static void main(String[] args) {
-//		try {
-//			GameServer server = new GameServer(Globals.Development.GAME_PORT);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
+	public void release(GameServerConnectionToClient thread) {
+		System.out.println("releasing connection to client from central server");
+		thread.interrupt();
+		System.out.println("interupted thread");
+		boolean removed = clients.remove(thread);
+		System.out.println("removed thread from vector: " + removed);
+		// TODO: released client, now needs to validate that game is still playable
+		// if so do nothing, if not, then signal to all players that the game has ended.
+	}
 }
