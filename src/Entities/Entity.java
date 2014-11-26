@@ -176,4 +176,9 @@ public abstract class Entity implements Serializable {
 			System.out.println(msg);
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getName() + " {\n\tx: " + x + ", y: " + y + ", theta: " + theta + ",\n\theight: " + height + ", width: " + width + ",\n\thealth: " + health + ", visible: " + visible + "\n}\n";
+	}
 }

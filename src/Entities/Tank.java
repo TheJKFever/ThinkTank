@@ -25,7 +25,7 @@ public class Tank extends Entity implements Serializable  {
     static final int TANK_WIDTH = 16;
     
     static final int TANK_SPAWN_X  = 0;
-    static final int TANK_SPAWN_Y  = 0;
+    static final int TANK_SPAWN_Y  = 50;
     public static int TankCount=0;
     public int tankID;
     
@@ -50,7 +50,8 @@ public class Tank extends Entity implements Serializable  {
     }
     
     public void spawn() {
-    	this.x = TANK_SPAWN_X + (50 * this.tankID);
+    	this.x = 100;
+//    	this.x = TANK_SPAWN_X + (50 * this.tankID);
     	if (team.num == 1) {
     		this.y = TANK_SPAWN_Y;
     	} else {
@@ -136,18 +137,19 @@ public class Tank extends Entity implements Serializable  {
     }
     
     public void keyPressed(SimpleKeyEvent e) { 
+    	log("TANK: KEY PRESSED");
         int key = e.getKeyCode();
         
         if (key == KeyEvent.VK_UP) {
         	dp = 2;
         }
-        
         if (key == KeyEvent.VK_DOWN) {
         	dp = -2;
         }
     }
 
     public void keyReleased(SimpleKeyEvent e) {
+    	log("TANK: KEY RELEASED");
         int key = e.getKeyCode();
 
         if (key == KeyEvent.VK_UP) {
@@ -162,7 +164,6 @@ public class Tank extends Entity implements Serializable  {
 		if (key == KeyEvent.VK_RIGHT) {
 			  dtheta = 90;
 		}
-		
         if (key == KeyEvent.VK_SPACE) {
 			this.firing = true;
 		}

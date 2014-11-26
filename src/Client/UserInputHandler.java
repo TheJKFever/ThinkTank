@@ -16,6 +16,7 @@ public class UserInputHandler extends KeyAdapter {
 	}
 	
 	public void keyReleased(KeyEvent ke) {
+		System.out.println("INPUT HANDLER: KEY RELEASED");
 		synchronized(gameScreen.engine.eventQ) {
 			try {
 				Event event = new Event("key event", ke);
@@ -30,6 +31,7 @@ public class UserInputHandler extends KeyAdapter {
 	}
 	
 	public void keyPressed(KeyEvent ke) {
+		System.out.println("INPUT HANDLER: KEY PRESSED");
 		synchronized(gameScreen.engine.eventQ) {
 			try {
 				Event event = new Event("key event", ke);

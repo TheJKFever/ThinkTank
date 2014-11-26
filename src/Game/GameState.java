@@ -102,17 +102,19 @@ public class GameState implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		
 		sb.append("------------------------------------------\n");
 		sb.append("GAME STATE:\n");
-		sb.append("TEAM 1:\n");
-		sb.append("\tPlayers: " + teams[0].players.size() + "\n");
-		sb.append("\tBrain Health: " + teams[0].brain.health + "\n");
-		sb.append("TEAM 2:\n");
-		sb.append("\tPlayers: " + teams[1].players.size() + "\n");
-		sb.append("\tBrain Health: " + teams[1].brain.health + "\n");
+		sb.append("IN GAME: " + this.inGame + "\n");
+		for (int i = 0; i < teams.length; i++) {
+			Team team = teams[i];
+			sb.append("TEAM " + (i+1) + ":\n");
+			sb.append(team.brain);
+			sb.append("Players: " + team.players.size() + "\n");
+			for (Player player: team.players) {
+				sb.append(player.tank);	
+			}			
+		}
 		sb.append("------------------------------------------\n");
-		
 		return sb.toString();
 	}
 }

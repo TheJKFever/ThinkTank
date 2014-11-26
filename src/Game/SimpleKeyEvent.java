@@ -25,6 +25,6 @@ public class SimpleKeyEvent implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "SIMPLE EVENT: { keyCode: " + keyCode + ", eventID: " + eventID + " }"; 
+		return "SimpleKeyEvent: { keyCode: " + keyCode + ", eventID: " + eventID + " }"; 
 	}
 }

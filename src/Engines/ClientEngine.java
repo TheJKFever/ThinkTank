@@ -59,7 +59,10 @@ public class ClientEngine implements Runnable {
 		log("CLIENT ENGINE: Adding UserInputHandler");
 		gamePanel.addKeyListener(new UserInputHandler(this.gameScreen));
 
-		while (gameState.inGame) {
+		while (true) {
+//		while (gameState.inGame) {
+			log("CLIENT ENGINE: entered main loop");
+			
 			getGameStateFromServer();
 		
 			processUserInput();
@@ -82,6 +85,7 @@ public class ClientEngine implements Runnable {
 			}
 			beforeTime = System.currentTimeMillis();
 		}
+//		log("CLIENT ENGINE: GAMESTATE.INGAME == FALSE");
 	}
 	
 	public void processUserInput() {

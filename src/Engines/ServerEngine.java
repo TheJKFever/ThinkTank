@@ -43,7 +43,7 @@ public class ServerEngine implements Runnable {
 			
 			// TODO: ADD DELAY / TIMER HERE
 			timeDiff = System.currentTimeMillis() - beforeTime;
-			sleep = Globals.DELAY * 10 - timeDiff;
+			sleep = Globals.DELAY * 20 - timeDiff;
 
 			if (sleep < 0)
 				sleep = 1;
@@ -75,9 +75,10 @@ public class ServerEngine implements Runnable {
 		log("GAMESERVER: PROCESSINPUTFROMCLIENTS");
 		synchronized(eventQ) {
 			for (Event event: eventQ) {
+				log("GAMESERVER: PROCESSING EVENT:\n" + event);
 				switch(event.type) {
 					case "key event":
-						SimpleKeyEvent ke = ((SimpleKeyEvent)event.data);
+						SimpleKeyEvent ke = (SimpleKeyEvent)(event.data);
 						if (ke.getID() == KeyEvent.KEY_RELEASED) {
 							event.player.tank.keyReleased(ke);
 						} else if (ke.getID() == KeyEvent.KEY_PRESSED) {
