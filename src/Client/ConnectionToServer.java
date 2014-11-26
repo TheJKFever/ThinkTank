@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import org.json.simple.JSONObject;
 
+import Game.Event;
 import Helper.Helper;
 
 public class ConnectionToServer extends Socket implements Runnable {
@@ -27,15 +28,18 @@ public class ConnectionToServer extends Socket implements Runnable {
 		logger = Logger.getLogger("Client");
 	}
 	
-	public void received(String data) {
+	public void received(String obj) {
 		// TODO Parse all possible messages
-		JSONObject jsonData = Helper.parse(data);
+		JSONObject jsonData = Helper.parse(obj);
 		String type = (String)jsonData.get("type");
 		switch(type) {
 			case "game update":
-			gui.gameEngine.serverEventQ.add(jsonData);
+				gui.gameEngine.serverEventQ.add(jsonData);
 			case "chat":
 //				gui.chatPanel.
+			case "assign player":
+				String player = (String)jsonData.get("data");
+				
 			default:
 				logger.log(Level.INFO, "Parse error. did not understand message: " + data);
 		}
@@ -44,6 +48,10 @@ public class ConnectionToServer extends Socket implements Runnable {
 	public void send(String data) {
 		out.println(data);
 		out.flush();
+	}
+
+	public void sendEvent(Event event) {
+		send(event.Jsonify());
 	}
 	
 	private void listen() {

@@ -19,14 +19,14 @@ public class Brain extends Entity {
 		this.health = MAX_BRAIN_HEALTH;	
 		ImageIcon ii = null;
 		
-		if (team.teamNumber == 1) {
+		if (team.num == 1) {
 			ii = new ImageIcon(IMAGE_BRAIN);
 //			setWidth(ii.getImage().getWidth(null)); 
 			setWidth(89);
 			setHeight(88);
 //	        height = ii.getImage().getWidth(null);
 			this.y = Globals.BOARD_HEIGHT - (this.getHeight() + 20);		
-		} else if (team.teamNumber == 2) {
+		} else if (team.num == 2) {
 			ii = new ImageIcon(IMAGE_BRAIN_ENEMY);
 //			width = ii.getImage().getWidth(null); 
 //	        height = ii.getImage().getWidth(null);

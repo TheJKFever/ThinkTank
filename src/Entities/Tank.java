@@ -24,14 +24,15 @@ public class Tank extends Entity {
     
     static final int TANK_SPAWN_X  = 0;
     static final int TANK_SPAWN_Y  = 0;
-    public int tankNum;
+    public static int TankCount=0;
+    public int tankID;
     
     public boolean firing;
     Team team;
     Player player;
     
-    public Tank(int tankNum, Player p, GameState gs) {
-    	this.tankNum = tankNum;
+    public Tank(Player p, GameState gs) {
+    	this.tankID = TankCount++;
     	this.player = p;
     	this.team = player.team;
     	this.gs = gs;
@@ -46,8 +47,8 @@ public class Tank extends Entity {
     }
     
     public void spawn() {
-    	this.x = TANK_SPAWN_X + (50 * this.tankNum);
-    	if (team.teamNumber == 1) {
+    	this.x = TANK_SPAWN_X + (50 * this.tankID);
+    	if (team.num == 1) {
     		this.y = TANK_SPAWN_Y;
     	} else {
     		this.y = Globals.BOARD_HEIGHT - TANK_SPAWN_Y;

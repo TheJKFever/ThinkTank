@@ -6,19 +6,23 @@ import java.util.logging.Level;
 
 import org.json.simple.JSONObject;
 
+import Game.Event;
+import Game.Player;
 import Helper.Helper;
 
 public class ConnectionToClient extends ServerThread {
 	private static int ID = 0;
-	public int team;
-	public int id;
+	public Player player;
 	
 	public ConnectionToClient(Socket client, int team) {
 		super(client);
-		this.team = team;
-		this.id = ID++;
 	}
 
+	public void assignPlayer(Player p) {
+		this.player = p;
+		sendEvent(new Event("assign player", p)); // TODO: figure out how to send p so that the client receives pertenent info
+	}
+	
 	@Override
 	public void processIncomingData(String data) {
 	/*		Format of JSON data

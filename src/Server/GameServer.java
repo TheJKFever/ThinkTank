@@ -7,6 +7,7 @@ import java.util.Vector;
 import java.util.logging.Logger;
 
 import Game.Globals;
+import Game.Player;
 import Game.ServerEngine;
 import Helper.Helper;
 
@@ -14,21 +15,21 @@ public class GameServer extends ServerSocket {
 	private boolean waitingForPlayers;
 	private ServerEngine game;
 	private Logger logger;
-	private Vector<ConnectionToClient> players;
+	private Vector<ConnectionToClient> clients;
 		
 	public GameServer(int port) throws IOException{
 		super(port);
-		game = new ServerEngine();
-		listenForPlayers();
+		game = new ServerEngine(clients);
+		listenForClients();
 	}
 	
-	private void listenForPlayers() {
+	private void listenForClients() {
 		waitingForPlayers = true;
 		int team=0;
 		while(waitingForPlayers) {
 			try {
-				Socket player = this.accept();
-				addPlayer(new ConnectionToClient(player, team%2+1));
+				Socket client = this.accept();
+				addPlayer(new ConnectionToClient(client, team%2+1));
 				team++;
 			} catch(IOException ioe) {
 				ioe.printStackTrace();
@@ -43,24 +44,26 @@ public class GameServer extends ServerSocket {
 		game.start();
 	}
 
-	public void addPlayer(ConnectionToClient player) {
-		players.addElement(player);
-		switch(player.team) {
+	public void addPlayer(ConnectionToClient client) {
+		clients.addElement(client);
+		switch(client.team) {
 		case 1:
-			game.gs.team1.newPlayer();
-			if (game.gs.team2.players.size()>1) waitingForPlayers = false;
+			Player p = game.gs.teams[0].newPlayer();
+			client.assignPlayer(p);
+			if (game.gs.teams[1].players.size()>0) waitingForPlayers = false;
 			break;
 		case 2:
-			game.gs.team2.newPlayer();
-			if (game.gs.team1.players.size()>1) waitingForPlayers = false;
+			Player p = game.gs.teams[1].newPlayer();
+			client.assignPlayer(p);
+			if (game.gs.teams[0].players.size()>0) waitingForPlayers = false;
 			break;
 		default:
-			int nonExistentTeam = player.team;
-			player.team = (int)(Math.ceil(Math.random()*2));
-			player.send(Helper.Jsonify("warning", "Team " + nonExistentTeam + " does not exist, assigned player to team " + player.team));
-			addPlayer(player);
+			int nonExistentTeam = client.team;
+			client.team = (int)(Math.ceil(Math.random()*2));
+			client.send(Helper.Jsonify("warning", "Team " + nonExistentTeam + " does not exist, assigned player to team " + client.team));
+			addPlayer(client);
 		}
-		player.start();
+		client.start();
 	}
 	
 	// TODO: create a playerExited method for onDispose of Client

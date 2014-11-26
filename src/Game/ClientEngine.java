@@ -95,7 +95,9 @@ public class ClientEngine extends JPanel implements Runnable {
 		public void keyReleased(KeyEvent e) {
 			synchronized(eventQ) {
 				try {
-					ClientEngine.this.eventQ.put(new Event(e));
+					Event event = new Event(e);
+					eventQ.put(event);
+					conn.sendEvent(event);
 				} catch (InterruptedException ie) {
 					ie.printStackTrace();
 				}
@@ -105,7 +107,9 @@ public class ClientEngine extends JPanel implements Runnable {
 		public void keyPressed(KeyEvent e) {
 			synchronized(eventQ) {
 				try {
-					ClientEngine.this.eventQ.put(new Event(e));
+					Event event = new Event(e);
+					eventQ.put(new Event(e));
+					conn.sendEvent(event);
 				} catch (InterruptedException ie) {
 					ie.printStackTrace();
 				}

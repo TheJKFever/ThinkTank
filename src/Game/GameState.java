@@ -19,7 +19,7 @@ public class GameState {
 	
 //	public Vector<Turret> turrets;
 	
-	public GameState(Vector<ConnectionToClient> clients) {
+	public GameState() {
 		barriers = new Vector<Barrier>();
 		shots = new Vector<Shot>();
 		
@@ -40,12 +40,10 @@ public class GameState {
 			} else {
 				newPlayer.team = teams[2];
 			}
+			clients.get(i).player = newPlayer;
 			newPlayer.client = clients.get(i);
-			newPlayer.tank = new Tank(i/2, newPlayer, this);
+			newPlayer.tank = new Tank(newPlayer, this);
 		}
-		
-		
-		
 		
 		// adds barriers, thought pools
 		setUpMap();

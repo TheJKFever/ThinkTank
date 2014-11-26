@@ -16,7 +16,7 @@ public class ServerEngine implements Runnable {
 
 	public ServerEngine(Vector<ConnectionToClient> clientConnections) {
 		this.clients = clientConnections;
-		this.gs = new GameState(this.clients);
+		this.gs = new GameState();
 		
 		engineThread = new Thread(this);
 		engineThread.start();
@@ -63,5 +63,11 @@ public class ServerEngine implements Runnable {
 		if (Globals.DEBUG) {
 			System.out.println(msg);
 		}
+	}
+
+
+	public void start() {
+		// TODO Auto-generated method stub
+		
 	}
 }
