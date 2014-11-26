@@ -1,14 +1,10 @@
 package Engines;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.concurrent.ArrayBlockingQueue;
 
-import javax.swing.JPanel;
-
 import Client.ConnectionToGameServer;
+import Client.UserInputHandler;
 import Game.Event;
 import Game.GameState;
 import Game.Globals;
@@ -18,15 +14,15 @@ import Screens.GameScreen;
 
 public class ClientEngine implements Runnable {
 	
-	public GameState gameState;
-	ArrayBlockingQueue<Event> eventQ = new ArrayBlockingQueue<Event>(100);	
-	GamePanel gamePanel;
-	ConnectionToGameServer gameConnection;
-	public Player player;
 	
+	public Player player;
+	public GameState gameState;
+//	public ConnectionToGameServer gameConnection;
+	public ArrayBlockingQueue<Event> eventQ = new ArrayBlockingQueue<Event>(100);	
 	private Thread engineThread;
 	private GameScreen gameScreen;
-
+	GamePanel gamePanel;
+	
 	public ClientEngine(GameScreen gameScreen) {
 		System.out.println("ClientEngine: IN CONSTRUCTOR");
 		this.gameScreen = gameScreen;
@@ -55,16 +51,21 @@ public class ClientEngine implements Runnable {
 		beforeTime = System.currentTimeMillis();
 		
 		getGameStateFromServer();
+		
 		log("CLIENT ENGINE: About to paint gamePanel for the first time");
 		gamePanel.repaint();
-		log("CLIENT ENGINE: ADDING KEY LISTENER");
-		gamePanel.addKeyListener(new GameInputHandler());
+		
+		log("CLIENT ENGINE: Adding UserInputHandler");
+		gamePanel.addKeyListener(new UserInputHandler(this.gameScreen));
 
 		while (gameState.inGame) {
 			getGameStateFromServer();
+		
 			processUserInput();
+			
 			log("CLIENT ENGINE: ABOUT TO UPDATE GAME STATE");
 			gameState.update();
+			
 			log("CLIENT ENGINE: ABOUT TO REPAINT GAMEPANEL");
 			gamePanel.repaint();
 			
@@ -96,33 +97,6 @@ public class ClientEngine implements Runnable {
 				}
 			}
 			eventQ.clear();
-		}
-	}
-
-	private class GameInputHandler extends KeyAdapter {
-
-		public void keyReleased(KeyEvent e) {
-			synchronized(eventQ) {
-				try {
-					Event event = new Event("key event", e);
-					eventQ.put(event);
-					gameConnection.sendEvent(event);
-				} catch (InterruptedException ie) {
-					ie.printStackTrace();
-				}
-			}
-		}
-		
-		public void keyPressed(KeyEvent e) {
-			synchronized(eventQ) {
-				try {
-					Event event = new Event("key event", e);
-					eventQ.put(new Event("key event", e));
-					gameConnection.sendEvent(event);
-				} catch (InterruptedException ie) {
-					ie.printStackTrace();
-				}
-			}
 		}
 	}
 	

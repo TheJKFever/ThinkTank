@@ -22,7 +22,7 @@ public class Event implements Serializable {
 	}
 	
 	public String toString() {
-		return ("timestamp: " + timestamp +", type: " + type + ", data: " + data);
+		return ("EVENT: timestamp: " + timestamp +", type: " + type + ", data: " + data);
 	}
 	
 }
