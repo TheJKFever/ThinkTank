@@ -23,6 +23,9 @@ public class ServerEngine implements Runnable {
 	
 	public void run() {
 		System.out.println("GSCONNECTIONTOCLIENT: RUN()");
+		long beforeTime, timeDiff, sleep;
+		beforeTime = System.currentTimeMillis();
+		
 		gameState.inGame = true;
 		broadcastGameState();
 		startGame();
@@ -31,7 +34,19 @@ public class ServerEngine implements Runnable {
 			processInputFromClients();
 			gameState.update();
 			broadcastGameState();
+			
 			// TODO: ADD DELAY / TIMER HERE
+			timeDiff = System.currentTimeMillis() - beforeTime;
+			sleep = Globals.DELAY * 10 - timeDiff;
+
+			if (sleep < 0)
+				sleep = 1;
+			try {
+				Thread.sleep(sleep);
+			} catch (InterruptedException e) {
+				System.out.println("interrupted");
+			}
+			beforeTime = System.currentTimeMillis();
 		}
 	}
 	

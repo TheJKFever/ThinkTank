@@ -28,8 +28,9 @@ public class GamePanel extends JPanel {
 		this.setDoubleBuffered(true);
 	}
 	
-	public void paint(Graphics g, GameState gs) {
+	public void paint(Graphics g) {
 		super.paint(g);
+		System.out.println("GAMEPANEL: ABOUT TO REPAINT");
 		this.gameState = this.gameScreen.engine.gameState;
 		render(g);
 	}

@@ -34,22 +34,33 @@ public class ClientEngine implements Runnable {
 		engineThread.start();
 	}
 
-	public void run() {
-		System.out.println("CLIENT ENGINE THREAD STARTED");
-		long beforeTime, timeDiff, sleep;
-		beforeTime = System.currentTimeMillis();
-		
+	public void getGameStateFromServer() {
+		System.out.println("CLIENT ENGINE: GETTING GAME STATE FROM SERVER");
+		gameState = gameScreen.gameConnection.getGameStateFromServer();
 		while (gameState == null) {
 			gameState = gameScreen.gameConnection.getGameStateFromServer();
 			System.out.println("GAME STATE == NULL");
 		}
-		System.out.println("GAME STATE NOT NULL!");
+		System.out.println("GAME STATE != NULL");
+	}
+	
+	public void run() {
+		System.out.println("CLIENT ENGINE: THREAD STARTED");
+		long beforeTime, timeDiff, sleep;
+		beforeTime = System.currentTimeMillis();
+		
+		getGameStateFromServer();
+		System.out.println("CLIENT ENGINE: ABOUT TO REPAINT GAMEPANEL");
+		gamePanel.repaint();
+		System.out.println("GAME STATE == NULL");
 		gamePanel.addKeyListener(new GameInputHandler());
 
 		while (gameState.inGame) {
-			gameState = gameScreen.gameConnection.getGameStateFromServer();
+			getGameStateFromServer();
 			processUserInput();
+			System.out.println("CLIENT ENGINE: ABOUT TO UPDATE GAME STATE");
 			gameState.update();
+			System.out.println("CLIENT ENGINE: ABOUT TO REPAINT");
 			gamePanel.repaint();
 			
 			timeDiff = System.currentTimeMillis() - beforeTime;
@@ -67,6 +78,7 @@ public class ClientEngine implements Runnable {
 	}
 	
 	public void processUserInput() {
+		System.out.println("CLIENT ENGINE: PROCESSING USER INPUT");
 		synchronized(eventQ) {
 			for (Event event: eventQ) {
 				if (event.type == "key event") {

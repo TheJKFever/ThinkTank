@@ -24,7 +24,9 @@ public class ConnectionToGameServer extends ConnectionToServer {
 
 	public GameState getGameStateFromServer() {
 		System.out.println("CONNECTIONTOGAMESERVER: GETGAMESTATEFROMSERVER()");
-		return gameState;
+		GameState latestState = gameState;
+		gameState = null;
+		return latestState;
 	}
 	
 	public void receive(Object obj) {
