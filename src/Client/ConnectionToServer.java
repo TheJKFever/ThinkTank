@@ -16,34 +16,19 @@ import Game.Event;
 import Game.Player;
 import Helper.Helper;
 
-public class ConnectionToServer extends Socket implements Runnable {
+public abstract class ConnectionToServer extends Socket implements Runnable {
 	public ObjectInputStream in;
 	public ObjectOutputStream out;
-	public ThinkTankGUI gui;
 	private Logger logger;
 	
-	public ConnectionToServer(ThinkTankGUI gui, String host, int port) throws UnknownHostException, IOException {
+	public ConnectionToServer(String host, int port) throws UnknownHostException, IOException {
 		super(host, port);
-		this.gui = gui;
 		in = new ObjectInputStream(getInputStream());
 		out = new ObjectOutputStream(getOutputStream());
 		logger = Logger.getLogger("Client");
 	}
 	
-	public void receive(Object obj) {
-		// TODO Parse all possible messages
-		Event event = Event.deserialize(obj);
-		switch(event.type) {
-			case "game update":
-				gui.clientEngine.serverEventQ.add(jsonData);
-			case "chat":
-//				gui.chatPanel.
-			case "assign player":
-				gui.clientEngine.player = (Player)event.data;
-			default:
-				logger.log(Level.INFO, "Parse error. did not understand message: " + data);
-		}
-	}
+	public abstract void receive(Object obj);
 	
 	public void send(Object obj) {
 		try {
@@ -55,17 +40,19 @@ public class ConnectionToServer extends Socket implements Runnable {
 	}
 
 	public void sendEvent(Event event) {
-		send(event.Jsonify());
+		send(event.serialize());
 	}
 	
 	private void listen() {
 		// Listen for messages from server
-		String dataFromServer;
+		Object dataFromServer;
 		try {
-			while ((dataFromServer = in.readLine()) != null) {
+			while ((dataFromServer = in.readObject()) != null) {
 				receive(dataFromServer);
 			}
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}

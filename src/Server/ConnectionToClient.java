@@ -26,18 +26,9 @@ public class ConnectionToClient extends ServerThread {
 	}
 	
 	@Override
-	public void processIncomingData(String data) {
-	/*		Format of JSON data
-	 * 		{
-	 * 		  "timestamp": 0nanoseconds0,
-	 *		  "type": "type of message",
-	 *		  "data": "this varies based off type",
-	 *		  "result": true <- if boolean result
-	 * 		}
-	 */
-		JSONObject jsonData = Helper.parse(data);
-		String type = (String)jsonData.get("type");
-		switch(type) {
+	public void receive(Object obj) {
+		Event event = Event.deserialize(obj);
+		switch(event.type) {
 		// consider making this {"type": "command", "data": "new game"...
 		// instead of {"type": "new game", ...
 			case "key event":
@@ -45,6 +36,7 @@ public class ConnectionToClient extends ServerThread {
 //				game.eventQ.add(Helper.parseEvent(jsonData));
 			case "chat":
 //				sendMessage();
+			case "new game":
 			default:
 //				logger.log(Level.INFO, "Parse error. did not understand message: " + data);
 		}			
@@ -55,7 +47,7 @@ public class ConnectionToClient extends ServerThread {
 		String dataFromPlayer;
 		try {
 			while ((dataFromPlayer = in.readObject()) != null) {
-				processIncomingData(dataFromPlayer);
+				receive(dataFromPlayer);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

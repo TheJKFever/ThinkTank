@@ -12,7 +12,7 @@ public interface Globals {
 	public int CHAT_PORT = 6789;
     
     public class Development {
-    	public static final int GAME_PORT = 3000;
+    	public static final int SERVER_PORT = 3000;
     	public static final String HOST = "localhost";
 
     	public class DB {
@@ -26,7 +26,7 @@ public interface Globals {
     
     public class Production {
     	public static final String HOST = "thinktank.herokuapp.com";
-    	public static final int GAME_PORT = 2400;
+    	public static final int SERVER_PORT = 2400;
     	public class DB {
         	public static final String ADDRESS = "jdbc:mysql://localhost/";
         	public static final String NAME = "lab11";

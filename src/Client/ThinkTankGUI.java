@@ -7,26 +7,30 @@ import java.net.UnknownHostException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import Helper.Helper;
-import Game.ClientEngine;
+import Game.Event;
 import Game.Globals;
+import Screens.GameScreen;
+import Screens.MainMenuScreen;
+import Screens.WaitingScreen;
 
 public class ThinkTankGUI extends JFrame {
-	private ConnectionToServer connection;
+	private ConnectionToCentralServer centralConnection;
 	private CardLayout cardLayout = new CardLayout();
 	private JPanel mainPanel;
-	//	private MainMenuScreen mainMenu;
+	public MainMenuScreen mainMenu;
 	//	private StatsScreen stats;
 	//	private CreateProfileScreen createProfile;
 	//	private CreateGameScreen createGame;
-	//	private WaitingScreen waiting;
+	public WaitingScreen waiting;
 	//	private JoinGameScreen joinGame;
-	public ClientEngine clientEngine;
+	public GameScreen gameScreen;
 	//	private GameOverScreen gameOver;
+	public boolean loggedIn = false;
 
+	
 	public ThinkTankGUI(String host, int port) {
 		try {
-			connection = new ConnectionToServer(this, host, port);
+			centralConnection = new ConnectionToCentralServer(this, host, port); // Connects to central server
 			
 			// client needs to have a unique id
 			// client needs to have a specific tank that it controls
@@ -53,7 +57,7 @@ public class ThinkTankGUI extends JFrame {
 //			 createGame = new CreateGameScreen(); 
 //			 waiting = new WaitingScreen(); 
 //			 joinGame = new JoinGameScreen(); 
-			clientEngine = new ClientEngine(); 
+			gameScreen = new GameScreen(this);
 //			 gameOver = new GameOverScreen(); 
 
 //			 mainPanel.add("mainMenu", mainMenu);
@@ -61,7 +65,7 @@ public class ThinkTankGUI extends JFrame {
 //			 mainPanel.add("createProfile", createProfile);
 //			 mainPanel.add("createGame", createGame);
 //			 mainPanel.add("waiting", waiting);
-			mainPanel.add("gameScreen", clientEngine);
+			mainPanel.add("gameScreen", gameScreen);
 //			 mainPanel.add("joinGame", joinGame);
 			
 			
@@ -69,12 +73,12 @@ public class ThinkTankGUI extends JFrame {
 
 
 			// TODO: put all  of these in action listeners
-//			 cardLayout.show(mainPanel, "mainMenu");
+			 cardLayout.show(mainPanel, "mainMenu");
 //			 cardLayout.show(mainPanel, "stats");
 //			 cardLayout.show(mainPanel, "createProfile");
 //			 cardLayout.show(mainPanel, "createGame");
 //			 cardLayout.show(mainPanel, "waiting");
-			cardLayout.show(mainPanel, "gameScreen");
+//			 cardLayout.show(mainPanel, "gameScreen");
 //			 cardLayout.show(mainPanel, "joinGame");
 
 
@@ -92,7 +96,36 @@ public class ThinkTankGUI extends JFrame {
 		}
 	}
 
-	public static void main(String[] args) {
-		ThinkTankGUI gui = new ThinkTankGUI(Globals.Development.HOST, Globals.Development.GAME_PORT);
+	public void startNewGame() {
+		centralConnection.sendEvent(new Event("new game"));
+		cardLayout.show(mainPanel, "waiting");
 	}
+	
+	public void joinGame() {
+		// Go to lobby
+		// Select available game
+		// get port from that game
+		joinGame(port);
+	}
+	
+	public void joinGame(int port) {
+		// make connection to game server
+		// store connection in gameScreen
+		// if connection made go to waiting screen
+		if (gameScreen.connectToGameServer(Globals.Development.HOST, port)) {
+			cardLayout.show(mainPanel, "waiting");
+		} else {
+			throw new RuntimeException("Could not create game in joinGame");
+		}
+	}
+
+	public static void main(String[] args) {
+		ThinkTankGUI gui = new ThinkTankGUI(Globals.Development.HOST, Globals.Development.SERVER_PORT);
+	}
+
+	public void startGame() {
+		cardLayout.show(mainPanel, "gameScreen");
+		gameScreen.engine.s
+	}
+
 }

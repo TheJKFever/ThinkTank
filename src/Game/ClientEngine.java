@@ -8,50 +8,41 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 import javax.swing.JPanel;
 
-import Chat.ChatClient;
-import Client.ConnectionToServer;
+import Client.ConnectionToGameServer;
 import Client.Renderer;
+import Screens.GameScreen;
 
-public class ClientEngine extends JPanel implements Runnable {
-	JPanel chatPanel;
+public class ClientEngine implements Runnable {
 	public GameState gs;
 	ArrayBlockingQueue<Event> eventQ = new ArrayBlockingQueue<Event>(100);	
-	public ChatClient chat; daf;dkjsalk;jfjkfsdajlk <-- fix this
 	Renderer renderer;
-	ConnectionToServer conn;
+	ConnectionToGameServer gameConnection;
 	public Player player;
 	
 	private Thread engineThread;
+	private GameScreen gameScreen;
 
-	public ClientEngine(ConnectionToServer connection) {
-		setFocusable(true);
-		setBackground(Color.black);
-		setDoubleBuffered(true);
-		this.conn = connection;
+	public ClientEngine(GameScreen gameScreen) {
+		this.gameScreen = gameScreen;
+		gameScreen.gamePanel.setFocusable(true);
+		gameScreen.gamePanel.setBackground(Color.black);
+		gameScreen.gamePanel.setDoubleBuffered(true);
+		engineThread = new Thread(this);
 	}
 
-	public void addNotify() {
-		super.addNotify();
-		gameInit();
-	}
-
-	public void gameInit() {
+	public void startGame() {
 		this.renderer = new Renderer(this);
-		addKeyListener(new GameInputHandler()); // TODO: this could be a problem cause could send data before game start
-
-		if (engineThread == null || !gs.inGame) {
-			engineThread = new Thread(this);
-			engineThread.start();
-		}
+		engineThread.start();
 	}
 
 	public void run() {
 		long beforeTime, timeDiff, sleep;
 		beforeTime = System.currentTimeMillis();
+		gameScreen.gamePanel.addKeyListener(new GameInputHandler());
 
 		while (gs.inGame) {
 			// non-blocking?
-			gs = conn.getGameStateFromServer();
+			gs = gameScreen.gameConnection.getGameStateFromServer();
 			//for Event in internalEventQ:
 				// sendInputsToServer()
 				// applyInputsLocally()
@@ -92,15 +83,15 @@ public class ClientEngine extends JPanel implements Runnable {
 			eventQ.clear();
 		}
 	}
-	
+
 	private class GameInputHandler extends KeyAdapter {
 
 		public void keyReleased(KeyEvent e) {
 			synchronized(eventQ) {
 				try {
-					Event event = new Event(e);
+					Event event = new Event("key event", e);
 					eventQ.put(event);
-					conn.sendEvent(event);
+					gameConnection.sendEvent(event);
 				} catch (InterruptedException ie) {
 					ie.printStackTrace();
 				}
@@ -110,9 +101,9 @@ public class ClientEngine extends JPanel implements Runnable {
 		public void keyPressed(KeyEvent e) {
 			synchronized(eventQ) {
 				try {
-					Event event = new Event(e);
-					eventQ.put(new Event(e));
-					conn.sendEvent(event);
+					Event event = new Event("key event", e);
+					eventQ.put(new Event("key event", e));
+					gameConnection.sendEvent(event);
 				} catch (InterruptedException ie) {
 					ie.printStackTrace();
 				}

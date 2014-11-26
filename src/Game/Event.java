@@ -12,21 +12,15 @@ public class Event implements Serializable {
 	public Object data;
 	public long timestamp;
 	
-	public Event(KeyEvent e) {
-		this.data = e;
-		this.timestamp = System.nanoTime();
-		this.type = "key event";
-	}
-	
-	public Event(String message) {
-		this.data = message;
-		this.timestamp = System.nanoTime();
-		this.type = "chat";
-	}
-	
-	public Event(String type, Player player) {
-		this.data = player;
+	public Event(String type) {
 		this.type = type;
+		this.timestamp = System.nanoTime();
+	}
+	
+	public Event(String type, Object data) {
+		this.type = type;
+		this.data = data;
+		this.timestamp = System.nanoTime();
 	}
 	
 	public String Jsonify() {

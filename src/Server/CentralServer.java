@@ -20,6 +20,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import Exceptions.PortNotAvailableException;
+import Game.Event;
 import Game.Globals;
 import Helper.Helper;
 
@@ -103,7 +104,9 @@ public class CentralServer extends ServerSocket {
 			try {
 				Socket connection = this.accept();
 				if (validate(connection)) {
-					clients.addElement(new CentralServerThread(connection));
+					CentralServerThread serverThread = new CentralServerThread(connection);
+					clients.addElement(serverThread);
+					serverThread.start();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -116,57 +119,55 @@ public class CentralServer extends ServerSocket {
 			super(connection);
 		}
 		
-		public void send(String data) {
-			out.println(data);
-			out.flush();
+		public void send(Object obj) {
+			try {
+				out.writeObject(obj);
+				out.flush();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		@Override
-		public void processIncomingData(String data) {
-			
-			// TODO Parse all possible messages
-			JSONObject jsonData = Helper.parse(data);
-			String type = (String)jsonData.get("type");
-			switch(type) {
+		public void receive(Object obj) {
+			Event event = Event.deserialize(obj);
+			switch(event.type) {
 			// consider making this {"type": "command", "data": "new game"...
 			// instead of {"type": "new game", ...
 				case "new game": 
-				int portOfNewGame;
-				try {
-					portOfNewGame = newGame();
-					send(Helper.Jsonify("response", portOfNewGame, true));
-				} catch (PortNotAvailableException pnae) {
-					send(Helper.Jsonify("response", pnae.getMessage(), false));
-				}
+					int portOfNewGame;
+					try {
+						portOfNewGame = newGame();
+						sendEvent(new Event("new game", portOfNewGame));
+					} catch (PortNotAvailableException pnae) {
+						sendEvent(new Event("new game", -1));
+					}
 				default:
 					logger.log(Level.INFO, "Parse error. did not understand message: " + data);
 			}
 		}
 		
-//		public void received(String data) {
-//			Message = this.protocolParser.parse(data);
-//			if (type 1) {
-//				// respond to type 1
-//			} else if (type 2) {
-////				respond to type 2
-//			} else if (type 3) {
-////				respond to type 3
-//			} else  {
-//				logger.log(Level.INFO, "Parse error. did not understand message: " + data);
-//			}
-//		}
-
 		public void listen() {
 			// Listen for messages from client
 			String dataFromClient;
 			try {
 				while ((dataFromClient = in.readLine()) != null) {
-					processIncomingData(dataFromClient);
+					receive(dataFromClient);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
+	
+	public static void main(String[] args) {
+		try {
+			CentralServer server = new CentralServer(Globals.Development.SERVER_PORT);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 }
 

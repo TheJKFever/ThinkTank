@@ -12,13 +12,16 @@ import Game.ServerEngine;
 import Game.Team;
 
 public class GameServer extends ServerSocket {
+	private static int ID=0;
 	private ServerEngine engine;
 	private Logger logger;
 	private Vector<ConnectionToClient> clients;
+	public String name;
 		
 	public GameServer(int port) throws IOException{
 		super(port);
 		engine = new ServerEngine(clients);
+		name = "" + ID++;
 		listenForClients();
 	}
 	
@@ -46,11 +49,11 @@ public class GameServer extends ServerSocket {
 	
 	// TODO: create a playerExited method for onDispose of Client
 	
-	public static void main(String[] args) {
-		try {
-			GameServer server = new GameServer(Globals.Development.GAME_PORT);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+//	public static void main(String[] args) {
+//		try {
+//			GameServer server = new GameServer(Globals.Development.GAME_PORT);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 }

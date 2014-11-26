@@ -38,7 +38,7 @@ public abstract class ServerThread extends Thread {
 		send(event.Jsonify());
 	}
 	
-	public abstract void processIncomingData(String data);
+	public abstract void receive(Object data);
 	
 	public abstract void listen();
 	
