@@ -10,8 +10,7 @@ import javax.swing.JPanel;
 import Chat.ChatClient;
 import Client.ConnectionToGameServer;
 import Client.ThinkTankGUI;
-import Game.ClientEngine;
-import Game.GamePanel;
+import Engines.ClientEngine;
 
 public class GameScreen extends JPanel {
 	

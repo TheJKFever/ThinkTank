@@ -1,21 +1,26 @@
-package Game;
+package Screens;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.Vector;
 
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import Entities.Barrier;
 import Entities.Brain;
 import Entities.Entity;
-import Screens.GameScreen;
+import Game.GameState;
+import Game.Globals;
 
 public class GamePanel extends JPanel {
 
+	private static final long serialVersionUID = 123783444588707640L; // not necessary
+	
 	public GameScreen gameScreen;
 	public GameState gameState;
 	
@@ -33,6 +38,11 @@ public class GamePanel extends JPanel {
 		System.out.println("GAMEPANEL: ABOUT TO REPAINT");
 		this.gameState = this.gameScreen.engine.gameState;
 		render(g);
+	}
+	
+	public Image getImg(String path) {
+		// TODO: CREATE A HASH MAP THAT CACHES IMAGES IT HAS ALREADY CREATED
+		return new ImageIcon(path).getImage();
 	}
 	
 	public void render(Graphics g) {
@@ -62,7 +72,7 @@ public class GamePanel extends JPanel {
 		for (Brain brain: gameState.brains) {
 		
 			if (brain.isVisible()) {
-				g.drawImage(brain.getImage(), brain.x, brain.y, this);
+				g.drawImage(getImg(brain.imagePath), brain.x, brain.y, this);
 			}
 			if (brain.isDying()) {
 				brain.die();
@@ -76,7 +86,7 @@ public class GamePanel extends JPanel {
 				g.fillRect(20, 20, brain.health, 20);
 	
 				Font small = new Font("Helvetica", Font.BOLD, 14);
-				FontMetrics metr = this.getFontMetrics(small);
+//				FontMetrics metr = this.getFontMetrics(small);
 				g.setColor(Color.white);
 				g.setFont(small);
 				g.drawString("Brain" + brain.team.num, 140, 20);
@@ -87,7 +97,7 @@ public class GamePanel extends JPanel {
 				g.fillRect(600, 20, brain.health, 20);
 	
 				Font small = new Font("Helvetica", Font.BOLD, 14);
-				FontMetrics metr = this.getFontMetrics(small);
+//				FontMetrics metr = this.getFontMetrics(small);
 				g.setColor(Color.white);
 				g.setFont(small);
 				g.drawString("Brain" + brain.team.num, 740, 20);
@@ -108,7 +118,7 @@ public class GamePanel extends JPanel {
 		
 		for (Entity e : entities) {
 			if (e.isVisible()) {
-				g.drawImage(e.getImage(), e.x, e.y, this);
+				g.drawImage(getImg(e.imagePath), e.x, e.y, this);
 			}
 			if (e.isDying()) {
 				e.die();

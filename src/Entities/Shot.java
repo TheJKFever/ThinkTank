@@ -2,14 +2,13 @@ package Entities;
 
 import java.io.Serializable;
 
-import javax.swing.ImageIcon;
-
 import Game.GameState;
 import Game.Globals;
 
 public class Shot extends Entity implements Serializable  {
 
 	private static final long serialVersionUID = -5027836598744895479L;
+	
 	static final String IMAGE_SHOT_UP = "images/bulletUp.png";
     static final String IMAGE_SHOT_RIGHT = "images/bulletRight.png";
     static final String IMAGE_SHOT_DOWN = "images/bulletDown.png";
@@ -26,29 +25,32 @@ public class Shot extends Entity implements Serializable  {
     public Shot(int x, int y, int theta, GameState gs) {
     	this.gs = gs;
         this.setX(x);
-        this.y = y;
+        this.y = y;   
         
         this.theta = theta;
-        
-        ImageIcon ii = null;
-        
         if (theta == 0) {
-        	ii = new ImageIcon(IMAGE_SHOT_UP);
+        	setImagePath(IMAGE_SHOT_UP);
+        	width = SHOT_WIDTH_VERTICAL;
+        	height = SHOT_HEIGHT_VERTICAL;
         } else if (theta == 90) {
-        	ii = new ImageIcon(IMAGE_SHOT_RIGHT);
+        	setImagePath(IMAGE_SHOT_RIGHT);
+        	width = SHOT_WIDTH_HORIZONTAL;
+        	height = SHOT_HEIGHT_HORIZONTAL;
         }  else if (theta == 180) {
-        	ii = new ImageIcon(IMAGE_SHOT_DOWN);
+        	setImagePath(IMAGE_SHOT_DOWN);
+        	width = SHOT_WIDTH_VERTICAL;
+        	height = SHOT_HEIGHT_VERTICAL;
         }  else if (theta == 270) {
-        	ii = new ImageIcon(IMAGE_SHOT_LEFT);
+        	setImagePath(IMAGE_SHOT_LEFT);
+        	width = SHOT_WIDTH_HORIZONTAL;
+        	height = SHOT_HEIGHT_HORIZONTAL;
         }
-        setImage(ii.getImage());
-        this.setWidth(ii.getImage().getWidth(null));
-    	this.setHeight(ii.getImage().getHeight(null));
+ 
     }
-    
+ 
     public void update() {
-        int shotX = getX();
-        int shotY = getY();
+//        int shotX = getX();
+//        int shotY = getY();
         updatePosition();
     }
     
@@ -60,12 +62,12 @@ public class Shot extends Entity implements Serializable  {
             }
         } else if (theta == 180) {
         	y += shotSpeed;
-        	if (y > Globals.BOARD_HEIGHT) { // TODO: FIX THIS TO BE SOME GLOBAL CONSTANT
+        	if (y > Globals.BOARD_HEIGHT) {
         		die();
         	}
         }  else if (theta == 90) {
         	x += shotSpeed;
-        	if (x > Globals.BOARD_WIDTH) { // TODO: FIX THIS TO BE SOME GLOBAL CONSTANT
+        	if (x > Globals.BOARD_WIDTH) {
         		die();
         	}
         }  else if (theta == 270) {

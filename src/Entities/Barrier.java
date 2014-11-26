@@ -7,6 +7,7 @@ import Game.GameState;
 
 public class Barrier extends Entity implements Serializable  {
 	private static final long serialVersionUID = -1039864192350379044L;
+	
 	//	final String IMAGE_BARRIER = "images"
 	public static final Color color = Color.orange;
 	

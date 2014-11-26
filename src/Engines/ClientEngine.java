@@ -1,4 +1,4 @@
-package Game;
+package Engines;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -9,6 +9,11 @@ import java.util.concurrent.ArrayBlockingQueue;
 import javax.swing.JPanel;
 
 import Client.ConnectionToGameServer;
+import Game.Event;
+import Game.GameState;
+import Game.Globals;
+import Game.Player;
+import Screens.GamePanel;
 import Screens.GameScreen;
 
 public class ClientEngine implements Runnable {
@@ -35,32 +40,32 @@ public class ClientEngine implements Runnable {
 	}
 
 	public void getGameStateFromServer() {
-		System.out.println("CLIENT ENGINE: GETTING GAME STATE FROM SERVER");
+		log("CLIENT ENGINE: GETTING GAME STATE FROM SERVER");
 		gameState = gameScreen.gameConnection.getGameStateFromServer();
 		while (gameState == null) {
+			log("GAME STATE == NULL, TRYING AGAIN");
 			gameState = gameScreen.gameConnection.getGameStateFromServer();
-			System.out.println("GAME STATE == NULL");
 		}
-		System.out.println("GAME STATE != NULL");
+		log(gameState.toString());
 	}
 	
 	public void run() {
-		System.out.println("CLIENT ENGINE: THREAD STARTED");
+		log("CLIENT ENGINE: THREAD STARTED");
 		long beforeTime, timeDiff, sleep;
 		beforeTime = System.currentTimeMillis();
 		
 		getGameStateFromServer();
-		System.out.println("CLIENT ENGINE: ABOUT TO REPAINT GAMEPANEL");
+		log("CLIENT ENGINE: About to paint gamePanel for the first time");
 		gamePanel.repaint();
-		System.out.println("GAME STATE == NULL");
+		log("CLIENT ENGINE: ADDING KEY LISTENER");
 		gamePanel.addKeyListener(new GameInputHandler());
 
 		while (gameState.inGame) {
 			getGameStateFromServer();
 			processUserInput();
-			System.out.println("CLIENT ENGINE: ABOUT TO UPDATE GAME STATE");
+			log("CLIENT ENGINE: ABOUT TO UPDATE GAME STATE");
 			gameState.update();
-			System.out.println("CLIENT ENGINE: ABOUT TO REPAINT");
+			log("CLIENT ENGINE: ABOUT TO REPAINT GAMEPANEL");
 			gamePanel.repaint();
 			
 			timeDiff = System.currentTimeMillis() - beforeTime;
@@ -71,14 +76,14 @@ public class ClientEngine implements Runnable {
 			try {
 				Thread.sleep(sleep);
 			} catch (InterruptedException e) {
-				System.out.println("interrupted");
+				log("interrupted");
 			}
 			beforeTime = System.currentTimeMillis();
 		}
 	}
 	
 	public void processUserInput() {
-		System.out.println("CLIENT ENGINE: PROCESSING USER INPUT");
+		log("CLIENT ENGINE: PROCESSING USER INPUT");
 		synchronized(eventQ) {
 			for (Event event: eventQ) {
 				if (event.type == "key event") {

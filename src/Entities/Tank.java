@@ -3,8 +3,6 @@ package Entities;
 import java.awt.event.KeyEvent;
 import java.io.Serializable;
 
-import javax.swing.ImageIcon;
-
 import Game.Player;
 import Game.Rect;
 import Game.GameState;
@@ -14,6 +12,7 @@ import Game.Team;
 public class Tank extends Entity implements Serializable  {
 
 	private static final long serialVersionUID = 4397815103071777225L;
+	
 	static final String imageDir = "images/tanks/";
     static final String IMAGE_TANK_UP = imageDir + "blue/up1.png";
     static final String IMAGE_TANK_RIGHT = imageDir + "blue/right1.png";
@@ -57,19 +56,17 @@ public class Tank extends Entity implements Serializable  {
     		this.y = Globals.BOARD_HEIGHT - TANK_SPAWN_Y;
     	}
     }
+    
     public void updateImage(int theta) {
-    	String filename = null;
     	if (theta == 0) {
-    		filename = IMAGE_TANK_UP;
+    		this.imagePath = IMAGE_TANK_UP;
     	} else if (theta == 90) {
-    		filename = IMAGE_TANK_RIGHT;
+    		this.imagePath = IMAGE_TANK_RIGHT;
     	} else if (theta == 180) {
-    		filename = IMAGE_TANK_DOWN;
+    		this.imagePath = IMAGE_TANK_DOWN;
     	} else if (theta == 270) {
-    		filename = IMAGE_TANK_LEFT;
+    		this.imagePath = IMAGE_TANK_LEFT;
     	}
-    	ImageIcon ii = new ImageIcon(filename);
-    	this.setImage(ii.getImage());
     }
 
     public void update() {

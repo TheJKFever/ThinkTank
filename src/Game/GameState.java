@@ -7,11 +7,11 @@ import Entities.Barrier;
 import Entities.Brain;
 import Entities.Shot;
 import Entities.Tank;
-import Server.GameServerConnectionToClient;
 
 public class GameState implements Serializable {
 	
 	private static final long serialVersionUID = 9118715319749588761L;
+	
 	public Team[] teams;
 	public Vector<Brain> brains;
 	public Vector<Player> players;
@@ -99,4 +99,20 @@ public class GameState implements Serializable {
 		}
 	}
 	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("------------------------------------------\n");
+		sb.append("GAME STATE:\n");
+		sb.append("TEAM 1:\n");
+		sb.append("\tPlayers: " + teams[0].players.size() + "\n");
+		sb.append("\tBrain Health: " + teams[0].brain.health + "\n");
+		sb.append("TEAM 2:\n");
+		sb.append("\tPlayers: " + teams[1].players.size() + "\n");
+		sb.append("\tBrain Health: " + teams[1].brain.health + "\n");
+		sb.append("------------------------------------------\n");
+		
+		return sb.toString();
+	}
 }

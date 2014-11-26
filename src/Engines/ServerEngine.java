@@ -1,9 +1,12 @@
-package Game;
+package Engines;
 
 import java.awt.event.KeyEvent;
 import java.util.Vector;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import Game.Event;
+import Game.GameState;
+import Game.Globals;
 import Server.GameServerConnectionToClient;
 
 public class ServerEngine implements Runnable {
@@ -16,8 +19,10 @@ public class ServerEngine implements Runnable {
 	public ServerEngine(Vector<GameServerConnectionToClient> clientConnections) {
 		System.out.println("SERVERENGINE: CONSTRUCTOR");
 		this.clients = clientConnections;
-		this.gameState = new GameState();		
+		this.gameState = new GameState();	
 		engineThread = new Thread(this);
+		System.out.println("SERVER ENGINE: INITIAL GAME STATE");
+		System.out.println(gameState);
 	}
 	
 	
@@ -52,6 +57,7 @@ public class ServerEngine implements Runnable {
 	
 	public void broadcastGameState() {
 		System.out.println("GAMESERVER: BROADCAST GAME STATE");
+		System.out.println(gameState);
 		for (GameServerConnectionToClient client: clients) {
 			client.sendEvent(new Event("game update", gameState));
 		}
