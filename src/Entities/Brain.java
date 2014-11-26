@@ -10,7 +10,7 @@ public class Brain extends Entity {
 	int MAX_BRAIN_HEALTH = 100;
 	static String IMAGE_BRAIN = "images/brain3D.png";
 	static String IMAGE_BRAIN_ENEMY = "images/brain3DEnemy.png";
-	Team team;
+	public Team team;
 	
 	public Brain(Team team, GameState gs) {
 		this.type = "Brain";

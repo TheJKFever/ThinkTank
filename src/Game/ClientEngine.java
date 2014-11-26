@@ -9,13 +9,12 @@ import java.util.concurrent.ArrayBlockingQueue;
 import javax.swing.JPanel;
 
 import Client.ConnectionToGameServer;
-import Client.Renderer;
 import Screens.GameScreen;
 
 public class ClientEngine implements Runnable {
 	public GameState gs;
 	ArrayBlockingQueue<Event> eventQ = new ArrayBlockingQueue<Event>(100);	
-	Renderer renderer;
+	GamePanel gamePanel;
 	ConnectionToGameServer gameConnection;
 	public Player player;
 	
@@ -24,30 +23,30 @@ public class ClientEngine implements Runnable {
 
 	public ClientEngine(GameScreen gameScreen) {
 		this.gameScreen = gameScreen;
-		gameScreen.gamePanel.setFocusable(true);
-		gameScreen.gamePanel.setBackground(Color.black);
-		gameScreen.gamePanel.setDoubleBuffered(true);
+		this.gamePanel = gameScreen.gamePanel;
 		engineThread = new Thread(this);
 	}
 
 	public void startGame() {
-		this.renderer = new Renderer(this);
 		engineThread.start();
 	}
 
 	public void run() {
 		long beforeTime, timeDiff, sleep;
 		beforeTime = System.currentTimeMillis();
-		gameScreen.gamePanel.addKeyListener(new GameInputHandler());
+		
+		gs = gameScreen.gameConnection.getGameStateFromServer();
+		gamePanel.addKeyListener(new GameInputHandler());
+		gamePanel.gs = this.gs;
 
 		while (gs.inGame) {
-			// non-blocking?
 			gs = gameScreen.gameConnection.getGameStateFromServer();
+			
 			//for Event in internalEventQ:
 				// sendInputsToServer()
 				// applyInputsLocally()
 			gs.update();
-			repaint();
+			gamePanel.repaint();
 			
 			timeDiff = System.currentTimeMillis() - beforeTime;
 			sleep = Globals.DELAY - timeDiff;
@@ -63,10 +62,6 @@ public class ClientEngine implements Runnable {
 		}
 	}
 	
-	public void paint(Graphics g) {
-		super.paint(g);
-		this.renderer.render(g);
-	}
 	
 	public void processInput() {
 		synchronized(eventQ) {

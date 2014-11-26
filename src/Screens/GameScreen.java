@@ -1,5 +1,6 @@
 package Screens;
 
+import java.awt.BorderLayout;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
@@ -9,20 +10,27 @@ import Chat.ChatClient;
 import Client.ConnectionToGameServer;
 import Client.ThinkTankGUI;
 import Game.ClientEngine;
+import Game.GamePanel;
 
 public class GameScreen extends JPanel {
-	public JPanel chatPanel, gamePanel, utilityBar;
+	public JPanel chatPanel, utilityBar, sidePanel;
 
 	public ThinkTankGUI gui;
-	public ChatClient chat; daf;dkjsalk;jfjkfsdajlk <-- fix this
+	public ChatClient chat; //	TODO: <-- fix this
 	public ClientEngine engine;
 	public ConnectionToGameServer gameConnection;
+	public GamePanel gamePanel;
 	
 	public GameScreen(ThinkTankGUI gui) {
 		this.gui = gui;
-		gamePanel = new JPanel();
-		// do gamePanel here
+		setLayout(new BorderLayout());
 		
+		gamePanel = new GamePanel();
+		chatPanel = new JPanel();
+		sidePanel = new JPanel();
+		sidePanel.add(chatPanel);
+		add(gamePanel, BorderLayout.CENTER);
+		add(sidePanel, BorderLayout.EAST);
 	}
 	
 	public boolean connectToGameServer(String host, int port) {

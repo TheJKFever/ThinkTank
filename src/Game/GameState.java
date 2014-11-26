@@ -16,7 +16,7 @@ public class GameState {
 	public Vector<Shot> shots;
 	public Vector<Tank> tanks;
 	public Vector<Barrier> barriers;
-	public Vector<Turret> turrets;
+//	public Vector<Turret> turrets; TODO: ADD TURRETS
 	public boolean inGame = false;
 	
 	public GameState() {
