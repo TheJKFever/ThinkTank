@@ -31,7 +31,7 @@ public class GameScreen extends JPanel {
 		
 		this.gui = gui;
 		setLayout(new BorderLayout());
-		gamePanel = new GamePanel();
+		gamePanel = new GamePanel(this);
 		chatPanel = new JPanel();
 		sidePanel = new JPanel();
 		sidePanel.setPreferredSize(new Dimension(200, 600));

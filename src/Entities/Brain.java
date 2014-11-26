@@ -22,21 +22,15 @@ public class Brain extends Entity implements Serializable  {
 		ImageIcon ii = null;
 		
 		if (team.num == 1) {
-			ii = new ImageIcon(IMAGE_BRAIN);
-//			setWidth(ii.getImage().getWidth(null)); 
-			setWidth(89);
-			setHeight(88);
-//	        height = ii.getImage().getWidth(null);
+			ii = new ImageIcon(IMAGE_BRAIN); 
 			this.y = Globals.BOARD_HEIGHT - (this.getHeight() + 20);		
 		} else if (team.num == 2) {
 			ii = new ImageIcon(IMAGE_BRAIN_ENEMY);
-//			width = ii.getImage().getWidth(null); 
-//	        height = ii.getImage().getWidth(null);
-			setWidth(89);
-			setHeight(88);
 	        this.y = 0;
 		}
 		this.setImage(ii.getImage());
+		setWidth(89);
+		setHeight(88);
         this.x = Globals.BOARD_WIDTH/2 - getWidth()/2;
 	}
 	

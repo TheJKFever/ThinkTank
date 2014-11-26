@@ -32,12 +32,13 @@ public class GameServer extends ServerSocket implements Runnable {
 	
 	public void run() {
 		listenForClients();
+		// TODO: GRACEFULLY HANDLE CLIENTS CLOSING CONNECTION
 	}
 	
 	private void listenForClients() {
 		System.out.println("GAMESERVER: LISTENING FOR CLIENTS");
 		int teamNumber = 0;
-		while(!engine.gs.playable()) {
+		while(!engine.gameState.playable()) {
 			try {
 				Socket client = this.accept();
 				addPlayer(client, (teamNumber % 2) + 1);
@@ -65,7 +66,7 @@ public class GameServer extends ServerSocket implements Runnable {
 		System.out.println("GAMESERVER: ADDING A CLIENT");
 		GameServerConnectionToClient client = new GameServerConnectionToClient(this, socket);
 		clients.addElement(client);
-		Player p = engine.gs.teams[team-1].newPlayer(); // Creates new player and adds to gameState
+		Player p = engine.gameState.teams[team-1].newPlayer(); // Creates new player and adds to gameState
 		client.assignPlayer(p); // tells client which player is his
 		client.start();
 	}

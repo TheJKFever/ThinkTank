@@ -12,46 +12,53 @@ import javax.swing.JPanel;
 import Entities.Barrier;
 import Entities.Brain;
 import Entities.Entity;
+import Screens.GameScreen;
 
 public class GamePanel extends JPanel {
 
-	public GameState gs;
+	public GameScreen gameScreen;
+	public GameState gameState;
 	
-	public GamePanel() {
-		this.gs = null;
+	public GamePanel(GameScreen gameScreen) {
+		super();
+		log("GAMEPANEL: IN CONSTRUCTOR");
+		this.gameScreen = gameScreen;
 		this.setFocusable(true);
 		this.setBackground(Color.black);
 		this.setDoubleBuffered(true);
 	}
 	
-	@Override
-	public void paint(Graphics g) {
+	public void paint(Graphics g, GameState gs) {
 		super.paint(g);
+		this.gameState = this.gameScreen.engine.gameState;
 		render(g);
 	}
 	
 	public void render(Graphics g) {
+		log("GAMEPANEL: RENDER");
 		g.setColor(Color.black);
 		g.fillRect(0, 0, Game.Globals.BOARD_WIDTH, Game.Globals.BOARD_HEIGHT);
 		
 		drawBarriers(g);
 		drawBrains(g);
-		drawEntities(g, gs.tanks);
-		drawEntities(g, gs.shots);
+		drawTanks(g);
+		drawShots(g);
 	
 		Toolkit.getDefaultToolkit().sync();
 		g.dispose();
 	}
 
 	public void drawBarriers(Graphics g) {
-		for (Barrier barrier: gs.barriers) {
+		log("GAMEPANEL: DRAW BARRIERS");
+		for (Barrier barrier: gameState.barriers) {
 			g.setColor(Barrier.color);
 			g.fillRect(barrier.x, barrier.y, barrier.getWidth(), barrier.getHeight());
 		}
 	}
 	
 	public void drawBrains(Graphics g) {
-		for (Brain brain: gs.brains) {
+		log("GAMEPANEL: DRAW BRAINS");
+		for (Brain brain: gameState.brains) {
 		
 			if (brain.isVisible()) {
 				g.drawImage(brain.getImage(), brain.x, brain.y, this);
@@ -87,7 +94,17 @@ public class GamePanel extends JPanel {
 		}
 	}
 	
+	public void drawShots(Graphics g) {
+		drawEntities(g, gameState.shots);
+	}
+	
+	public void drawTanks(Graphics g) {
+		drawEntities(g, gameState.tanks);
+	}
+	
 	public void drawEntities(Graphics g, Vector<? extends Entity> entities) {
+		log("GAMEPANEL: DRAW ENTITIES");
+		
 		for (Entity e : entities) {
 			if (e.isVisible()) {
 				g.drawImage(e.getImage(), e.x, e.y, this);

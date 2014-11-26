@@ -11,33 +11,34 @@ import Screens.GameScreen;
 
 public class ConnectionToGameServer extends ConnectionToServer {
 	public GameScreen gameScreen;
-	public GameState gs;
+	public GameState gameState;
 	public Thread thread;
 	
 	public ConnectionToGameServer(GameScreen gameScreen, String host, int port) throws UnknownHostException, IOException {
 		super(host, port);
 		System.out.println("CONNECTIONTOGAMESERVER: CONSTRUCTOR");
 		this.gameScreen = gameScreen;
+		this.gameState = null;
 		this.thread = new Thread(this);
 	}
 
 	public GameState getGameStateFromServer() {
 		System.out.println("CONNECTIONTOGAMESERVER: GETGAMESTATEFROMSERVER()");
-		return gs;
+		return gameState;
 	}
 	
 	public void receive(Object obj) {
 		System.out.println("CONNECTIONTOGAMESERVER: RECEIVING");
 		
-		Event event = (Event)obj;
+		Event event = (Event) obj;
 		switch(event.type) {
 		case "assign player":
 			System.out.println("CONNECTIONTOGAMESERVER: RECEIEVED ASSIGN PLAYER EVENT");
-			gameScreen.engine.player = (Player)event.data;
+			gameScreen.engine.player = (Player) event.data;
 			break;
 		case "game update":
 			System.out.println("CONNECTIONTOGAMESERVER: RECEIEVED GAME UPDATE EVENT");
-			this.gs = (GameState)event.data;
+			this.gameState = (GameState) event.data;
 			break;
 		case "start game":
 			System.out.println("CONNECTIONTOGAMESERVER: RECEIEVED START GAME EVENT");

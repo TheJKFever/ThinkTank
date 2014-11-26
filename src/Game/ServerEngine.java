@@ -8,7 +8,7 @@ import Server.GameServerConnectionToClient;
 
 public class ServerEngine implements Runnable {
 	
-	public GameState gs;
+	public GameState gameState;
 	Vector<GameServerConnectionToClient> clients;
 	public ArrayBlockingQueue<Event> eventQ = new ArrayBlockingQueue<Event>(1000);	// TODO: could possibly not be adding over 100 events
 	private Thread engineThread;
@@ -16,26 +16,32 @@ public class ServerEngine implements Runnable {
 	public ServerEngine(Vector<GameServerConnectionToClient> clientConnections) {
 		System.out.println("SERVERENGINE: CONSTRUCTOR");
 		this.clients = clientConnections;
-		this.gs = new GameState();
-		
+		this.gameState = new GameState();		
 		engineThread = new Thread(this);
 	}
 	
 	
 	public void run() {
 		System.out.println("GSCONNECTIONTOCLIENT: RUN()");
-		gs.inGame = true;
-		
+		gameState.inGame = true;
 		broadcastGameState();
 		startGame();
 		
-		while (gs.inGame) {
+		while (gameState.inGame) {
 			processInputFromClients();
-			gs.update();
+			gameState.update();
 			broadcastGameState();
+			// TODO: ADD DELAY / TIMER HERE
 		}
 	}
 	
+	public void broadcastGameState() {
+		System.out.println("GAMESERVER: BROADCAST GAME STATE");
+		for (GameServerConnectionToClient client: clients) {
+			client.sendEvent(new Event("game update", gameState));
+		}
+	}
+
 	private void startGame() {
 		System.out.println("GAMESERVER: START GAME");
 		for (GameServerConnectionToClient client:clients) {
@@ -43,14 +49,6 @@ public class ServerEngine implements Runnable {
 		}
 	}
 
-
-	public void broadcastGameState() {
-		System.out.println("GAMESERVER: BROADCAST GAME STATE");
-		for (GameServerConnectionToClient client:clients) {
-			client.sendEvent(new Event("game update", gs));
-		}
-	}
-	
 	public void processInputFromClients() {
 		System.out.println("GAMESERVER: PROCESSINPUTFROMCLIENTS");
 		synchronized(eventQ) {

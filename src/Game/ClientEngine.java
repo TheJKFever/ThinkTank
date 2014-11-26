@@ -13,7 +13,7 @@ import Screens.GameScreen;
 
 public class ClientEngine implements Runnable {
 	
-	public GameState gs;
+	public GameState gameState;
 	ArrayBlockingQueue<Event> eventQ = new ArrayBlockingQueue<Event>(100);	
 	GamePanel gamePanel;
 	ConnectionToGameServer gameConnection;
@@ -26,6 +26,7 @@ public class ClientEngine implements Runnable {
 		System.out.println("ClientEngine: IN CONSTRUCTOR");
 		this.gameScreen = gameScreen;
 		this.gamePanel = gameScreen.gamePanel;
+		this.gameState = null;
 		engineThread = new Thread(this);
 	}
 
@@ -38,17 +39,17 @@ public class ClientEngine implements Runnable {
 		long beforeTime, timeDiff, sleep;
 		beforeTime = System.currentTimeMillis();
 		
-		gs = gameScreen.gameConnection.getGameStateFromServer();
+		while (gameState == null) {
+			gameState = gameScreen.gameConnection.getGameStateFromServer();
+			System.out.println("GAME STATE == NULL");
+		}
+		System.out.println("GAME STATE NOT NULL!");
 		gamePanel.addKeyListener(new GameInputHandler());
-		gamePanel.gs = this.gs;
 
-		while (gs.inGame) {
-			gs = gameScreen.gameConnection.getGameStateFromServer();
-			
-			//for Event in internalEventQ:
-				// sendInputsToServer()
-				// applyInputsLocally()
-			gs.update();
+		while (gameState.inGame) {
+			gameState = gameScreen.gameConnection.getGameStateFromServer();
+			processUserInput();
+			gameState.update();
 			gamePanel.repaint();
 			
 			timeDiff = System.currentTimeMillis() - beforeTime;
@@ -65,8 +66,7 @@ public class ClientEngine implements Runnable {
 		}
 	}
 	
-	
-	public void processInput() {
+	public void processUserInput() {
 		synchronized(eventQ) {
 			for (Event event: eventQ) {
 				if (event.type == "key event") {
