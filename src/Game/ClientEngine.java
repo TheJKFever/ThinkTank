@@ -14,7 +14,7 @@ import Screens.GameScreen;
 
 public class ClientEngine implements Runnable {
 	public GameState gs;
-	ArrayBlockingQueue<Event> eventQ = new ArrayBlockingQueue<Event>(100);	
+	public ArrayBlockingQueue<Event> eventQ = new ArrayBlockingQueue<Event>(100);	
 	Renderer renderer;
 	ConnectionToGameServer gameConnection;
 	public Player player;

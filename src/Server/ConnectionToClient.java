@@ -27,7 +27,7 @@ public class ConnectionToClient extends ServerThread {
 	
 	@Override
 	public void receive(Object obj) {
-		Event event = Event.deserialize(obj);
+		Event event = (Event)obj;
 		switch(event.type) {
 		// consider making this {"type": "command", "data": "new game"...
 		// instead of {"type": "new game", ...
@@ -44,12 +44,14 @@ public class ConnectionToClient extends ServerThread {
 
 	@Override
 	public void listen() {
-		String dataFromPlayer;
+		Object dataFromPlayer;
 		try {
 			while ((dataFromPlayer = in.readObject()) != null) {
 				receive(dataFromPlayer);
 			}
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
