@@ -6,7 +6,9 @@ import java.util.Vector;
 import Entities.Brain;
 
 public class Team implements Serializable  {
+	
 	private static final long serialVersionUID = 5095457291029072701L;
+	
 	public int num;
 	public Brain brain;
 	public Vector<Player> players;

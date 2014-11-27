@@ -1,22 +1,23 @@
 package Entities;
 
-import java.awt.Image;
+import java.io.Serializable;
 import java.util.Vector;
 
 import Game.Rect;
 import Game.GameState;
 import Game.Globals;
 
-public abstract class Entity {
+public abstract class Entity implements Serializable {
 
-    boolean visible;
-    Image image;
-    boolean dying;
+	private static final long serialVersionUID = -4882402415044435970L;
+	
+	public boolean visible;
+    public String imagePath;
+    public boolean dying;
     
-    public int x, y, dx, dy, dp, prevX, prevY, theta, dtheta, height, width;
+    public int x, y, dx, dy, dp, prevX, prevY, theta, dtheta, height, width, health;
     
-    public int health;
-    String type;
+    public String type;
     GameState gs;
     
     public Entity() {
@@ -35,12 +36,12 @@ public abstract class Entity {
         this.visible = visible;
     }
 
-    public void setImage(Image image) {
-        this.image = image;
+    public void setImagePath(String path) {
+        this.imagePath = path;
     }
 
-    public Image getImage() {
-        return image;
+    public String getImagePath() {
+        return imagePath;
     }
 
     public void setX(int x) {
@@ -174,5 +175,10 @@ public abstract class Entity {
 		if (Globals.DEBUG) {
 			System.out.println(msg);
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getName() + " {\n\tx: " + x + ", y: " + y + ", theta: " + theta + ",\n\theight: " + height + ", width: " + width + ",\n\thealth: " + health + ", visible: " + visible + "\n}\n";
 	}
 }

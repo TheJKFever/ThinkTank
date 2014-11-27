@@ -6,9 +6,9 @@ import java.net.Socket;
 import java.util.Vector;
 import java.util.logging.Logger;
 
+import Engines.ServerEngine;
 import Game.Globals;
 import Game.Player;
-import Game.ServerEngine;
 import Game.Team;
 
 public class GameServer extends ServerSocket implements Runnable {

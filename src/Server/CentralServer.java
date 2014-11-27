@@ -117,6 +117,7 @@ public class CentralServer extends ServerSocket {
 	}
 
 	public void listenForConnections() {
+		System.out.println("Central Server: Listening for connections...");
 		while(!this.isClosed()) {
 			// Listen for clients signing onto server
 			try {

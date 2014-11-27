@@ -6,7 +6,9 @@ import Client.ChatClient;
 import Entities.Tank;
 
 public class Player implements Serializable  {
+	
 	private static final long serialVersionUID = 8546860096571379783L;
+	
 	public Tank tank;
 	public Team team;
 	public GameState gs;

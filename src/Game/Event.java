@@ -1,5 +1,6 @@
 package Game;
 
+import java.awt.event.KeyEvent;
 import java.io.Serializable;
 
 public class Event implements Serializable {
@@ -15,6 +16,12 @@ public class Event implements Serializable {
 		this.timestamp = System.nanoTime();
 	}
 	
+	public Event(String type, KeyEvent ke) {
+		this.type = type;
+		this.data = new SimpleKeyEvent(ke);
+		this.timestamp = System.nanoTime();
+	}
+	
 	public Event(String type, Object data) {
 		this.type = type;
 		this.data = data;
@@ -22,7 +29,7 @@ public class Event implements Serializable {
 	}
 	
 	public String toString() {
-		return ("timestamp: " + timestamp +", type: " + type + ", data: " + data);
+		return ("EVENT: { \n\ttimestamp: " + timestamp +",\n\t type: " + type + ",\n\t data: " + data + "\n}");
 	}
 	
 }
