@@ -1,18 +1,13 @@
-package Chat;
+package Client;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.Scanner;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -20,9 +15,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import Client.ConnectionToGameServer;
 import Game.Event;
-import Game.Globals;
 
 public class ChatClient extends JPanel {
 	
@@ -39,9 +32,6 @@ public class ChatClient extends JPanel {
 	JLabel chatLabel;
 	JTextArea ta;
 	JButton sendBtn;
-	
-	ObjectOutputStream out;
-	ObjectInputStream in;
 	
 	String name;
 	
@@ -82,9 +72,7 @@ public class ChatClient extends JPanel {
 //				setTitle(name);
 //				String ip = hostNameTf.getText();
 //			}
-//		});
-		
-		
+//		});		
 		
 		/****** Chat Panel*******/
 		chatPanel = new JPanel();
@@ -111,7 +99,7 @@ public class ChatClient extends JPanel {
 		
 		// bottom part
 		inputPanel = new JPanel(new BorderLayout());
-		tf = new JTextField(20);
+		tf = new JTextField(12);
 		inputPanel.add(tf);
 		sendBtn = new JButton("Send");
 		inputPanel.add(sendBtn, BorderLayout.EAST);

@@ -32,6 +32,7 @@ public class Brain extends Entity implements Serializable  {
 		setWidth(89);
 		setHeight(88);
         this.x = Globals.BOARD_WIDTH/2 - getWidth()/2;
+		gs.brains.addElement(this);
 	}
 	
 	public void update() {

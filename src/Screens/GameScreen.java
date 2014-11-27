@@ -7,7 +7,7 @@ import java.net.UnknownHostException;
 
 import javax.swing.JPanel;
 
-import Chat.ChatClient;
+import Client.ChatClient;
 import Client.ConnectionToGameServer;
 import Client.ThinkTankGUI;
 import Game.ClientEngine;

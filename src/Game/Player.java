@@ -2,7 +2,7 @@ package Game;
 
 import java.io.Serializable;
 
-import Chat.ChatClient;
+import Client.ChatClient;
 import Entities.Tank;
 
 public class Player implements Serializable  {

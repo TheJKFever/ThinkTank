@@ -17,7 +17,7 @@ public class GameState implements Serializable {
 	public Vector<Player> players;
 	public Vector<Shot> shots;
 	public Vector<Tank> tanks;
-	public Vector<Barrier> barriers;
+	public transient Vector<Barrier> barriers;
 //	public Vector<Turret> turrets; TODO: ADD TURRETS
 	public boolean inGame = false;
 	
@@ -31,13 +31,10 @@ public class GameState implements Serializable {
 		tanks = new Vector<Tank>();
 		teams = new Team[2];
 		
-		// create teams with brains
+		// create teams
 		for (int i=0; i < teams.length; i++) {
 			teams[i] = new Team(i+1, this);
-			Brain b = new Brain(teams[i], this);
-			teams[i].brain = b;
-			brains.add(b);	
-		} // TODO: make all the same style
+		}
 		
 		setUpMap();
 	}
@@ -62,13 +59,12 @@ public class GameState implements Serializable {
 	
 	public void setUpMap() {
 		System.out.println("GAMESTATE: SETUPMAP()");
-		// TODO: adds barriers, thought pools
-		barriers.add(new Barrier(100, 100, 300, 10, this));
-		barriers.add(new Barrier(200, 200, 200, 10, this));
-		barriers.add(new Barrier(300, 300, 400, 10, this));
-		barriers.add(new Barrier(400, 400, 100, 10, this));
-		barriers.add(new Barrier(150, 150, 10, 200, this));
-		barriers.add(new Barrier(250, 250, 10, 100, this));
+		new Barrier(100, 100, 300, 10, this);
+		new Barrier(200, 200, 200, 10, this);
+		new Barrier(300, 300, 400, 10, this);
+		new Barrier(400, 400, 100, 10, this);
+		new Barrier(150, 150, 10, 200, this);
+		new Barrier(250, 250, 10, 100, this);
 		
 		// TODO: Thoughtpools
 	}
