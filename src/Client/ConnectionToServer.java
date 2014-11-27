@@ -25,6 +25,7 @@ public abstract class ConnectionToServer extends Socket implements Runnable {
 	
 	private void send(Object obj) {
 		try {
+			out.reset();
 			out.writeObject(obj);
 			out.flush();
 		} catch (IOException e) {

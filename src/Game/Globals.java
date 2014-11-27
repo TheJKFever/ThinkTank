@@ -4,12 +4,13 @@ public interface Globals {
 
     public static final int BOARD_WIDTH = 800;
     public static final int BOARD_HEIGHT = 600;
+    
     public static final int GUI_WIDTH = 1000;
     public static final int GUI_HEIGHT = 600;
-    public static final int DELAY = 17;
-    public static final int PLAYER_WIDTH = 15;
-    public static final int PLAYER_HEIGHT = 10;
-	public static final boolean DEBUG = true;
+    
+    public static final int DELAY = 20;
+	
+    public static final boolean DEBUG = true;
     
 	public int CHAT_PORT = 6789;
     

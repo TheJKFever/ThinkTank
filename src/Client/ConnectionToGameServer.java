@@ -16,34 +16,37 @@ public class ConnectionToGameServer extends ConnectionToServer {
 	
 	public ConnectionToGameServer(GameScreen gameScreen, String host, int port) throws UnknownHostException, IOException {
 		super(host, port);
-		System.out.println("CONNECTIONTOGAMESERVER: CONSTRUCTOR");
+		System.out.println("ConnectionToGameServer: CONSTRUCTOR");
 		this.gameScreen = gameScreen;
 		this.gameState = null;
 		this.thread = new Thread(this);
 	}
 
 	public GameState getGameStateFromServer() {
-		System.out.println("CONNECTIONTOGAMESERVER: GETGAMESTATEFROMSERVER()");
+		System.out.println("ConnectionToGameServer: GETGAMESTATEFROMSERVER()");
 		GameState latestState = gameState;
 		gameState = null;
 		return latestState;
 	}
 	
 	public void receive(Object obj) {
-		System.out.println("CONNECTIONTOGAMESERVER: RECEIVING");
+		System.out.println("ConnectionToGameServer: RECEIVING");
 		
 		Event event = (Event) obj;
 		switch(event.type) {
 		case "assign player":
-			System.out.println("CONNECTIONTOGAMESERVER: RECEIEVED ASSIGN PLAYER EVENT");
+			System.out.println("ConnectionToGameServer: RECEIVED ASSIGN PLAYER EVENT");
 			gameScreen.engine.player = (Player) event.data;
 			break;
 		case "game update":
-			System.out.println("CONNECTIONTOGAMESERVER: RECEIEVED GAME UPDATE EVENT");
+			System.out.println("ConnectionToGameServer: RECEIVED GAME UPDATE EVENT, raw");
+			System.out.println((GameState) event.data);
 			this.gameState = (GameState) event.data;
+			System.out.println("ConnectionToGameServer: this.gameState = ");
+			System.out.println(this.gameState);
 			break;
 		case "start game":
-			System.out.println("CONNECTIONTOGAMESERVER: RECEIEVED START GAME EVENT");
+			System.out.println("ConnectionToGameServer: RECEIVED START GAME EVENT");
 			gameScreen.gui.startGame();
 			gameScreen.engine.startGame();
 			break;
@@ -51,7 +54,7 @@ public class ConnectionToGameServer extends ConnectionToServer {
 //			gui.chatPanel.
 			break;
 		default:
-			System.out.println("CONNECTIONTOGAMESERVER: DIDN'T UNDERSTAND EVENT");
+			System.out.println("ConnectionToGameServer: DIDN'T UNDERSTAND EVENT");
 			ThinkTankGUI.logger.log(Level.INFO, "Parse error. did not understand message: " + event);
 		}
 	}

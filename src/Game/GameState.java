@@ -19,10 +19,12 @@ public class GameState implements Serializable {
 	public Vector<Tank> tanks;
 	public Vector<Barrier> barriers;
 //	public Vector<Turret> turrets; TODO: ADD TURRETS
-	public boolean inGame = false;
+	public boolean inGame;
 	
 	public GameState() {
 		System.out.println("GAMESTATE: CONSTRUCTOR");
+		
+		inGame = false;
 		
 		barriers = new Vector<Barrier>();
 		brains = new Vector<Brain>();
@@ -44,18 +46,19 @@ public class GameState implements Serializable {
 	
 	public boolean playable() {
 		System.out.println("GAMESTATE: PLAYABLE()?");
-		if (teams!= null) {
-			System.out.println("GAMESTATE: TEAM 1 SIZE" + teams[0].players.size() + " TEAM 2 SIZE" + teams[1].players.size());
-		} else {
-			System.out.println("GAMESTATE: .teams is NULL");
-		}
+//		if (teams != null) {
+//			System.out.println("GAMESTATE: TEAM 1 SIZE" + teams[0].players.size() + " TEAM 2 SIZE" + teams[1].players.size());
+//		} else {
+//			System.out.println("GAMESTATE: .teams is NULL");
+//		}
+		
 		if (teams != null && 
 			teams[0].players.size() > 0 && 
 			teams[1].players.size() > 0) {
 			System.out.println("GAMESTATE: YES, PLAYABLE");
 				return true;
 		} else {	
-			System.out.println("GAMESTATE: NO, PLAYABLE");
+			System.out.println("GAMESTATE: NO, NOT PLAYABLE");
 			return false;
 		}
 	}
@@ -113,6 +116,10 @@ public class GameState implements Serializable {
 			for (Player player: team.players) {
 				sb.append(player.tank);	
 			}			
+		}
+		sb.append("SHOTS: " + this.shots.size() + "\n");
+		for (Shot sh: shots) {
+			sb.append(sh);	
 		}
 		sb.append("------------------------------------------\n");
 		return sb.toString();

@@ -43,7 +43,7 @@ public class ServerEngine implements Runnable {
 			
 			// TODO: ADD DELAY / TIMER HERE
 			timeDiff = System.currentTimeMillis() - beforeTime;
-			sleep = Globals.DELAY * 20 - timeDiff;
+			sleep = Globals.DELAY - timeDiff;
 
 			if (sleep < 0)
 				sleep = 1;
@@ -53,14 +53,17 @@ public class ServerEngine implements Runnable {
 				log("interrupted");
 			}
 			beforeTime = System.currentTimeMillis();
+			// TODO: kill server if all clients leave
 		}
 	}
 	
 	public void broadcastGameState() {
 		log("GAMESERVER: BROADCAST GAME STATE");
 		log(gameState.toString());
+		Event e = new Event("game update", gameState);
+		
 		for (GameServerConnectionToClient client: clients) {
-			client.sendEvent(new Event("game update", gameState));
+			client.sendEvent(e);
 		}
 	}
 

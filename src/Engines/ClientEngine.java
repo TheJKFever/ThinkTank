@@ -38,11 +38,19 @@ public class ClientEngine implements Runnable {
 
 	public void getGameStateFromServer() {
 		log("CLIENT ENGINE: GETTING GAME STATE FROM SERVER");
-		gameState = gameScreen.gameConnection.getGameStateFromServer();
-		while (gameState == null) {
-			log("GAME STATE == NULL, TRYING AGAIN");
-			gameState = gameScreen.gameConnection.getGameStateFromServer();
+		
+		GameState newGameState = gameScreen.gameConnection.getGameStateFromServer();
+		while (newGameState == null) {
+			log("CLIENT ENGINE: GAME STATE == NULL, TRYING AGAIN in a few");
+			newGameState = gameScreen.gameConnection.getGameStateFromServer();
+			try {
+				Thread.sleep(Globals.DELAY/5);
+			} catch (InterruptedException ie) {
+				System.out.println("CLIENT ENGINE: INTERRUPTED WHILE WAITING FOR GAME STATE");
+			}
 		}
+		gameState = newGameState;
+		log("CLIENT ENGINE: GOT GAME STATE");
 		log(gameState.toString());
 	}
 	
