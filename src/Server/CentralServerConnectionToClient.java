@@ -49,15 +49,15 @@ public class CentralServerConnectionToClient extends ServerThread {
 				System.out.println("TOLD CLIENT TO JOIN GAME ON PORT " + port);
 				break;
 			case "create profile":
-				// TODO:
+				// TODO: Handle Create Profile
 				break;
 			case "login":
-				// TODO:
+				// TODO: Handle Login
 				// Login login = (Login)event.data;
 				// check Database if login.username and login.password exist
 				break;
 			case "logout":
-				// TODO:
+				// TODO: Handle login
 				break;
 			case "get stats":
 				// TODO: get stats from database for username

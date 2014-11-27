@@ -41,8 +41,14 @@ public class GamePanel extends JPanel {
 	}
 	
 	public Image getImg(String path) {
-		// TODO: CREATE A HASH MAP THAT CACHES IMAGES IT HAS ALREADY CREATED
-		return new ImageIcon(path).getImage();
+		// TODO: Create a hash map that caches all images
+		Image img = null;
+		try {
+			img = new ImageIcon(path).getImage();
+		} catch (Exception e) {
+			System.out.println("GAMPANEL: ERROR DRAWING IMAGE FOR PATH:" + path);
+		}
+		return img; 
 	}
 	
 	public void render(Graphics g) {

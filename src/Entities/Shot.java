@@ -9,10 +9,10 @@ public class Shot extends Entity implements Serializable  {
 
 	private static final long serialVersionUID = -5027836598744895479L;
 	
-	static final String IMAGE_SHOT_UP = "images/bulletUp.png";
-    static final String IMAGE_SHOT_RIGHT = "images/bulletRight.png";
-    static final String IMAGE_SHOT_DOWN = "images/bulletDown.png";
-    static final String IMAGE_SHOT_LEFT = "images/bulletLeft.png";
+	static final String IMAGE_SHOT_UP = "images/shots/bulletUp.png";
+    static final String IMAGE_SHOT_RIGHT = "images/shots/bulletRight.png";
+    static final String IMAGE_SHOT_DOWN = "images/shots/bulletDown.png";
+    static final String IMAGE_SHOT_LEFT = "images/shots/bulletLeft.png";
     static final int SHOT_WIDTH_VERTICAL = 13;
     static final int SHOT_HEIGHT_VERTICAL = 16;
     static final int SHOT_WIDTH_HORIZONTAL = 16;
@@ -22,6 +22,10 @@ public class Shot extends Entity implements Serializable  {
     int damage = 1;
     boolean exploding = false;
 
+    // TODO: CREATE EXPLOSION ANIMATION
+    // TODO: ENSURE THAT BULLETS LAUNCH FROM THE PROPER LOCATION
+    // TODO: REGULARIZE THE EXPLODING/DYING/VISIBLE METHODS
+    
     public Shot(int x, int y, int theta, GameState gs) {
     	this.gs = gs;
         this.setX(x);
@@ -76,5 +80,11 @@ public class Shot extends Entity implements Serializable  {
         		die();
         	}
         }
+    }
+    
+    public void hitSomething() {
+    	this.exploding = true;
+    	this.dying = true;
+    	this.visible = false;
     }
 }

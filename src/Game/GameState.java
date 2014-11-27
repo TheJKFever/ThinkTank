@@ -46,11 +46,6 @@ public class GameState implements Serializable {
 	
 	public boolean playable() {
 		System.out.println("GAMESTATE: PLAYABLE()?");
-//		if (teams != null) {
-//			System.out.println("GAMESTATE: TEAM 1 SIZE" + teams[0].players.size() + " TEAM 2 SIZE" + teams[1].players.size());
-//		} else {
-//			System.out.println("GAMESTATE: .teams is NULL");
-//		}
 		
 		if (teams != null && 
 			teams[0].players.size() > 0 && 
@@ -65,7 +60,8 @@ public class GameState implements Serializable {
 	
 	public void setUpMap() {
 		System.out.println("GAMESTATE: SETUPMAP()");
-		// TODO: adds barriers, thought pools
+		
+		// TODO: create interesting map, not just random barriers
 		barriers.add(new Barrier(100, 100, 300, 10, this));
 		barriers.add(new Barrier(200, 200, 200, 10, this));
 		barriers.add(new Barrier(300, 300, 400, 10, this));
@@ -73,7 +69,7 @@ public class GameState implements Serializable {
 		barriers.add(new Barrier(150, 150, 10, 200, this));
 		barriers.add(new Barrier(250, 250, 10, 100, this));
 		
-		// TODO: Thoughtpools
+		// TODO: Add Thoughtpools
 	}
 	
 	public void update() {

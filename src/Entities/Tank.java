@@ -32,6 +32,10 @@ public class Tank extends Entity implements Serializable  {
     public boolean firing;
     Team team;
     Player player;
+
+    // TODO: ALLOW TANKS TO TAKE DAMAGE FROM OTHER TANKS
+    // TODO: ALLOW TANKS TO DIE AND RESPAWN
+    // TODO: ADD WAITING PERIOD BETWEEN RESPAWN PERIOD
     
     public Tank(Player p, GameState gs) {
     	this.tankID = TankCount++;

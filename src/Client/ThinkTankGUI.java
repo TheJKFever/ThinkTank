@@ -29,7 +29,8 @@ public class ThinkTankGUI extends JFrame {
 	public GameScreen gameScreen;
 	//	private GameOverScreen gameOver;
 	public boolean loggedIn = false;
-
+	
+	//TODO: FIX GUI FOCUSING ISSUE, GET FOCUS AUTOMATICALLY FOR GAMEPANEL
 	
 	public ThinkTankGUI(String host, int port) {
 		try {
