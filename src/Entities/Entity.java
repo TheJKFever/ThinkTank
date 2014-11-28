@@ -20,6 +20,16 @@ public abstract class Entity implements Serializable {
     
     public Entity() {
         visible = true;
+        x = 0;
+        y = 0;
+        dx = 0;
+        dy = 0;
+        dp = 0;
+        prevX = 0;
+        prevY = 0;
+        theta = 0;
+        dtheta = 0;
+        health = 0;
     }
 
     public void die() {
@@ -160,9 +170,10 @@ public abstract class Entity implements Serializable {
     }
 
     public int wrapDegrees(int d) {
-    	if (d < 0) {
+    	while (d < 0) {
     		d += 360;
-    	} else if (d >= 360) {
+    	}
+    	while (d >= 360) {
     		d -= 360;
     	}
     	return d;

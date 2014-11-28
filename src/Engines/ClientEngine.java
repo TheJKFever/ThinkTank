@@ -67,8 +67,8 @@ public class ClientEngine implements Runnable {
 		log("CLIENT ENGINE: Adding UserInputHandler");
 		gamePanel.addKeyListener(new UserInputHandler(this.gameScreen));
 
-		while (true) {
-//		while (gameState.inGame) {
+
+		while (gameState.inGame) {
 			log("CLIENT ENGINE: entered main loop");
 			
 			getGameStateFromServer();
@@ -84,8 +84,10 @@ public class ClientEngine implements Runnable {
 			timeDiff = System.currentTimeMillis() - beforeTime;
 			sleep = Globals.DELAY - timeDiff;
 
-			if (sleep < 0)
+			if (sleep < 0) {
 				sleep = 1;
+			}
+			
 			try {
 				Thread.sleep(sleep);
 			} catch (InterruptedException e) {
@@ -93,7 +95,6 @@ public class ClientEngine implements Runnable {
 			}
 			beforeTime = System.currentTimeMillis();
 		}
-//		log("CLIENT ENGINE: GAMESTATE.INGAME == FALSE");
 	}
 	
 	public void processUserInput() {

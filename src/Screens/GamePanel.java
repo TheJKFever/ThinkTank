@@ -6,6 +6,8 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -28,9 +30,16 @@ public class GamePanel extends JPanel {
 		super();
 		log("GAMEPANEL: IN CONSTRUCTOR");
 		this.gameScreen = gameScreen;
-		this.setFocusable(true);
 		this.setBackground(Color.black);
 		this.setDoubleBuffered(true);
+		this.setFocusable(true);
+		this.requestFocusInWindow();
+		this.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent me) {
+				GamePanel.this.requestFocusInWindow();
+			}
+		});
 	}
 	
 	public void paint(Graphics g) {

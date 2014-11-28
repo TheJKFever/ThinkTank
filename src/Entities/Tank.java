@@ -33,27 +33,29 @@ public class Tank extends Entity implements Serializable  {
     Team team;
     Player player;
 
-    // TODO: ALLOW TANKS TO TAKE DAMAGE FROM OTHER TANKS
-    // TODO: ALLOW TANKS TO DIE AND RESPAWN
-    // TODO: ADD WAITING PERIOD BETWEEN RESPAWN PERIOD
+    // TODO: Allow tanks to detect collisions and tank damage from shots
+    // TODO: Allow tanks to die and re-spawn
+    // TODO: Create explosion animation tank dies 
+    // TODO: Add waiting period between re-spawns
     
     public Tank(Player p, GameState gs) {
     	this.tankID = TankCount++;
     	this.player = p;
     	this.team = player.team;
     	this.gs = gs;
-        gs.tanks.addElement(this);
+    	this.gs.tanks.addElement(this);
+    	this.health = MAX_TANK_HEALTH;
+    	this.setWidth(TANK_HEIGHT);
+        this.setHeight(TANK_WIDTH);
         this.theta = 0;
         this.dtheta = 0;
-        this.health = MAX_TANK_HEALTH;
         this.firing = false;
-        spawn();
-        updateImage(theta);
-        this.setWidth(TANK_HEIGHT);
-        this.setHeight(TANK_WIDTH);
+        this.spawn(); // sets x and y
+        this.updateImagePath(theta);
     }
     
     public void spawn() {
+        // TODO: Spawn tanks properly
     	this.x = 100;
 //    	this.x = TANK_SPAWN_X + (50 * this.tankID);
     	if (team.num == 1) {
@@ -63,7 +65,7 @@ public class Tank extends Entity implements Serializable  {
     	}
     }
     
-    public void updateImage(int theta) {
+    public void updateImagePath(int theta) {
     	if (theta == 0) {
     		this.imagePath = IMAGE_TANK_UP;
     	} else if (theta == 90) {
@@ -74,16 +76,76 @@ public class Tank extends Entity implements Serializable  {
     		this.imagePath = IMAGE_TANK_LEFT;
     	}
     }
+    
+    public void keyPressed(SimpleKeyEvent e) { 
+    	log("TANK: KEY PRESSED");
+        int key = e.getKeyCode();
+        
+        if (key == KeyEvent.VK_UP) {
+        	dp = 2;
+        }
+        if (key == KeyEvent.VK_DOWN) {
+        	dp = -2;
+        }
+    }
 
+    public void keyReleased(SimpleKeyEvent e) {
+    	log("TANK: KEY RELEASED");
+        int key = e.getKeyCode();
+
+        // Sets velocity back to 0 when user lets go of up/down arrow 
+        if (key == KeyEvent.VK_UP) {
+            dp = 0;
+        }
+        if (key == KeyEvent.VK_DOWN) {
+            dp = 0;
+        }
+        if (key == KeyEvent.VK_LEFT) {
+        	dtheta -= 90;
+        }
+		if (key == KeyEvent.VK_RIGHT) {
+			dtheta += 90;
+		}
+		// TODO: Enable tank to shoot multiple shots 
+		// (use counter instead of boolean)
+        if (key == KeyEvent.VK_SPACE) {
+			this.firing = true;
+		}
+    }
+    
     public void update() {
-    	theta = wrapDegrees(theta + dtheta); 
-    	dtheta = 0;
-    	updateImage(theta);
-    	
     	prevY = y;
     	prevX = x;
     	
-    	// apply movement
+    	updateOrientation();
+    	updatePosition();
+    	
+    	// TODO: Subtract health when run into things?
+    	checkForCollisionWithWalls();
+    	checkForCollisionWithObstacles(gs.tanks);
+        checkForCollisionWithObstacles(gs.brains);
+        checkForCollisionWithObstacles(gs.barriers);
+        checkForCollisionWithShots();
+        
+        if (this.firing) {
+        	fireShot();
+        }
+        
+        // log("TANK X: " + this.x + " Y: " + this.y + " WIDTH: " + this.getWidth() + " HEIGHT: " + this.getHeight());
+    }
+    
+    public void updateOrientation() {
+    	theta = wrapDegrees(theta + dtheta); 
+    	dtheta = 0; // reset to 0 after updating position
+    	updateImagePath(theta);	
+    }
+    
+    public void updatePosition() {
+//    	assert(theta >= 0);
+//    	assert(theta < 360);
+//    	assert(dp >= 0);
+//    	assert(dp <= 2);
+    	
     	if (theta == 0) {
     		setY(getY() - dp);
     	} else if (theta == 180) {
@@ -93,29 +155,20 @@ public class Tank extends Entity implements Serializable  {
     	} else if (theta == 270) {
     		setX(getX() - dp);
     	}
-    	
-    	// check for collision with walls
-        if (x <= 2) 
-            setX(2);
-        if (x >= Globals.BOARD_WIDTH - getWidth()) { 
+    }
+    
+    public void checkForCollisionWithWalls() {
+        if (x < 0) {
+            setX(0);
+        } else if (x >= Globals.BOARD_WIDTH - getWidth()) { 
         	setX(Globals.BOARD_WIDTH - getWidth());
         }
         
         if (y < 0) {
         	setY(0);
-        } else if (y >= Globals.BOARD_HEIGHT - 50) {
-        	setY(Globals.BOARD_HEIGHT - 50);
+        } else if (y >= Globals.BOARD_HEIGHT - getHeight()) {
+        	setY(Globals.BOARD_HEIGHT - getHeight());
         }
-        
-        checkForCollisionWithShots();
-        checkForCollisionWithObstacles(gs.brains);
-        checkForCollisionWithObstacles(gs.barriers);
-        
-        if (this.firing) {
-        	fireShot();
-        }
-        
-//        log("TANK X: " + this.x + " Y: " + this.y + " WIDTH: " + this.getWidth() + " HEIGHT: " + this.getHeight());
     }
     
     public void fireShot() {
@@ -136,62 +189,7 @@ public class Tank extends Entity implements Serializable  {
     		shotY = this.y + this.getHeight()/2 - Shot.SHOT_HEIGHT_HORIZONTAL/2;
     	}
     	
-    	gs.shots.add(new Shot(shotX, shotY, this.theta, this.gs));
+    	gs.shots.add(new Shot(shotX, shotY, theta, gs));
     	this.firing = false;
     }
-    
-    public void keyPressed(SimpleKeyEvent e) { 
-    	log("TANK: KEY PRESSED");
-        int key = e.getKeyCode();
-        
-        if (key == KeyEvent.VK_UP) {
-        	dp = 2;
-        }
-        if (key == KeyEvent.VK_DOWN) {
-        	dp = -2;
-        }
-    }
-
-    public void keyReleased(SimpleKeyEvent e) {
-    	log("TANK: KEY RELEASED");
-        int key = e.getKeyCode();
-
-        if (key == KeyEvent.VK_UP) {
-            dp = 0;
-        }
-        if (key == KeyEvent.VK_DOWN) {
-            dp = 0;
-        }
-        if (key == KeyEvent.VK_LEFT) {
-			  dtheta = -90;
-        }
-		if (key == KeyEvent.VK_RIGHT) {
-			  dtheta = 90;
-		}
-        if (key == KeyEvent.VK_SPACE) {
-			this.firing = true;
-		}
-    }
-    
-    public boolean collidesWith(Rect other) {
-		boolean yCollision = false;
-		boolean xCollision = false;
-		
-		Rect my = this.getRect();
-		
-		if (my.top <= other.bottom && my.top >= other.top) {
-			yCollision = true;
-		} else if (my.bottom >= other.top && my.bottom <= other.bottom) {
-			yCollision = true;
-		}
-
-		if (my.right >= other.left && my.right <= other.right) {
-			xCollision = true;
-		} else if (my.left <= other.right && my.left >= other.left) {
-			xCollision = true;
-		}
-		
-		
-		return (xCollision && yCollision);
-	}
 }
