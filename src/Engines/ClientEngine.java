@@ -8,6 +8,7 @@ import Client.UserInputHandler;
 import Game.Event;
 import Game.GameState;
 import Game.Globals;
+import Game.Helper;
 import Game.Player;
 import Game.SimpleKeyEvent;
 import Screens.GamePanel;
@@ -18,67 +19,70 @@ public class ClientEngine implements Runnable {
 	
 	public Player player;
 	public GameState gameState;
-//	public ConnectionToGameServer gameConnection;
 	public ArrayBlockingQueue<Event> eventQ = new ArrayBlockingQueue<Event>(100);	
 	private Thread engineThread;
 	private GameScreen gameScreen;
 	GamePanel gamePanel;
 	
 	public ClientEngine(GameScreen gameScreen) {
-		System.out.println("ClientEngine: IN CONSTRUCTOR");
 		this.gameScreen = gameScreen;
 		this.gamePanel = gameScreen.gamePanel;
-		this.gameState = null;
+		this.gameState = new GameState();
 		engineThread = new Thread(this);
+		Helper.log("Created new ClientEngine");
 	}
 
-	public void startGame() {
+	public void start() {
 		engineThread.start();
 	}
 
 	public void getGameStateFromServer() {
-		log("CLIENT ENGINE: GETTING GAME STATE FROM SERVER");
+		Helper.log("CLIENT ENGINE: GETTING GAME STATE FROM SERVER");
 		
 		GameState newGameState = gameScreen.gameConnection.getGameStateFromServer();
-		while (newGameState == null) {
-			log("CLIENT ENGINE: GAME STATE == NULL, TRYING AGAIN in a few");
-			newGameState = gameScreen.gameConnection.getGameStateFromServer();
-			try {
-				Thread.sleep(Globals.DELAY/5);
-			} catch (InterruptedException ie) {
-				System.out.println("CLIENT ENGINE: INTERRUPTED WHILE WAITING FOR GAME STATE");
-			}
+		if (newGameState!=null) {
+			gameState = newGameState;
 		}
-		gameState = newGameState;
-		log("CLIENT ENGINE: GOT GAME STATE");
-		log(gameState.toString());
+		
+//		while (newGameState == null) {
+//			Helper.log("CLIENT ENGINE: GAME STATE == NULL, TRYING AGAIN in a few");
+//			newGameState = gameScreen.gameConnection.getGameStateFromServer();
+//			try {
+//				Thread.sleep(Globals.DELAY/5);
+//			} catch (InterruptedException ie) {
+//				Helper.log("CLIENT ENGINE: INTERRUPTED WHILE WAITING FOR GAME STATE");
+//			}
+//		}
+//		gameState = newGameState;
+		// Helper.log("CLIENT ENGINE: GOT GAME STATE");
+		// Helper.log(gameState);
 	}
 	
 	public void run() {
-		log("CLIENT ENGINE: THREAD STARTED");
+		Helper.log("CLIENT ENGINE: THREAD STARTED");
 		long beforeTime, timeDiff, sleep;
 		beforeTime = System.currentTimeMillis();
 		
-		getGameStateFromServer();
+//		getGameStateFromServer();
 		
-		log("CLIENT ENGINE: About to paint gamePanel for the first time");
+		Helper.log("CLIENT ENGINE: About to paint gamePanel for the first time");
 		gamePanel.repaint();
 		
-		log("CLIENT ENGINE: Adding UserInputHandler");
+		Helper.log("CLIENT ENGINE: Adding UserInputHandler");
 		gamePanel.addKeyListener(new UserInputHandler(this.gameScreen));
 
 		while (true) {
 //		while (gameState.inGame) {
-			log("CLIENT ENGINE: entered main loop");
+			Helper.log("CLIENT ENGINE: entered main loop");
 			
 			getGameStateFromServer();
 		
 			processUserInput();
 			
-			log("CLIENT ENGINE: ABOUT TO UPDATE GAME STATE");
+			Helper.log("CLIENT ENGINE: ABOUT TO UPDATE GAME STATE");
 			gameState.update();
 			
-			log("CLIENT ENGINE: ABOUT TO REPAINT GAMEPANEL");
+			Helper.log("CLIENT ENGINE: ABOUT TO REPAINT GAMEPANEL");
 			gamePanel.repaint();
 			
 			timeDiff = System.currentTimeMillis() - beforeTime;
@@ -89,15 +93,15 @@ public class ClientEngine implements Runnable {
 			try {
 				Thread.sleep(sleep);
 			} catch (InterruptedException e) {
-				log("interrupted");
+				Helper.log("interrupted");
 			}
 			beforeTime = System.currentTimeMillis();
 		}
-//		log("CLIENT ENGINE: GAMESTATE.INGAME == FALSE");
+//		Helper.log("CLIENT ENGINE: GAMESTATE.INGAME == FALSE");
 	}
 	
 	public void processUserInput() {
-		log("CLIENT ENGINE: PROCESSING USER INPUT");
+		Helper.log("CLIENT ENGINE: PROCESSING USER INPUT");
 		synchronized(eventQ) {
 			for (Event event: eventQ) {
 				if (event.type == "key event") {
@@ -110,12 +114,6 @@ public class ClientEngine implements Runnable {
 				}
 			}
 			eventQ.clear();
-		}
-	}
-	
-	public void log(String msg) {
-		if (Globals.DEBUG) {
-			System.out.println(msg);
 		}
 	}
 }

@@ -17,13 +17,11 @@ public class GameState implements Serializable {
 	public Vector<Player> players;
 	public Vector<Shot> shots;
 	public Vector<Tank> tanks;
-	public transient Vector<Barrier> barriers;
+	public Vector<Barrier> barriers;
 //	public Vector<Turret> turrets; TODO: ADD TURRETS
 	public boolean inGame;
 	
 	public GameState() {
-		System.out.println("GAMESTATE: CONSTRUCTOR");
-		
 		inGame = false;
 		
 		barriers = new Vector<Barrier>();
@@ -39,29 +37,30 @@ public class GameState implements Serializable {
 		}
 		
 		setUpMap();
+		Helper.log("Created new GameState");
 	}
 	
 	public boolean playable() {
-		System.out.println("GAMESTATE: PLAYABLE()?");
+		Helper.log("GAMESTATE: PLAYABLE()?");
 //		if (teams != null) {
-//			System.out.println("GAMESTATE: TEAM 1 SIZE" + teams[0].players.size() + " TEAM 2 SIZE" + teams[1].players.size());
+//			Helper.log("GAMESTATE: TEAM 1 SIZE" + teams[0].players.size() + " TEAM 2 SIZE" + teams[1].players.size());
 //		} else {
-//			System.out.println("GAMESTATE: .teams is NULL");
+//			Helper.log("GAMESTATE: .teams is NULL");
 //		}
 		
 		if (teams != null && 
 			teams[0].players.size() > 0 && 
 			teams[1].players.size() > 0) {
-			System.out.println("GAMESTATE: YES, PLAYABLE");
+			Helper.log("GAMESTATE: YES, PLAYABLE");
 				return true;
 		} else {	
-			System.out.println("GAMESTATE: NO, NOT PLAYABLE");
+			Helper.log("GAMESTATE: NO, NOT PLAYABLE");
 			return false;
 		}
 	}
 	
 	public void setUpMap() {
-		System.out.println("GAMESTATE: SETUPMAP()");
+		Helper.log("GAMESTATE: SETUPMAP()");
 		new Barrier(100, 100, 300, 10, this);
 		new Barrier(200, 200, 200, 10, this);
 		new Barrier(300, 300, 400, 10, this);
@@ -73,7 +72,7 @@ public class GameState implements Serializable {
 	}
 	
 	public void update() {
-		System.out.println("GAMESTATE: UPDATE");
+		// Helper.log("GAMESTATE: UPDATE");
 		
 		// tanks
 		for (Tank t: tanks) {

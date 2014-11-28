@@ -77,7 +77,7 @@ public class CentralServer extends ServerSocket {
 	}
 	
 	public void newGame(int port) throws PortNotAvailableException {
-		System.out.println("IN CENTRAL SERVER NEWGAME(INT)");
+		System.out.println("IN CENTRAL SERVER NEWGAME(" + port + ")");
 		if (games.containsKey(port)) {
 			System.out.println("GAMES ALREADY USING PORT: " + port);
 			logger.log(Level.SEVERE, "Game already running on port: " + port);

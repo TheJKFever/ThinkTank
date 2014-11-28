@@ -21,18 +21,16 @@ public class GameServer extends ServerSocket implements Runnable {
 		
 	public GameServer(int port) throws IOException{
 		super(port);
-		if (Globals.DEBUG) System.out.println("CREATED SOCKET");
+		if (Globals.DEBUG) System.out.println("CREATED GAME SERVER SOCKET");
 		clients = new Vector<GameServerConnectionToClient>();
-		if (Globals.DEBUG) System.out.println("CREATED CLIENTS");
 		engine = new ServerEngine(clients);
-		if (Globals.DEBUG) System.out.println("CREATED ENGINE");
+		if (Globals.DEBUG) System.out.println("CREATED SERVER ENGINE");
 		name = "" + ID++;
 		this.thread = new Thread(this);
 	}
 	
 	public void run() {
 		listenForClients();
-		// TODO: GRACEFULLY HANDLE CLIENTS CLOSING CONNECTION
 	}
 	
 	private void listenForClients() {

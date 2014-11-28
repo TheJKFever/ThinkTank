@@ -28,7 +28,7 @@ public class Barrier extends Entity implements Serializable  {
 				hitBy(shot);
 			}
 		}
-//        log("BARRIER X: " + this.x + " Y: " + this.y + " WIDTH: " + this.getWidth() + " HEIGHT: " + this.getHeight());
+//        Helper.log("BARRIER X: " + this.x + " Y: " + this.y + " WIDTH: " + this.getWidth() + " HEIGHT: " + this.getHeight());
 //        checkForCollisionWithShots();
 	}
 }

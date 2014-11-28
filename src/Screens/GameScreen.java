@@ -11,6 +11,7 @@ import Client.ChatClient;
 import Client.ConnectionToGameServer;
 import Client.ThinkTankGUI;
 import Engines.ClientEngine;
+import Game.Helper;
 
 public class GameScreen extends JPanel {
 	
@@ -28,8 +29,7 @@ public class GameScreen extends JPanel {
 	
 	public GameScreen(ThinkTankGUI gui) {
 		super();
-		System.out.println("IN GAME SCREEN CONSTRUCTOR");
-		
+		Helper.log("Creating new GameScreen");
 		this.gui = gui;
 		setLayout(new BorderLayout());
 		gamePanel = new GamePanel(this);
@@ -39,15 +39,16 @@ public class GameScreen extends JPanel {
 		sidePanel.add(chatPanel);
 		add(gamePanel, BorderLayout.CENTER);
 		add(sidePanel, BorderLayout.EAST);
+		Helper.log("Created new GameScreen");
 	}
 	
 	public boolean connectToGameServer(String host, int port) {
-		System.out.println("GAMESCREEN: connectToGameServer");
+		Helper.log("GAMESCREEN: connectToGameServer");
 		engine = new ClientEngine(this);
-		System.out.println("GAMESCREEN: created client engine");
+		Helper.log("GAMESCREEN: created client engine");
 		try {
 			gameConnection = new ConnectionToGameServer(this, host, port);
-			System.out.println("GAMESCREEN: got connection to game server");
+			Helper.log("GAMESCREEN: got connection to game server");
 			return true;
 		} catch (UnknownHostException uhe) {
 			uhe.printStackTrace();

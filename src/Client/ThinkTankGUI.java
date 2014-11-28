@@ -6,11 +6,11 @@ import java.net.UnknownHostException;
 import java.util.logging.Logger;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import Game.Event;
 import Game.Globals;
+import Game.Helper;
 import Screens.GameScreen;
 import Screens.MainMenuScreen;
 import Screens.WaitingScreen;
@@ -55,9 +55,8 @@ public class ThinkTankGUI extends JFrame {
 			    }
 			});
 
-			System.out.println("host: " + host + " and port: " + port);
+			Helper.log("Connecting to " + host + ":" + port);
 			centralConnection = new ConnectionToCentralServer(this, host, port); // Connects to central server
-			System.out.println("Got here");
 			// client needs to have a unique id
 			// client needs to have a specific tank that it controls
 			// tank needs to belong to specific client/player
@@ -78,9 +77,9 @@ public class ThinkTankGUI extends JFrame {
 			 mainMenu = new MainMenuScreen(this); 
 //			 stats = new StatsScreen(); 
 //			 createProfile = new CreateProfileScreen(); 
-//			 createGame = new CreateGameScreen(); 
+//			 createGame = new CreateGameScreen();
 			 waiting = new WaitingScreen(); 
-//			 joinGame = new JoinGameScreen(); 
+//			 joinGame = new JoinGameScreen();
 			 gameScreen = new GameScreen(this);
 //			 gameOver = new GameOverScreen(); 
 
@@ -105,8 +104,7 @@ public class ThinkTankGUI extends JFrame {
 //			 cardLayout.show(mainPanel, "gameScreen");
 //			 cardLayout.show(mainPanel, "joinGame");
 
-
-			// Global JFrame Settings
+			 Helper.log("Finished ThinkTankGUI Constructor");
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -115,13 +113,13 @@ public class ThinkTankGUI extends JFrame {
 	}
 
 	public void startNewGame() {
-		System.out.println("GUI: START NEW GAME CLICKED");
+		Helper.log("GUI: START NEW GAME CLICKED");
 		centralConnection.sendEvent(new Event("new game"));
 		cardLayout.show(mainPanel, "waiting");
 	}
 	
 	public void joinGame() {
-		System.out.println("GUI: joinGame()");
+		Helper.log("GUI: joinGame()");
 		// Go to lobby
 		// Select available game
 		// get port from that game
@@ -129,12 +127,12 @@ public class ThinkTankGUI extends JFrame {
 	}
 	
 	public void joinGame(int port) {
-		System.out.println("GUI: joinGame(port)");
+		Helper.log("GUI: joinGame(" + port + ")");
 		// make connection to game server
 		// store connection in gameScreen
 		// if connection made go to waiting screen
 		if (gameScreen.connectToGameServer(Globals.Development.HOST, port)) {
-			System.out.println("GUI: gameScreen connected to game server");
+			Helper.log("GUI: gameScreen connected to game server");
 			cardLayout.show(mainPanel, "waiting");
 			gameScreen.gameConnection.thread.start();
 		} else {
@@ -143,7 +141,7 @@ public class ThinkTankGUI extends JFrame {
 	}
 
 	public void startGame() {
-		System.out.println("GUI: STARTGAME()");
+		Helper.log("GUI: STARTGAME()");
 		cardLayout.show(mainPanel, "gameScreen");
 	}
 

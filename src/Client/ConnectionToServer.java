@@ -1,5 +1,6 @@
 package Client;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -15,10 +16,9 @@ public abstract class ConnectionToServer extends Socket implements Runnable {
 	
 	public ConnectionToServer(String host, int port) throws UnknownHostException, IOException {
 		super(host, port);
-		if (Globals.DEBUG) System.out.println("CONNECTIONTOSERVER: CONSTRUCTOR");
 		out = new ObjectOutputStream(getOutputStream());
 		in = new ObjectInputStream(getInputStream());
-		if (Globals.DEBUG) System.out.println("CONNECTIONTOSERVER: GOT INPUT AND OUTPUT STREAMS");
+		if (Globals.DEBUG) System.out.println("CONNECTIONTOSERVER: CONNECTION SUCCESSFUL");
 	}
 	
 	public abstract void receive(Object obj);
@@ -34,27 +34,32 @@ public abstract class ConnectionToServer extends Socket implements Runnable {
 	}
 
 	public void sendEvent(Event event) {
-		System.out.println("SENDING EVENT:\n" + event);
+		// System.out.println("SENDING EVENT:\n" + event);
 		send(event);
 	}
 	
 	private void listen() {
+		try {
 		// Listen for messages from server
 		Object dataFromServer;
-		try {
-			while ((dataFromServer = in.readObject()) != null) {
-				receive(dataFromServer);
+			while (true) {
+				if (this.isConnected()) {
+						if ((dataFromServer = in.readObject()) != null) {
+							receive(dataFromServer);
+						}
+				} else {
+					this.close();
+				}
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	@Override
 	public void run() {
-		System.out.println("CONNECTIONTOSERVER: RUN()");
 		listen();
 	}
 }

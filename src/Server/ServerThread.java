@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import Game.Event;
+import Game.Helper;
 
 public abstract class ServerThread extends Thread {
 	private Heartbeat hb;
@@ -13,7 +14,6 @@ public abstract class ServerThread extends Thread {
 	public ObjectOutputStream out;	
 
 	public ServerThread(Socket connection) {
-		System.out.println("SERVERTHREAD: IN CONSTRUCTOR");
 		try {
 			out = new ObjectOutputStream(connection.getOutputStream());
 			in = new ObjectInputStream(connection.getInputStream());
@@ -22,6 +22,7 @@ public abstract class ServerThread extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		Helper.log("Created new ServerThread");
 	}
 
 	public void send(Object obj) {
@@ -30,15 +31,15 @@ public abstract class ServerThread extends Thread {
 			out.writeObject(obj);
 			out.flush();
 		} catch (IOException e) {
-			System.out.println("ERROR SENDING DATA TO CLIENT");
+			Helper.log("ERROR SENDING DATA TO CLIENT");
 			this.interrupt();
 			e.printStackTrace();
 		}
 	}
 
 	public void sendEvent(Event event) {
-		System.out.println("ServerThread: Sending event co client:");
-		System.out.println(event);
+		// Helper.log("ServerThread: Sending event co client:");
+		// Helper.log(event);
 		send(event);
 	}
 
