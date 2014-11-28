@@ -18,7 +18,6 @@ public class ClientEngine implements Runnable {
 	
 	public Player player;
 	public GameState gameState;
-//	public ConnectionToGameServer gameConnection;
 	public ArrayBlockingQueue<Event> eventQ = new ArrayBlockingQueue<Event>(100);	
 	private Thread engineThread;
 	private GameScreen gameScreen;
@@ -44,7 +43,7 @@ public class ClientEngine implements Runnable {
 			log("CLIENT ENGINE: GAME STATE == NULL, TRYING AGAIN in a few");
 			newGameState = gameScreen.gameConnection.getGameStateFromServer();
 			try {
-				Thread.sleep(Globals.DELAY/5);
+				Thread.sleep(Globals.DELAY/3);
 			} catch (InterruptedException ie) {
 				System.out.println("CLIENT ENGINE: INTERRUPTED WHILE WAITING FOR GAME STATE");
 			}
@@ -56,7 +55,7 @@ public class ClientEngine implements Runnable {
 	
 	public void run() {
 		log("CLIENT ENGINE: THREAD STARTED");
-		long beforeTime, timeDiff, sleep;
+		long beforeTime;
 		beforeTime = System.currentTimeMillis();
 		
 		getGameStateFromServer();
@@ -67,33 +66,30 @@ public class ClientEngine implements Runnable {
 		log("CLIENT ENGINE: Adding UserInputHandler");
 		gamePanel.addKeyListener(new UserInputHandler(this.gameScreen));
 
-
 		while (gameState.inGame) {
-			log("CLIENT ENGINE: entered main loop");
-			
 			getGameStateFromServer();
-		
 			processUserInput();
-			
-			log("CLIENT ENGINE: ABOUT TO UPDATE GAME STATE");
 			gameState.update();
-			
-			log("CLIENT ENGINE: ABOUT TO REPAINT GAMEPANEL");
 			gamePanel.repaint();
-			
-			timeDiff = System.currentTimeMillis() - beforeTime;
-			sleep = Globals.DELAY - timeDiff;
-
-			if (sleep < 0) {
-				sleep = 1;
-			}
-			
-			try {
-				Thread.sleep(sleep);
-			} catch (InterruptedException e) {
-				log("interrupted");
-			}
+			waitIfDoneEarly(beforeTime);
 			beforeTime = System.currentTimeMillis();
+		}
+	}
+	
+	public void waitIfDoneEarly(long beforeTime) {
+		long timeDiff, sleep;
+		
+		timeDiff = System.currentTimeMillis() - beforeTime;
+		sleep = Globals.DELAY - timeDiff;
+
+		if (sleep < 0) {
+			sleep = 1;
+		}
+		
+		try {
+			Thread.sleep(sleep);
+		} catch (InterruptedException e) {
+			log("interrupted");
 		}
 	}
 	

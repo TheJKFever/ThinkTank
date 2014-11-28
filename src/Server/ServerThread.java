@@ -38,7 +38,7 @@ public abstract class ServerThread extends Thread {
 
 	public void sendEvent(Event event) {
 		System.out.println("ServerThread: Sending event co client:");
-		System.out.println(event);
+//		System.out.println(event);
 		send(event);
 	}
 

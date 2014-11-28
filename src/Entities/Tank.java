@@ -51,7 +51,7 @@ public class Tank extends Entity implements Serializable  {
         this.dtheta = 0;
         this.firing = false;
         this.spawn(); // sets x and y
-        this.updateImagePath(theta);
+        this.updateImagePath();
     }
     
     public void spawn() {
@@ -65,7 +65,7 @@ public class Tank extends Entity implements Serializable  {
     	}
     }
     
-    public void updateImagePath(int theta) {
+    public void updateImagePath() {
     	if (theta == 0) {
     		this.imagePath = IMAGE_TANK_UP;
     	} else if (theta == 90) {
@@ -122,9 +122,9 @@ public class Tank extends Entity implements Serializable  {
     	
     	// TODO: Subtract health when run into things?
     	checkForCollisionWithWalls();
-    	checkForCollisionWithObstacles(gs.tanks);
-        checkForCollisionWithObstacles(gs.brains);
-        checkForCollisionWithObstacles(gs.barriers);
+    	checkForCollisionWithObjects(gs.tanks);
+        checkForCollisionWithObjects(gs.brains);
+        checkForCollisionWithObjects(gs.barriers);
         checkForCollisionWithShots();
         
         if (this.firing) {
@@ -135,39 +135,48 @@ public class Tank extends Entity implements Serializable  {
     }
     
     public void updateOrientation() {
+    	log("TANK: Updating Orientation");
+    	log("Before:");
+    	log("theta = " + theta);
+    	log("dtheta = " + dtheta);
     	theta = wrapDegrees(theta + dtheta); 
     	dtheta = 0; // reset to 0 after updating position
-    	updateImagePath(theta);	
+    	updateImagePath();	
+    	log("After:");
+    	log("theta = " + theta);
+    	log("dtheta = " + dtheta);
     }
     
     public void updatePosition() {
-//    	assert(theta >= 0);
-//    	assert(theta < 360);
-//    	assert(dp >= 0);
-//    	assert(dp <= 2);
+    	log("TANK: UPDATING POSITION");
+    	log("BEFORE");
+    	log(this.toString());
     	
     	if (theta == 0) {
-    		setY(getY() - dp);
+    		y -= dp;
     	} else if (theta == 180) {
-    		setY(getY() + dp);
+    		y += dp;
     	} else if (theta == 90) {
-    		setX(getX() + dp);
+    		x += dp;
     	} else if (theta == 270) {
-    		setX(getX() - dp);
+    		x -= dp;
     	}
+    	
+    	log("AFTER");
+    	log(this.toString());
     }
     
     public void checkForCollisionWithWalls() {
         if (x < 0) {
-            setX(0);
-        } else if (x >= Globals.BOARD_WIDTH - getWidth()) { 
-        	setX(Globals.BOARD_WIDTH - getWidth());
+            x = 0;
+        } else if (x >= (Globals.BOARD_WIDTH - width)) { 
+        	setX(Globals.BOARD_WIDTH - width);
         }
         
         if (y < 0) {
-        	setY(0);
-        } else if (y >= Globals.BOARD_HEIGHT - getHeight()) {
-        	setY(Globals.BOARD_HEIGHT - getHeight());
+        	y = 0;
+        } else if (y >= Globals.BOARD_HEIGHT - height) {
+        	y = (Globals.BOARD_HEIGHT - height);
         }
     }
     
@@ -176,20 +185,20 @@ public class Tank extends Entity implements Serializable  {
     	int shotY = 0;
     	
     	if (theta == 0) {
-    		shotX = this.x + this.getWidth()/2 - Shot.SHOT_WIDTH_VERTICAL/2;
-    		shotY = this.y - Shot.SHOT_HEIGHT_VERTICAL;
+    		shotX = x + width/2 - Shot.SHOT_WIDTH_VERTICAL/2;
+    		shotY = y - Shot.SHOT_HEIGHT_VERTICAL;
     	} else if (theta == 90) {
-    		shotX = this.x + this.getWidth();
-    		shotY = this.y + this.getHeight()/2 - Shot.SHOT_HEIGHT_HORIZONTAL/2;
+    		shotX = x + width;
+    		shotY = y + height/2 - Shot.SHOT_HEIGHT_HORIZONTAL/2;
     	} else if (theta == 180) {
-    		shotX = this.x + this.getWidth()/2 - Shot.SHOT_WIDTH_VERTICAL/2;
-    		shotY = this.y + this.getHeight();
+    		shotX = x + width/2 - Shot.SHOT_WIDTH_VERTICAL/2;
+    		shotY = y + height;
     	} else if (theta == 270) {
-    		shotX = this.x - Shot.SHOT_WIDTH_HORIZONTAL;
-    		shotY = this.y + this.getHeight()/2 - Shot.SHOT_HEIGHT_HORIZONTAL/2;
+    		shotX = x - Shot.SHOT_WIDTH_HORIZONTAL;
+    		shotY = y + height/2 - Shot.SHOT_HEIGHT_HORIZONTAL/2;
     	}
     	
     	gs.shots.add(new Shot(shotX, shotY, theta, gs));
-    	this.firing = false;
+    	firing = false;
     }
 }
