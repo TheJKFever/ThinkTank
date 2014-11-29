@@ -34,7 +34,7 @@ public abstract class ConnectionToServer extends Socket implements Runnable {
 	}
 
 	public void sendEvent(Event event) {
-		System.out.println("SENDING EVENT:\n" + event);
+//		System.out.println("SENDING EVENT:\n" + event);
 		send(event);
 	}
 	

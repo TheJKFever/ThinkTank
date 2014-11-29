@@ -77,10 +77,10 @@ public class ServerEngine implements Runnable {
 	}
 
 	public void processInputFromClients() {
-		log("GAMESERVER: PROCESSINPUTFROMCLIENTS");
+//		log("GAMESERVER: PROCESSINPUTFROMCLIENTS");
 		synchronized(eventQ) {
 			for (Event event: eventQ) {
-				log("GAMESERVER: PROCESSING EVENT:\n" + event);
+//				log("GAMESERVER: PROCESSING EVENT:\n" + event);
 				switch(event.type) {
 					case "key event":
 						SimpleKeyEvent ke = (SimpleKeyEvent)(event.data);

@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 import Exceptions.PortNotAvailableException;
 import Game.Event;
 
-public class CentralServerConnectionToClient extends ServerThread {
+public class CentralServerConnectionToClient extends ConnectionToClient {
 	CentralServer centralServer;
 	private static Logger logger = Logger.getLogger("CentralServer.log");
 	

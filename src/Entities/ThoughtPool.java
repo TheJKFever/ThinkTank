@@ -4,14 +4,13 @@ import java.awt.Color;
 
 import Game.GameState;
 
-public class Barrier extends Entity {
+public class ThoughtPool extends Entity {
 	
-	private static final long serialVersionUID = -1039864192350379044L;
+	private static final long serialVersionUID = 708897813125520555L;
+
+	public static final Color color = Color.pink;
 	
-	//	final String IMAGE_BARRIER = "images"
-	public static final Color color = Color.orange;
-	
-    public Barrier(int x, int y, int width, int height, GameState gs) {
+    public ThoughtPool(int x, int y, int width, int height, GameState gs) {
     	this.gs = gs;
         this.x = x;
         this.y = y;

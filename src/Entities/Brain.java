@@ -1,12 +1,10 @@
 package Entities;
 
-import java.io.Serializable;
-
 import Game.GameState;
 import Game.Team;
 import Global.Settings;
 
-public class Brain extends Entity implements Serializable  {
+public class Brain extends Entity  {
 	
 	private static final long serialVersionUID = 6669994797629316542L;
 	
@@ -43,6 +41,13 @@ public class Brain extends Entity implements Serializable  {
 	
 	public void update() {
     	super.update();
-        checkForCollisionWithShots();
 	}
+	
+	public void die() {
+    	// TODO: BRAIN DEATH
+    	visible = false;
+    	exploding = true;
+    }
+	
+	public void collideWith(Entity e) {}
 }

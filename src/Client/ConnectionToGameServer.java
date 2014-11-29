@@ -23,7 +23,7 @@ public class ConnectionToGameServer extends ConnectionToServer {
 	}
 
 	public GameState getGameStateFromServer() {
-		System.out.println("ConnectionToGameServer: GETGAMESTATEFROMSERVER()");
+//		System.out.println("ConnectionToGameServer: GETGAMESTATEFROMSERVER()");
 		GameState latestState = gameState;
 		gameState = null;
 		return latestState;
@@ -37,7 +37,7 @@ public class ConnectionToGameServer extends ConnectionToServer {
 			gameScreen.engine.player = (Player) event.data;
 			break;
 		case "game update":
-			System.out.println("ConnectionToGameServer: RECEIVED GAME UPDATE EVENT, raw");
+//			System.out.println("ConnectionToGameServer: RECEIVED GAME UPDATE EVENT, raw");
 //			System.out.println((GameState) event.data);
 			this.gameState = (GameState) event.data;
 			break;

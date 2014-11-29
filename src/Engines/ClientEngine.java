@@ -37,11 +37,11 @@ public class ClientEngine implements Runnable {
 	}
 
 	public void getGameStateFromServer() {
-		log("CLIENT ENGINE: GETTING GAME STATE FROM SERVER");
+//		log("CLIENT ENGINE: GETTING GAME STATE FROM SERVER");
 		
 		GameState newGameState = gameScreen.gameConnection.getGameStateFromServer();
 		while (newGameState == null) {
-			log("CLIENT ENGINE: GAME STATE == NULL, TRYING AGAIN in a few");
+//			log("CLIENT ENGINE: GAME STATE == NULL, TRYING AGAIN in a few");
 			newGameState = gameScreen.gameConnection.getGameStateFromServer();
 			try {
 				Thread.sleep(Settings.DELAY/3);
@@ -61,10 +61,10 @@ public class ClientEngine implements Runnable {
 		
 		getGameStateFromServer();
 		
-		log("CLIENT ENGINE: About to paint gamePanel for the first time");
+//		log("CLIENT ENGINE: About to paint gamePanel for the first time");
 		gamePanel.repaint();
 		
-		log("CLIENT ENGINE: Adding UserInputHandler");
+//		log("CLIENT ENGINE: Adding UserInputHandler");
 		gamePanel.addKeyListener(new UserInputHandler(this.gameScreen));
 
 		while (gameState.inGame) {
@@ -95,7 +95,7 @@ public class ClientEngine implements Runnable {
 	}
 	
 	public void processUserInput() {
-		log("CLIENT ENGINE: PROCESSING USER INPUT");
+//		log("CLIENT ENGINE: PROCESSING USER INPUT");
 		synchronized(eventQ) {
 			for (Event event: eventQ) {
 				if (event.type == "key event") {

@@ -8,6 +8,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -16,6 +17,7 @@ import javax.swing.JPanel;
 import Entities.Barrier;
 import Entities.Brain;
 import Entities.Entity;
+import Entities.ThoughtPool;
 import Game.GameState;
 import Global.Settings;
 
@@ -25,6 +27,7 @@ public class GamePanel extends JPanel {
 	
 	public GameScreen gameScreen;
 	public GameState gameState;
+	HashMap<String, Image> imageCache;
 	
 	public GamePanel(GameScreen gameScreen) {
 		super();
@@ -40,6 +43,7 @@ public class GamePanel extends JPanel {
 				GamePanel.this.requestFocusInWindow();
 			}
 		});
+		this.imageCache = new HashMap<String, Image>();
 	}
 	
 	public void paint(Graphics g) {
@@ -50,20 +54,20 @@ public class GamePanel extends JPanel {
 	}
 	
 	public Image getImg(String path) {
-		// TODO: Create a hash map that caches all images
-		Image img = null;
-		try {
-			img = new ImageIcon(path).getImage();
-		} catch (Exception e) {
-			System.out.println("GAMPANEL: ERROR DRAWING IMAGE FOR PATH:" + path);
-		}
-		return img; 
+		if (imageCache.containsKey(path)) {
+			return imageCache.get(path);
+		} else {
+			Image img = new ImageIcon(path).getImage();
+			imageCache.put(path, img);
+			return img;
+		} 
 	}
 	
 	public void render(Graphics g) {
 		log("GAMEPANEL: RENDER");	
 		drawMap(g);
 		drawBarriers(g);
+		drawThoughtPools(g);
 		drawBrains(g);
 		drawTanks(g);
 		drawShots(g);
@@ -74,24 +78,22 @@ public class GamePanel extends JPanel {
 
 	public void drawMap(Graphics g) {
 		g.setColor(Color.black);
-		
 		// black background
 		g.fillRect(0, 0, Global.Settings.BOARD_WIDTH, Global.Settings.BOARD_HEIGHT);
 		
-		
-		// top wall
-		g.setColor(Color.green);
-		g.fillRect(0, 0, Global.Settings.BOARD_WIDTH, 10);
-		
-		// left wall
-		g.fillRect(0, 0, 10, Global.Settings.BOARD_HEIGHT);
-		
-		// bottom wall
-		g.fillRect(0, Settings.BOARD_HEIGHT-10, Settings.BOARD_WIDTH, 10);
-		
-		// right wall
-		g.fillRect(Settings.BOARD_WIDTH - 10, 0, 10, Settings.BOARD_HEIGHT);
-		g.setColor(Color.black);
+//		// top wall
+//		g.setColor(Color.green);
+//		g.fillRect(0, 0, Global.Settings.BOARD_WIDTH, 10);
+//		
+//		// left wall
+//		g.fillRect(0, 0, 10, Global.Settings.BOARD_HEIGHT);
+//		
+//		// bottom wall
+//		g.fillRect(0, Settings.BOARD_HEIGHT-10, Settings.BOARD_WIDTH, 10);
+//		
+//		// right wall
+//		g.fillRect(Settings.BOARD_WIDTH - 10, 0, 10, Settings.BOARD_HEIGHT);
+//		g.setColor(Color.black);
 	}
 	
 	public void drawBarriers(Graphics g) {
@@ -99,6 +101,14 @@ public class GamePanel extends JPanel {
 		for (Barrier barrier: gameState.barriers) {
 			g.setColor(Barrier.color);
 			g.fillRect(barrier.x, barrier.y, barrier.width, barrier.height);
+		}
+	}
+
+	public void drawThoughtPools(Graphics g) {
+		log("GAMEPANEL: DRAW THOUGHT POOLS");
+		for (ThoughtPool thoughtPool: gameState.thoughtPools) {
+			g.setColor(ThoughtPool.color);
+			g.fillRect(thoughtPool.x, thoughtPool.y, thoughtPool.width, thoughtPool.height);
 		}
 	}
 	

@@ -1,5 +1,6 @@
 package Game;
 
+import java.awt.Color;
 import java.io.Serializable;
 import java.util.Vector;
 
@@ -7,6 +8,8 @@ import Entities.Barrier;
 import Entities.Brain;
 import Entities.Shot;
 import Entities.Tank;
+import Entities.ThoughtPool;
+import Global.Settings;
 
 public class GameState implements Serializable {
 	
@@ -18,6 +21,7 @@ public class GameState implements Serializable {
 	public Vector<Shot> shots;
 	public Vector<Tank> tanks;
 	public Vector<Barrier> barriers;
+	public Vector<ThoughtPool> thoughtPools;
 //	public Vector<Turret> turrets; TODO: ADD TURRETS
 	public boolean inGame;
 	
@@ -27,6 +31,7 @@ public class GameState implements Serializable {
 		inGame = false;
 		
 		barriers = new Vector<Barrier>();
+		thoughtPools = new Vector<ThoughtPool>();
 		brains = new Vector<Brain>();
 		shots = new Vector<Shot>();
 		players = new Vector<Player>();
@@ -60,8 +65,17 @@ public class GameState implements Serializable {
 	
 	public void setUpMap() {
 		System.out.println("GAMESTATE: SETUPMAP()");
-		
-		// TODO: create interesting map, not just random barriers
+	
+		// top wall
+		barriers.add(new Barrier(0, 0, Global.Settings.BOARD_WIDTH, 10, this));
+		// left wall
+		barriers.add(new Barrier(0, 0, 10, Global.Settings.BOARD_HEIGHT, this));
+		// bottom wall
+		barriers.add(new Barrier(0, Settings.BOARD_HEIGHT-10, Settings.BOARD_WIDTH, 10, this));
+		// right wall
+		barriers.add(new Barrier(Settings.BOARD_WIDTH - 10, 0, 10, Settings.BOARD_HEIGHT, this));
+				
+		// TODO: create interesting map, not just random barriers			
 		barriers.add(new Barrier(100, 100, 300, 10, this));
 		barriers.add(new Barrier(200, 200, 200, 10, this));
 		barriers.add(new Barrier(300, 300, 400, 10, this));
@@ -69,7 +83,12 @@ public class GameState implements Serializable {
 		barriers.add(new Barrier(150, 150, 10, 200, this));
 		barriers.add(new Barrier(250, 250, 10, 100, this));
 		
-		// TODO: Add Thoughtpools
+		thoughtPools.add(new ThoughtPool(200, 200, 50, 50, this));
+		thoughtPools.add(new ThoughtPool(250, 250, 50, 50, this));
+		thoughtPools.add(new ThoughtPool(300, 300, 20, 40, this));
+		thoughtPools.add(new ThoughtPool(350, 350, 70, 70, this));
+		thoughtPools.add(new ThoughtPool(400, 400, 60, 40, this));
+		thoughtPools.add(new ThoughtPool(450, 450, 20, 20, this));
 	}
 	
 	public void update() {
@@ -79,14 +98,10 @@ public class GameState implements Serializable {
 		for (Tank t: tanks) {
 			t.update();
 		}
-		// brains
-		for (Brain b: brains) {
-			b.update();
-		}
-		// barriers 
-		for (Barrier b: barriers) {
-			b.update();
-		}
+		
+//		for (Shot s: shots) {
+//			s.update();
+//		}
 		// shots
 		for (int i = (shots.size() - 1); i >= 0; i--) {
 			Shot shot = shots.get(i);
@@ -96,6 +111,19 @@ public class GameState implements Serializable {
 				shot.update();
 			}
 		}
+		// brains
+//		for (Brain b: brains) {
+//			b.update();
+//		}
+		// barriers 
+//		for (Barrier b: barriers) {
+//			b.update();
+//		}
+		// Thought Pools
+//		for (ThoughtPool tp: thoughtPools) {
+//			tp.update();
+//		}
+		
 	}
 	
 	@Override
@@ -114,9 +142,9 @@ public class GameState implements Serializable {
 			}			
 		}
 		sb.append("SHOTS: " + this.shots.size() + "\n");
-		for (Shot sh: shots) {
-			sb.append(sh);	
-		}
+//		for (Shot sh: shots) {
+//			sb.append(sh);	
+//		}
 		sb.append("------------------------------------------\n");
 		return sb.toString();
 	}
