@@ -125,9 +125,10 @@ public class Tank extends Entity implements Serializable  {
     	
     	// TODO: Subtract health when run into things?
     	checkForCollisionWithWalls();
+    	checkForCollisionWithObjects(gs.barriers);
 //    	checkForCollisionWithObjects(gs.tanks);
 //        checkForCollisionWithObjects(gs.brains);
-//        checkForCollisionWithObjects(gs.barriers);
+        
 //        checkForCollisionWithShots();
         
         if (this.firing) {

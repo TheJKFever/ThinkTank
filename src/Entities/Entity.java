@@ -11,12 +11,19 @@ public abstract class Entity implements Serializable {
 
 	private static final long serialVersionUID = -4882402415044435970L;
 	
+	GameState gs;
 	public boolean visible;
     public String imagePath;
     public boolean dying;
-    
-    public int x, y, dx, dy, dp, prevX, prevY, theta, dtheta, height, width, health;
-    GameState gs;
+    public int x, y, dx, dy, dp, prevX, prevY, theta, dtheta, height, width, health;    
+    public boolean yCollision = false;
+    public boolean xCollision = false;
+    public boolean topCollision = false;
+	public boolean bottomCollision = false;
+	public boolean leftCollision = false;
+	public boolean rightCollision = false;
+	public boolean xCollisionPrev = false;
+	public boolean yCollisionPrev = false;
     
     public Entity() {
         visible = true;
@@ -117,46 +124,67 @@ public abstract class Entity implements Serializable {
 	}
 	
 	public boolean collidesWith(Rect other) {
-		boolean yCollision = false;
-		boolean xCollision = false;
+		log(this.getClass().getName() + ": collidesWith()");
+		
+		// store previous values
+		yCollisionPrev = new Boolean(yCollision);
+		xCollisionPrev = new Boolean(xCollision);
+		
+		// reset values
+		yCollision = false;
+		xCollision = false;
+		leftCollision = false;
+		rightCollision = false;
+		topCollision = false;
+		bottomCollision = false;
 		
 		Rect my = this.getRect();
 		
 		if (my.top <= other.bottom && my.top >= other.top) {
 			yCollision = true;
+			topCollision = true;
 		} else if (my.bottom >= other.top && my.bottom <= other.bottom) {
 			yCollision = true;
+			bottomCollision = true;
 		}
 
 		if (my.right >= other.left && my.right <= other.right) {
 			xCollision = true;
+			rightCollision = true;
 		} else if (my.left <= other.right && my.left >= other.left) {
 			xCollision = true;
+			leftCollision = true;
 		}
 		
 //        log("MY X: " + my.x + " Y: " + my.y + " WIDTH: " + my.width + " HEIGHT: " + my.height);
 //        log("OT X: " + other.x + " Y: " + other.y + " WIDTH: " + other.width + " HEIGHT: " + other.height);
 
-		return (xCollision && yCollision);
+		log(this.getClass().getName() + " xCollision: " + xCollision + " yCollision: " + yCollision);
+		boolean collision = xCollision && yCollision;
+		if (collision) {
+			log("COLLISION");
+		}
+		return collision;
 	}
 	
     public void resetPositionOnCollision(Rect rect) {
-    	int deltaY = y - prevY;
-    	int deltaX = x -  prevX;
+    	log(this.getClass().getName() + ": resetPositionOnCollision()");
     	
-    	if (deltaY != 0) {
-			if (deltaY > 0) {
-				this.y = rect.top - 10;
-			} else {
-				this.y = rect.bottom + 10;
-			}
-    	} else if (deltaX != 0) {
-			if (deltaX > 0) {
-				this.x = rect.left - 10;
-			} else {
-				this.x = rect.right + 10;	
-			}
-		}
+    	if (xCollisionPrev) {
+    		if (topCollision) {
+    			y = rect.bottom + 1;
+    		} else if (bottomCollision) {
+    			y = rect.top - height - 1;
+    		}
+    		this.yCollision = false;
+    	} else if (yCollisionPrev) {
+    		if (rightCollision) {
+    			x = rect.left - width - 1;
+    		} else if (leftCollision){
+    			x = rect.right + 1;
+    		}
+    		this.xCollision = false;
+    	}	
     }
     
 	public void checkForCollisionWithObjects(Vector<? extends Entity> obstacles) {
