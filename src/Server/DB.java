@@ -9,7 +9,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import Client.GameState;
 
-public class DB implements Runnable
+public abstract class DB implements Runnable
 {
 	public static final String ADDRESS = "jdbc:mysql://localhost/";
 	public static final String NAME = "lab11";
@@ -33,20 +33,5 @@ public class DB implements Runnable
 		queryLock.unlock();
 	}
 	
-	public void execute()
-	{
-		Connection connection=null;
-		Statement statement=null;
-		try {
-			Class.forName(DRIVER);
-			connection=DriverManager.getConnection(ADDRESS+NAME, USER, PASSWORD);
-			statement=connection.createStatement();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	public abstract void execute();
 }
