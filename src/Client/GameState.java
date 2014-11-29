@@ -7,13 +7,14 @@ import Entities.Barrier;
 import Entities.Brain;
 import Entities.Shot;
 import Entities.Tank;
+import Entities.Turret;
 
 public class GameState {
 	// TODO: these should probably all be private with getters, and no setters
 	public Team team1;
 	public Team team2;
 	public Vector<Shot> shots;
-//	public Vector<Turret> turrets;
+	public Vector<Turret> turrets;
 	public long startTime;
 	public Vector<Brain> brains;
 	public Vector<Barrier> barriers;
@@ -27,7 +28,7 @@ public class GameState {
 		team1 = new Team(1, this);
 		team2 = new Team(2, this);
 		shots = new Vector<Shot>();
-//		turrets = new Vector<startTime>();
+		turrets = new Vector<Turret>();
 		startTime = System.currentTimeMillis();
 	}
 }

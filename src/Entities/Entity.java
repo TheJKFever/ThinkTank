@@ -6,12 +6,18 @@ import java.util.Vector;
 import Client.GameRect;
 import Client.GameState;
 import Client.Globals;
+import Client.Player;
 
 public abstract class Entity {
 
     boolean visible;
     Image image;
     boolean dying;
+    public Player player;
+
+    //shiyao 
+    int team;
+    //shiyao
     
     public int x, y, dx, dy, dp, prevX, prevY, theta, dtheta, height, width;
     
@@ -96,9 +102,15 @@ public abstract class Entity {
     
 	public void hitBy(Shot shot) {
 		this.health -= shot.damage;
+		shot.shooter.numHit++;
 		log(this.type + " HEALTH = " + health);
 		if (this.health == 0) {
 			this.setDying(true);
+			shot.shooter.enemyKilled++;
+			if (this.type.equals("Tank"))
+			{
+				this.player.death++;
+			}
 		}
 		shot.exploding = true;
 		shot.dying = true;

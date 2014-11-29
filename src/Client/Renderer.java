@@ -30,6 +30,7 @@ public class Renderer {
 			drawBrains(g);
 			drawEntities(g, gameScreen.gs.tanks);
 			drawEntities(g, gameScreen.gs.shots);
+			drawEntities(g, gameScreen.gs.turrets);
 		}
 	
 		Toolkit.getDefaultToolkit().sync();

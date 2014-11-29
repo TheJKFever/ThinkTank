@@ -20,12 +20,15 @@ import Entities.Barrier;
 import Entities.Brain;
 import Entities.Shot;
 import Entities.Tank;
+import Entities.Turret;
 
 public class GameScreen extends JPanel implements Runnable {
 	JPanel chatPanel;
 	public GameState gs;
 	Dimension d;
 	Tank tank;
+	Turret turret;
+	Player player;
 	
 	ArrayBlockingQueue<GameEvent> eventQ = new ArrayBlockingQueue<GameEvent>(100);
 	
@@ -56,8 +59,11 @@ public class GameScreen extends JPanel implements Runnable {
 	public void gameInit() {
 		log("gameInit()...");
 
-		tank = new Tank(this.gs);
-		gs.tanks.add(tank);
+		tank = new Tank(1, this.gs);
+		player = new Player();
+		player.tank = tank;
+		gs.team1.players.add(player);
+		turret = new Turret(150, 350, 2, this.gs);
 		
 		gs.barriers.add(new Barrier(100, 100, 300, 10, this.gs));
 		gs.barriers.add(new Barrier(200, 200, 200, 10, this.gs));
@@ -122,6 +128,10 @@ public class GameScreen extends JPanel implements Runnable {
 			} else {
 				shot.update();
 			}
+		}
+		for (Turret t:gs.turrets)
+		{
+			t.update();
 		}
 	}
 	

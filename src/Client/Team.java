@@ -12,6 +12,7 @@ public class Team {
 
 	public Team(int teamNumber, GameState gs) {
 		this.teamNumber = teamNumber;
+		players=new Vector<Player>();
 		brain = new Brain(teamNumber, gs);
 		gs.brains.add(brain);
 	}

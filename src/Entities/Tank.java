@@ -7,23 +7,27 @@ import javax.swing.ImageIcon;
 import Client.GameRect;
 import Client.GameState;
 import Client.Globals;
+import Client.Player;
 
 public class Tank extends Entity {
 
     private final int START_Y = 280; 
     private final int START_X = 270;
 
-    static final String imageDir = "images/tanks/";
-    static final String IMAGE_TANK_UP = imageDir + "blue/up1.png";
-    static final String IMAGE_TANK_RIGHT = imageDir + "blue/right1.png";
-    static final String IMAGE_TANK_DOWN = imageDir + "blue/down1.png";
-    static final String IMAGE_TANK_LEFT = imageDir + "blue/left1.png";
+    public static final String imageDir = "images/tanks/";
+    public static final String IMAGE_TANK_UP = imageDir + "blue/up1.png";
+    public static final String IMAGE_TANK_RIGHT = imageDir + "blue/right1.png";
+    public static final String IMAGE_TANK_DOWN = imageDir + "blue/down1.png";
+    public static final String IMAGE_TANK_LEFT = imageDir + "blue/left1.png";
     
     static final int MAX_TANK_HEALTH = 10;
     
+    public int team;
     public boolean firing;
     
-    public Tank(GameState gs) {
+    public Tank(int team, GameState gs, Player player) {
+    	this.team = team;
+    	this.player=player;
     	type = "Tank";
     	this.gs = gs;
         setX(START_X);
@@ -40,6 +44,7 @@ public class Tank extends Entity {
 //        this.height = ii.getImage().getWidth(null);
         this.setWidth(16);
         this.setHeight(16);
+    	gs.tanks.add(this);
     }
     
     public void updateImage(int theta) {
@@ -118,7 +123,8 @@ public class Tank extends Entity {
     		shotY = this.y + this.getWidth()/2;
     	}
     	
-    	gs.shots.add(new Shot(shotX, shotY, this.theta, this.gs));
+    	gs.shots.add(new Shot(shotX, shotY, this.theta, this.gs, this.player));
+    	this.player.numShot++;
     	this.firing = false;
     }
     

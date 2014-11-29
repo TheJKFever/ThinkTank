@@ -4,6 +4,7 @@ import javax.swing.ImageIcon;
 
 import Client.GameState;
 import Client.Globals;
+import Client.Player;
 
 public class Shot extends Entity {
 
@@ -15,9 +16,15 @@ public class Shot extends Entity {
     int shotSpeed = 4;
     int damage = 1;
     boolean exploding = false;
-
-    public Shot(int x, int y, int theta, GameState gs) {
+    Player shooter;
+    Player getHit;
+    Player getKilled;
+    
+    public Shot(int x, int y, int theta, GameState gs, Player shooter) {
     	this.gs = gs;
+    	this.shooter=shooter;
+    	this.getHit=null;
+    	this.getKilled=null;
         this.setX(x);
         this.y = y;
         
