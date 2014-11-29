@@ -1,17 +1,10 @@
 package Server;
 
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.Semaphore;
@@ -133,15 +126,6 @@ public class CentralServer extends ServerSocket {
 		}		
 	}
 	
-	public static void main(String[] args) {
-		try {
-			CentralServer server = new CentralServer(Settings.Development.SERVER_PORT);
-			System.out.println("CENTRAL SERVER IS RUNNING");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 	public Vector<GameObject> getGamesVector() {
 		Vector<GameObject> gameVector = new Vector<GameObject>();
 		for(Map.Entry<Integer, GameServer> game:games.entrySet()) {
@@ -153,6 +137,15 @@ public class CentralServer extends ServerSocket {
 	public void broadcast(Event event) {
 		for (CentralServerConnectionToClient client:clients) {
 			client.send(event);
+		}
+	}
+
+	public static void main(String[] args) {
+		try {
+			CentralServer server = new CentralServer(Settings.Development.SERVER_PORT);
+			System.out.println("CENTRAL SERVER IS RUNNING");
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

@@ -16,7 +16,7 @@ import Entities.Shot;
 import Entities.Tank;
 import Game.GameState;
 
-public class GameScreen extends JPanel implements Runnable {
+public class KevinGameScreen extends JPanel implements Runnable {
 	JPanel chatPanel;
 	public GameState gs;
 	Dimension d;
@@ -34,7 +34,7 @@ public class GameScreen extends JPanel implements Runnable {
 
 	private Thread animator;
 
-	public GameScreen() {
+	public KevinGameScreen() {
 		gs = new GameState();
 		addKeyListener(new TAdapter());
 		setFocusable(true);

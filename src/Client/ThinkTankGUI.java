@@ -2,11 +2,16 @@ package Client;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.logging.Logger;
 
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 import Game.Event;
@@ -26,11 +31,14 @@ public class ThinkTankGUI extends JFrame {
 	public MainMenuScreen mainMenu;
 	//	private StatsScreen stats;
 	//	private CreateProfileScreen createProfile;
-	private CreateGameScreen createGame;
+	public CreateGameScreen createGame;
 	public WaitingScreen waiting;
 	public LobbyScreen lobby;
-	public GameScreen gameScreen;
+	public GameScreen gameScree;
 	//	private GameOverScreen gameOver;
+	private JMenuBar menuBar;
+	private JMenu menu;
+	private JMenuItem mainMenuItem, exitItem;
 	public boolean loggedIn = false;
 	
 	public ThinkTankGUI(String host, int port) {
@@ -46,9 +54,9 @@ public class ThinkTankGUI extends JFrame {
 			    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
 			    	try {
 			    		centralConnection.close();
-				    	if (gameScreen.gameConnection !=null) {
-				    		gameScreen.gameConnection.thread.interrupt();
-				    		gameScreen.gameConnection.close();
+				    	if (gameScree.gameConnection !=null) {
+				    		gameScree.gameConnection.thread.interrupt();
+				    		gameScree.gameConnection.close();
 				    	}
 				    	ThinkTankGUI.this.dispose();
 				    } catch (IOException e) {
@@ -64,6 +72,17 @@ public class ThinkTankGUI extends JFrame {
 			mainPanel.setPreferredSize(new Dimension(Settings.GUI_WIDTH, Settings.GUI_HEIGHT));
 			mainPanel.setLayout(cardLayout);
 			add(mainPanel);
+			
+			menuBar = new JMenuBar();
+			menu = new JMenu("File");
+			menuBar.add(menu);
+			mainMenuItem = new JMenuItem("Main Menu");
+			mainMenuItem.addActionListener(new MainMenuListener(this));
+			exitItem = new JMenuItem("Exit");
+			exitItem.addActionListener(new CloseWindowListener(this));
+			menu.add(mainMenuItem);
+			menu.add(exitItem);
+			this.setJMenuBar(menuBar);
 
 			/* SCREENS:
 			 * Main Menu
@@ -81,7 +100,7 @@ public class ThinkTankGUI extends JFrame {
 			 createGame = new CreateGameScreen(this);
 			 waiting = new WaitingScreen(); 
 			 lobby = new LobbyScreen(this);
-			 gameScreen = new GameScreen(this);
+			 gameScree = new GameScreen(this);
 //			 gameOver = new GameOverScreen(this); 
 
 			 mainPanel.add("mainMenu", mainMenu);
@@ -89,12 +108,10 @@ public class ThinkTankGUI extends JFrame {
 //			 mainPanel.add("createProfile", createProfile);
 			 mainPanel.add("createGame", createGame);
 			 mainPanel.add("waiting", waiting);
-			 mainPanel.add("gameScreen", gameScreen);
+			 mainPanel.add("gameScreen", gameScree);
 			 mainPanel.add("lobby", lobby);
 			
-			
 //			 mainPanel.add(gameOver);
-
 
 			// TODO: put all  of these in action listeners
 			 cardLayout.show(mainPanel, "mainMenu");
@@ -132,10 +149,10 @@ public class ThinkTankGUI extends JFrame {
 		// make connection to game server
 		// store connection in gameScreen
 		// if connection made go to waiting screen
-		if (gameScreen.connectToGameServer(Settings.Development.HOST, port)) {
+		if (gameScree.connectToGameServer(Settings.Development.HOST, port)) {
 			System.out.println("GUI: gameScreen connected to game server");
 			goTo("waiting");
-			gameScreen.gameConnection.thread.start();
+			gameScree.gameConnection.thread.start();
 		} else {
 			throw new RuntimeException("Could not create game in joinGame");
 		}
@@ -144,6 +161,37 @@ public class ThinkTankGUI extends JFrame {
 	public void goTo(String page) {
 		Helper.log("GUI: Going to page: " + page);
 		cardLayout.show(mainPanel, page);
+	}
+	
+	public class MainMenuListener implements ActionListener {
+		public ThinkTankGUI gui;
+		public MainMenuListener(ThinkTankGUI gui) {
+			this.gui = gui;
+		}
+		public void actionPerformed(ActionEvent arg0) {
+			// TODO: if in the game, option page to confirm, are you sure you want to forfeit?
+			gui.goTo("mainMenu");
+		}
+	}
+		
+	public class CloseWindowListener implements ActionListener {
+		public ThinkTankGUI gui;
+		public CloseWindowListener(ThinkTankGUI gui) {
+			this.gui = gui;
+		}
+		public void actionPerformed(ActionEvent e) {
+	    	try {
+	    		gui.centralConnection.close();
+		    	if (gui.gameScree.gameConnection !=null) {
+		    		gui.gameScree.gameConnection.thread.interrupt();
+		    		gui.gameScree.gameConnection.close();
+		    	}
+		    	gui.dispose();
+		    } catch (IOException ioe) {
+		    	ioe.printStackTrace();
+	            System.exit(0);
+			}
+		}
 	}
 	
 	public static void main(String[] args) {

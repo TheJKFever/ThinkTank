@@ -81,10 +81,11 @@ public class LobbyScreen extends JPanel {
 		this.repaint();
 	}
 	
-	public void paint(Graphics g) {
-		super.paint(g);
-		revalidate();
+	public void paintComponent(Graphics g) {
+		super.paintComponent (g);
 		render(g);
+		invalidate();
+		revalidate();
 	}
 	
 	private void render(Graphics g) {

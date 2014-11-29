@@ -32,7 +32,7 @@ public class CentralServerConnectionToClient extends ConnectionToClient {
 					port = centralServer.newGame((String)event.data);
 					System.out.println("GAME CREATED, SENDING INFO TO CLIENT");
 					sendEvent(new Event("new game", port));
-					centralServer.broadcast(new Event("games update", centralServer.getGamesVector()));
+					centralServer.broadcast(new Event("games info", centralServer.getGamesVector()));
 					System.out.println("NEW GAME CREATED SUCCESSFULLY");
 				} catch (PortNotAvailableException pnae) {
 					System.out.println("FAILED TO CREATE NEW GAME");
@@ -50,7 +50,7 @@ public class CentralServerConnectionToClient extends ConnectionToClient {
 				System.out.println("TOLD CLIENT TO JOIN GAME ON PORT " + port);
 				break;
 			case "update games":
-				this.sendEvent(new Event("games update", centralServer.getGamesVector()));
+				this.sendEvent(new Event("games info", centralServer.getGamesVector()));
 			case "create profile":
 				// TODO: Handle Create Profile
 				break;

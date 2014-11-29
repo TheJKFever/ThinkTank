@@ -33,16 +33,15 @@ public class ConnectionToCentralServer extends ConnectionToServer {
 				}
 				break;
 			case "games info":
+				Vector<GameObject> games = (Vector<GameObject>)event.data;
+				Helper.log("Received update game event from central server, updated " + games.size() + " games.");
+				gui.lobby.updateGames(games);
 				break;
 			case "join game":
 				port = (int)event.data;
 				System.out.println("CONNECTION TO CS: ABOUT TO TELL GUI TO JOIN GAME");
 				gui.joinGame(port);
 				break;
-			case "games update":
-				Vector<GameObject> games = (Vector<GameObject>)event.data;
-				Helper.log("Received update game event from central server, updated " + games.size() + " games.");
-				gui.lobby.updateGames(games);
 			default:
 				ThinkTankGUI.logger.log(Level.INFO, "Parse error. did not understand message: " + event);
 		}
