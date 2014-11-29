@@ -1,5 +1,6 @@
 package Server;
 
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -54,7 +55,7 @@ public class CentralServer extends ServerSocket {
 		listenForConnections();
 	}
 	
-	public int newGame() throws PortNotAvailableException {
+	public int newGame(String name) throws PortNotAvailableException {
 		if (Settings.DEBUG) System.out.println("IN CENRTAL SERVER NEWGAME()");
 		if (games.size() >= MAX_GAMES) {
 			if (Settings.DEBUG) System.out.println("MAX CAPACITY REACHED");
@@ -64,7 +65,7 @@ public class CentralServer extends ServerSocket {
 		for (int port: PORTS) {
 			try {
 				if (Settings.DEBUG) System.out.println("TRYING PORT: " + port);
-				newGame(port);
+				newGame(name, port);
 				return port;
 			} catch (PortNotAvailableException e) {
 				if (Settings.DEBUG) System.out.println("THIS PORT NOT AVAIALABLE: " + port);
@@ -76,7 +77,7 @@ public class CentralServer extends ServerSocket {
 		throw new PortNotAvailableException("Cannot start new game. All available ports are taken by server");
 	}
 	
-	public void newGame(int port) throws PortNotAvailableException {
+	public void newGame(String name, int port) throws PortNotAvailableException {
 		System.out.println("IN CENTRAL SERVER NEWGAME(" + port + ")");
 		if (games.containsKey(port)) {
 			System.out.println("GAMES ALREADY USING PORT: " + port);
@@ -86,7 +87,7 @@ public class CentralServer extends ServerSocket {
 		GameServer gameServer;
 		try {
 			if (Settings.DEBUG) System.out.println("ABOUT TO CREATE GAME SERVER");
-			gameServer = new GameServer(port);
+			gameServer = new GameServer(name, port);
 			if (Settings.DEBUG) System.out.println("CREATED GAME SERVER");
 			gameServer.thread.start();
 			if (Settings.DEBUG) System.out.println("STARTED GAME SERVER THREAD");
@@ -104,7 +105,6 @@ public class CentralServer extends ServerSocket {
 			// throw new ServerAtMaxCapacityException("Server has reach ed max capacity: " + MAX_CAPACITY);
 		}
 		return true;
-		// TODO: make sure to release the permit when the client signs off
 	}
 	
 	public void release(CentralServerConnectionToClient thread) {
@@ -142,5 +142,18 @@ public class CentralServer extends ServerSocket {
 		}
 	}
 
+	public Vector<GameObject> getGamesVector() {
+		Vector<GameObject> gameVector = new Vector<GameObject>();
+		for(Map.Entry<Integer, GameServer> game:games.entrySet()) {
+			gameVector.add(new GameObject(game.getValue().name, game.getKey(), game.getValue().clients));
+		}
+		return gameVector;
+	}
+
+	public void broadcast(Event event) {
+		for (CentralServerConnectionToClient client:clients) {
+			client.send(event);
+		}
+	}
 }
 
