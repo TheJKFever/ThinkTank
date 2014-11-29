@@ -47,7 +47,7 @@ public class ConnectionToGameServer extends ConnectionToServer {
 			break;
 		case "start game":
 			Helper.log("ConnectionToGameServer: RECEIVED START GAME EVENT");
-			gameScreen.gui.startGame();
+			gameScreen.gui.showGamePanel();
 			gameScreen.engine.start();
 			break;
 		case "chat":

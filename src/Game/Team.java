@@ -16,9 +16,9 @@ public class Team implements Serializable  {
 	
 	public Team(int num, GameState gs) {
 		players = new Vector<Player>();
-		brain = new Brain(this, gs);
 		this.num = num;
 		this.gs = gs;
+		brain = new Brain(this, gs);
 	}
 	
 	public Player newPlayer() {

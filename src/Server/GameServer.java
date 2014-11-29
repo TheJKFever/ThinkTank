@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 import Engines.ServerEngine;
 import Game.Globals;
 import Game.Player;
-import Game.Team;
 
 public class GameServer extends ServerSocket implements Runnable {
 	private static Logger logger = Logger.getLogger("GameServer.log");
@@ -77,5 +76,9 @@ public class GameServer extends ServerSocket implements Runnable {
 		System.out.println("removed thread from vector: " + removed);
 		// TODO: released client, now needs to validate that game is still playable
 		// if so do nothing, if not, then signal to all players that the game has ended.
+	}
+	
+	public static GameObject toObject(int port, GameServer game) {
+		return new GameObject(game.name, port, game.clients);
 	}
 }

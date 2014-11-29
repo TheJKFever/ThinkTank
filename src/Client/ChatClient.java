@@ -114,7 +114,7 @@ public class ChatClient extends JPanel {
 			this.repaint();
 		}
 		else {
-			ta.append(message);
+			ta.append("\n"+message);
 		}
 	}
 	
@@ -136,7 +136,7 @@ public class ChatClient extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			String message = "["+ChatClient.this.name+"]"+"\t"+tf.getText();
 			tf.setText("");
-			ta.append(message);
+			ta.append("\n"+message);
 			gameConnection.sendEvent(new Event("chat", message));
 		}
 	}		

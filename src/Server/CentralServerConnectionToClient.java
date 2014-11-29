@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,6 +40,8 @@ public class CentralServerConnectionToClient extends ServerThread {
 				break;
 			case "join game":
 				// TODO: this should send a list of games with their ports back to the client
+//				for( game:centralServer.games.keySet().toArray() {
+//				}
 				List<Integer> activePorts = new ArrayList<Integer>(centralServer.games.keySet());
 				System.out.println("PRINTING ACTIVE PORTS");
 				for (Integer i: activePorts) {
@@ -49,15 +52,15 @@ public class CentralServerConnectionToClient extends ServerThread {
 				System.out.println("TOLD CLIENT TO JOIN GAME ON PORT " + port);
 				break;
 			case "create profile":
-				// TODO:
+				// TODO: Handle Create Profile
 				break;
 			case "login":
-				// TODO:
+				// TODO: Handle Login
 				// Login login = (Login)event.data;
 				// check Database if login.username and login.password exist
 				break;
 			case "logout":
-				// TODO:
+				// TODO: Handle login
 				break;
 			case "get stats":
 				// TODO: get stats from database for username

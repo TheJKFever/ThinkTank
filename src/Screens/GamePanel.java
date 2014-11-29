@@ -19,11 +19,13 @@ import Game.Helper;
 public class GamePanel extends JPanel {
 
 	private static final long serialVersionUID = 123783444588707640L; // not necessary
+	public GameState gameState;
+	private GameScreen gameScreen;
 	
-	public GamePanel() {
+	public GamePanel(GameScreen gameScreen) {
 		super();
 		Helper.log("Creating new GamePanel");
-//		this.gameScreen = gameScreen;
+		this.gameScreen = gameScreen;
 		this.setFocusable(true);
 		this.setBackground(Color.black);
 		this.setDoubleBuffered(true);
@@ -32,35 +34,35 @@ public class GamePanel extends JPanel {
 	
 	public void paint(Graphics g) {
 		super.paint(g);
-//		updateGameState();
+		updateGameState();
 		System.out.println("GAMEPANEL: ABOUT TO REPAINT");
-		render(g, gameState);
+		render(g);
 	}
 	
-//	private void updateGameState() {
-//		this.gameState = this.gameScreen.engine.gameState;
-//	}
+	private void updateGameState() {
+		this.gameState = this.gameScreen.engine.gameState;
+	}
 
 	public Image getImg(String path) {
 		// TODO: CREATE A HASH MAP THAT CACHES IMAGES IT HAS ALREADY CREATED
 		return new ImageIcon(path).getImage();
 	}
 	
-	public void render(Graphics g, GameState gameState) {
+	public void render(Graphics g) {
 		Helper.log("GAMEPANEL: RENDER");
 		g.setColor(Color.black);
 		g.fillRect(0, 0, Game.Globals.BOARD_WIDTH, Game.Globals.BOARD_HEIGHT);
 		
-		drawBarriers(g, gameState);
-		drawBrains(g, gameState);
-		drawTanks(g, gameState);
-		drawShots(g, gameState);
+		drawBarriers(g);
+		drawBrains(g);
+		drawTanks(g);
+		drawShots(g);
 	
 		Toolkit.getDefaultToolkit().sync();
 		g.dispose();
 	}
 
-	public void drawBarriers(Graphics g, GameState gameState) {
+	public void drawBarriers(Graphics g) {
 		Helper.log("GAMEPANEL: DRAW BARRIERS");
 		for (Barrier barrier: gameState.barriers) {
 			g.setColor(Barrier.color);
@@ -68,17 +70,18 @@ public class GamePanel extends JPanel {
 		}
 	}
 	
-	public void drawBrains(Graphics g, GameState gameState) {
+	public void drawBrains(Graphics g) {
 		Helper.log("GAMEPANEL: DRAW BRAINS");
 		for (Brain brain: gameState.brains) {
-		
 			if (brain.isVisible()) {
+				System.out.println("path is: " + brain.imagePath);
 				g.drawImage(getImg(brain.imagePath), brain.x, brain.y, this);
 			}
 			if (brain.isDying()) {
 				brain.die();
 			}
 			
+			System.out.println(brain.team.num);
 			 // draw in two different placed based on team
 			if (brain.team.num == 1) {
 				g.setColor(Color.white);
@@ -106,11 +109,11 @@ public class GamePanel extends JPanel {
 		}
 	}
 	
-	public void drawShots(Graphics g, GameState gameState) {
+	public void drawShots(Graphics g) {
 		drawEntities(g, gameState.shots);
 	}
 	
-	public void drawTanks(Graphics g, GameState gameState) {
+	public void drawTanks(Graphics g) {
 		drawEntities(g, gameState.tanks);
 	}
 	

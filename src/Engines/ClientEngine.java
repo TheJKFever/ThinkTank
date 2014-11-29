@@ -14,8 +14,7 @@ import Game.SimpleKeyEvent;
 import Screens.GamePanel;
 import Screens.GameScreen;
 
-public class ClientEngine implements Runnable {
-	
+public class ClientEngine extends Engine {
 	
 	public Player player;
 	public GameState gameState;
@@ -77,7 +76,7 @@ public class ClientEngine implements Runnable {
 			
 			getGameStateFromServer();
 		
-			processUserInput();
+			processInput();
 			
 			Helper.log("CLIENT ENGINE: ABOUT TO UPDATE GAME STATE");
 			gameState.update();
@@ -100,7 +99,7 @@ public class ClientEngine implements Runnable {
 //		Helper.log("CLIENT ENGINE: GAMESTATE.INGAME == FALSE");
 	}
 	
-	public void processUserInput() {
+	public void processInput() {
 		Helper.log("CLIENT ENGINE: PROCESSING USER INPUT");
 		synchronized(eventQ) {
 			for (Event event: eventQ) {

@@ -29,6 +29,8 @@ public class ConnectionToCentralServer extends ConnectionToServer {
 					gui.joinGame(port);
 				}
 				break;
+			case "games info":
+				break;
 			case "join game":
 				port = (int)event.data;
 				System.out.println("CONNECTION TO CS: ABOUT TO TELL GUI TO JOIN GAME");

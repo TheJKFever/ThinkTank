@@ -47,7 +47,7 @@ public class GameState implements Serializable {
 //		} else {
 //			Helper.log("GAMESTATE: .teams is NULL");
 //		}
-		
+
 		if (teams != null && 
 			teams[0].players.size() > 0 && 
 			teams[1].players.size() > 0) {
@@ -66,9 +66,8 @@ public class GameState implements Serializable {
 		new Barrier(300, 300, 400, 10, this);
 		new Barrier(400, 400, 100, 10, this);
 		new Barrier(150, 150, 10, 200, this);
-		new Barrier(250, 250, 10, 100, this);
-		
-		// TODO: Thoughtpools
+		new Barrier(250, 250, 10, 100, this);		
+		// TODO: Add Thoughtpools
 	}
 	
 	public void update() {

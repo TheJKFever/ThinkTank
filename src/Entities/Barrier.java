@@ -12,7 +12,6 @@ public class Barrier extends Entity implements Serializable  {
 	public static final Color color = Color.orange;
 	
     public Barrier(int x, int y, int width, int height, GameState gs) {
-    	type = "Barrier";
     	this.gs = gs;
     	gs.barriers.addElement(this);
         setX(x);

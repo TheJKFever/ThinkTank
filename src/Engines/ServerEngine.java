@@ -11,11 +11,13 @@ import Game.Helper;
 import Game.SimpleKeyEvent;
 import Server.GameServerConnectionToClient;
 
-public class ServerEngine implements Runnable {
+public class ServerEngine extends Engine {
 	
 	public GameState gameState;
 	Vector<GameServerConnectionToClient> clients;
-	public ArrayBlockingQueue<Event> eventQ = new ArrayBlockingQueue<Event>(1000);	// TODO: could possibly not be adding over 100 events
+	
+	// TODO: Ensure eventQ is proper data structure and large enough
+	public ArrayBlockingQueue<Event> eventQ = new ArrayBlockingQueue<Event>(1000);
 	private Thread engineThread;
 
 	public ServerEngine(Vector<GameServerConnectionToClient> clientConnections) {
@@ -40,11 +42,11 @@ public class ServerEngine implements Runnable {
 		startGame();
 		
 		while (gameState.inGame) {
-			processInputFromClients();
+			processInput();
 			gameState.update();
 			broadcastGameState();
 			
-			// TODO: ADD DELAY / TIMER HERE
+			// TODO: Calibrate server time step, faster or slower?
 			timeDiff = System.currentTimeMillis() - beforeTime;
 			sleep = Globals.DELAY - timeDiff;
 
@@ -77,7 +79,7 @@ public class ServerEngine implements Runnable {
 		}
 	}
 
-	public void processInputFromClients() {
+	public void processInput() {
 		Helper.log("GAMESERVER: PROCESSINPUTFROMCLIENTS");
 		synchronized(eventQ) {
 			for (Event event: eventQ) {

@@ -16,8 +16,6 @@ public abstract class Entity implements Serializable {
     public boolean dying;
     
     public int x, y, dx, dy, dp, prevX, prevY, theta, dtheta, height, width, health;
-    
-    public String type;
     GameState gs;
     
     public Entity() {
@@ -97,12 +95,11 @@ public abstract class Entity implements Serializable {
     
 	public void hitBy(Shot shot) {
 		this.health -= shot.damage;
-		log(this.type + " HEALTH = " + health);
+		log(this.getClass().getName() + " HEALTH = " + health);
 		if (this.health == 0) {
 			this.setDying(true);
 		}
-		shot.exploding = true;
-		shot.dying = true;
+		shot.hitSomething();
 	}
 	
 	public Rect getRect() {

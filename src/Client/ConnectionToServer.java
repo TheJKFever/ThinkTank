@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import Game.Event;
@@ -50,6 +51,12 @@ public abstract class ConnectionToServer extends Socket implements Runnable {
 				} else {
 					this.close();
 				}
+			}
+		} catch (EOFException|SocketException e) {
+			try {
+				this.close();
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
 			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();

@@ -29,7 +29,8 @@ public class ThinkTankGUI extends JFrame {
 	public GameScreen gameScreen;
 	//	private GameOverScreen gameOver;
 	public boolean loggedIn = false;
-
+	
+	//TODO: FIX GUI FOCUSING ISSUE, GET FOCUS AUTOMATICALLY FOR GAMEPANEL
 	
 	public ThinkTankGUI(String host, int port) {
 		try {
@@ -48,10 +49,11 @@ public class ThinkTankGUI extends JFrame {
 				    		gameScreen.gameConnection.thread.interrupt();
 				    		gameScreen.gameConnection.close();
 				    	}
-					} catch (IOException e) {
+				    	ThinkTankGUI.this.dispose();
+				    } catch (IOException e) {
 						e.printStackTrace();
+			            System.exit(0);
 					}
-		            System.exit(0);
 			    }
 			});
 
@@ -140,8 +142,8 @@ public class ThinkTankGUI extends JFrame {
 		}
 	}
 
-	public void startGame() {
-		Helper.log("GUI: STARTGAME()");
+	public void showGamePanel() {
+		Helper.log("GUI: showGamePanel()");
 		cardLayout.show(mainPanel, "gameScreen");
 	}
 
