@@ -6,8 +6,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 import Game.Event;
 import Game.GameState;
-import Game.Globals;
 import Game.SimpleKeyEvent;
+import Global.Settings;
 import Server.GameServerConnectionToClient;
 
 public class ServerEngine implements Runnable {
@@ -45,7 +45,7 @@ public class ServerEngine implements Runnable {
 			
 			// TODO: Calibrate server time step, faster or slower?
 			timeDiff = System.currentTimeMillis() - beforeTime;
-			sleep = Globals.DELAY - timeDiff;
+			sleep = Settings.DELAY - timeDiff;
 
 			if (sleep < 0)
 				sleep = 1;
@@ -100,7 +100,7 @@ public class ServerEngine implements Runnable {
 	}
 	
 	public void log(String msg) {
-		if (Globals.DEBUG) {
+		if (Settings.DEBUG) {
 			System.out.println(msg);
 		}
 	}

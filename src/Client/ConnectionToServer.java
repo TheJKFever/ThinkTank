@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import Game.Event;
-import Game.Globals;
+import Global.Settings;
 
 public abstract class ConnectionToServer extends Socket implements Runnable {
 	public ObjectInputStream in;
@@ -15,10 +15,10 @@ public abstract class ConnectionToServer extends Socket implements Runnable {
 	
 	public ConnectionToServer(String host, int port) throws UnknownHostException, IOException {
 		super(host, port);
-		if (Globals.DEBUG) System.out.println("CONNECTIONTOSERVER: CONSTRUCTOR");
+		if (Settings.DEBUG) System.out.println("CONNECTIONTOSERVER: CONSTRUCTOR");
 		out = new ObjectOutputStream(getOutputStream());
 		in = new ObjectInputStream(getInputStream());
-		if (Globals.DEBUG) System.out.println("CONNECTIONTOSERVER: GOT INPUT AND OUTPUT STREAMS");
+		if (Settings.DEBUG) System.out.println("CONNECTIONTOSERVER: GOT INPUT AND OUTPUT STREAMS");
 	}
 	
 	public abstract void receive(Object obj);

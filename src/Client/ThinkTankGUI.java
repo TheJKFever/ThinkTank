@@ -1,6 +1,7 @@
 package Client;
 
 import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.logging.Logger;
@@ -10,7 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import Game.Event;
-import Game.Globals;
+import Global.Settings;
 import Screens.GameScreen;
 import Screens.MainMenuScreen;
 import Screens.WaitingScreen;
@@ -34,7 +35,7 @@ public class ThinkTankGUI extends JFrame {
 		try {
 			setTitle("Think Tank");
 			setDefaultCloseOperation(EXIT_ON_CLOSE);
-			setSize(Globals.GUI_WIDTH, Globals.GUI_HEIGHT);
+			setSize(Settings.GUI_WIDTH, Settings.GUI_HEIGHT);
 			setLocationRelativeTo(null);
 			setVisible(true);
 			setResizable(false);
@@ -43,7 +44,7 @@ public class ThinkTankGUI extends JFrame {
 			    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
 			    	try {
 			    		centralConnection.close();
-				    	if (gameScreen.gameConnection!=null) {
+				    	if (gameScreen.gameConnection !=null) {
 				    		gameScreen.gameConnection.thread.interrupt();
 				    		gameScreen.gameConnection.close();
 				    	}
@@ -57,10 +58,8 @@ public class ThinkTankGUI extends JFrame {
 			System.out.println("host: " + host + " and port: " + port);
 			centralConnection = new ConnectionToCentralServer(this, host, port); // Connects to central server
 			System.out.println("Got here");
-			// client needs to have a unique id
-			// client needs to have a specific tank that it controls
-			// tank needs to belong to specific client/player
 			mainPanel = new JPanel();
+			mainPanel.setPreferredSize(new Dimension(Settings.GUI_WIDTH, Settings.GUI_HEIGHT));
 			mainPanel.setLayout(cardLayout);
 			add(mainPanel);
 
@@ -132,7 +131,7 @@ public class ThinkTankGUI extends JFrame {
 		// make connection to game server
 		// store connection in gameScreen
 		// if connection made go to waiting screen
-		if (gameScreen.connectToGameServer(Globals.Development.HOST, port)) {
+		if (gameScreen.connectToGameServer(Settings.Development.HOST, port)) {
 			System.out.println("GUI: gameScreen connected to game server");
 			cardLayout.show(mainPanel, "waiting");
 			gameScreen.gameConnection.thread.start();
@@ -147,6 +146,6 @@ public class ThinkTankGUI extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		ThinkTankGUI gui = new ThinkTankGUI(Globals.Development.HOST, Globals.Development.SERVER_PORT);
+		ThinkTankGUI gui = new ThinkTankGUI(Settings.Development.HOST, Settings.Development.SERVER_PORT);
 	}
 }

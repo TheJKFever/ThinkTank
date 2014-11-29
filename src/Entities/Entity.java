@@ -5,7 +5,7 @@ import java.util.Vector;
 
 import Game.Rect;
 import Game.GameState;
-import Game.Globals;
+import Global.Settings;
 
 public abstract class Entity implements Serializable {
 
@@ -180,7 +180,7 @@ public abstract class Entity implements Serializable {
     }
     
 	public void log(String msg) {
-		if (Globals.DEBUG) {
+		if (Settings.DEBUG) {
 			System.out.println(msg);
 		}
 	}

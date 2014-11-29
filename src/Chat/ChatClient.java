@@ -22,7 +22,7 @@ import javax.swing.border.EmptyBorder;
 
 import Client.ConnectionToGameServer;
 import Game.Event;
-import Game.Globals;
+import Global.Settings;
 
 public class ChatClient extends JPanel {
 	

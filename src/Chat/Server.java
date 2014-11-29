@@ -5,7 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
 
-import Game.Globals;
+import Global.Settings;
 
 public class Server {
 	
@@ -38,6 +38,6 @@ public class Server {
 	}
 	
 	public static void main(String[] args) {
-		new Server(Globals.CHAT_PORT);
+		new Server(Settings.CHAT_PORT);
 	}
 }

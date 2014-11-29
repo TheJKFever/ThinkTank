@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 
 import Exceptions.PortNotAvailableException;
 import Game.Event;
-import Game.Globals;
+import Global.Settings;
 
 public class CentralServer extends ServerSocket {
 	private static Logger logger = Logger.getLogger("CentralServer.log");
@@ -41,7 +41,7 @@ public class CentralServer extends ServerSocket {
 		
 		// Database Connection
 		try { 
-			Class.forName(Globals.Development.DB.DRIVER);
+			Class.forName(Settings.Development.DB.DRIVER);
 			// TODO: setup database on production server
 //			db = DriverManager.getConnection(
 //				Globals.Development.DB.ADDRESS + Globals.Development.DB.NAME, 
@@ -55,19 +55,19 @@ public class CentralServer extends ServerSocket {
 	}
 	
 	public int newGame() throws PortNotAvailableException {
-		if (Globals.DEBUG) System.out.println("IN CENRTAL SERVER NEWGAME()");
+		if (Settings.DEBUG) System.out.println("IN CENRTAL SERVER NEWGAME()");
 		if (games.size() >= MAX_GAMES) {
-			if (Globals.DEBUG) System.out.println("MAX CAPACITY REACHED");
+			if (Settings.DEBUG) System.out.println("MAX CAPACITY REACHED");
 			logger.log(Level.SEVERE, "Cannot start new game. server has reached max game capacity: " + MAX_GAMES);
 			return -1;
 		}
 		for (int port: PORTS) {
 			try {
-				if (Globals.DEBUG) System.out.println("TRYING PORT: " + port);
+				if (Settings.DEBUG) System.out.println("TRYING PORT: " + port);
 				newGame(port);
 				return port;
 			} catch (PortNotAvailableException e) {
-				if (Globals.DEBUG) System.out.println("THIS PORT NOT AVAIALABLE: " + port);
+				if (Settings.DEBUG) System.out.println("THIS PORT NOT AVAIALABLE: " + port);
 				e.printStackTrace();
 			}
 		}
@@ -85,13 +85,13 @@ public class CentralServer extends ServerSocket {
 		}
 		GameServer gameServer;
 		try {
-			if (Globals.DEBUG) System.out.println("ABOUT TO CREATE GAME SERVER");
+			if (Settings.DEBUG) System.out.println("ABOUT TO CREATE GAME SERVER");
 			gameServer = new GameServer(port);
-			if (Globals.DEBUG) System.out.println("CREATED GAME SERVER");
+			if (Settings.DEBUG) System.out.println("CREATED GAME SERVER");
 			gameServer.thread.start();
-			if (Globals.DEBUG) System.out.println("STARTED GAME SERVER THREAD");
+			if (Settings.DEBUG) System.out.println("STARTED GAME SERVER THREAD");
 			games.put(port, gameServer);
-			if (Globals.DEBUG) System.out.println("ADDED TO GAMESERVER TO GAMES MAP");
+			if (Settings.DEBUG) System.out.println("ADDED TO GAMESERVER TO GAMES MAP");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -135,7 +135,7 @@ public class CentralServer extends ServerSocket {
 	
 	public static void main(String[] args) {
 		try {
-			CentralServer server = new CentralServer(Globals.Development.SERVER_PORT);
+			CentralServer server = new CentralServer(Settings.Development.SERVER_PORT);
 			System.out.println("CENTRAL SERVER IS RUNNING");
 		} catch (IOException e) {
 			e.printStackTrace();

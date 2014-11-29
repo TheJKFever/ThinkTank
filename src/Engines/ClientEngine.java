@@ -3,13 +3,14 @@ package Engines;
 import java.awt.event.KeyEvent;
 import java.util.concurrent.ArrayBlockingQueue;
 
+
 //import Client.ConnectionToGameServer;
 import Client.UserInputHandler;
 import Game.Event;
 import Game.GameState;
-import Game.Globals;
 import Game.Player;
 import Game.SimpleKeyEvent;
+import Global.Settings;
 import Screens.GamePanel;
 import Screens.GameScreen;
 
@@ -43,7 +44,7 @@ public class ClientEngine implements Runnable {
 			log("CLIENT ENGINE: GAME STATE == NULL, TRYING AGAIN in a few");
 			newGameState = gameScreen.gameConnection.getGameStateFromServer();
 			try {
-				Thread.sleep(Globals.DELAY/3);
+				Thread.sleep(Settings.DELAY/3);
 			} catch (InterruptedException ie) {
 				System.out.println("CLIENT ENGINE: INTERRUPTED WHILE WAITING FOR GAME STATE");
 			}
@@ -80,7 +81,7 @@ public class ClientEngine implements Runnable {
 		long timeDiff, sleep;
 		
 		timeDiff = System.currentTimeMillis() - beforeTime;
-		sleep = Globals.DELAY - timeDiff;
+		sleep = Settings.DELAY - timeDiff;
 
 		if (sleep < 0) {
 			sleep = 1;
@@ -111,7 +112,7 @@ public class ClientEngine implements Runnable {
 	}
 	
 	public void log(String msg) {
-		if (Globals.DEBUG) {
+		if (Settings.DEBUG) {
 			System.out.println(msg);
 		}
 	}

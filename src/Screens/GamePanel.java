@@ -17,7 +17,7 @@ import Entities.Barrier;
 import Entities.Brain;
 import Entities.Entity;
 import Game.GameState;
-import Game.Globals;
+import Global.Settings;
 
 public class GamePanel extends JPanel {
 
@@ -61,10 +61,8 @@ public class GamePanel extends JPanel {
 	}
 	
 	public void render(Graphics g) {
-		log("GAMEPANEL: RENDER");
-		g.setColor(Color.black);
-		g.fillRect(0, 0, Game.Globals.BOARD_WIDTH, Game.Globals.BOARD_HEIGHT);
-		
+		log("GAMEPANEL: RENDER");	
+		drawMap(g);
 		drawBarriers(g);
 		drawBrains(g);
 		drawTanks(g);
@@ -74,11 +72,33 @@ public class GamePanel extends JPanel {
 		g.dispose();
 	}
 
+	public void drawMap(Graphics g) {
+		g.setColor(Color.black);
+		
+		// black background
+		g.fillRect(0, 0, Global.Settings.BOARD_WIDTH, Global.Settings.BOARD_HEIGHT);
+		
+		
+		// top wall
+		g.setColor(Color.green);
+		g.fillRect(0, 0, Global.Settings.BOARD_WIDTH, 10);
+		
+		// left wall
+		g.fillRect(0, 0, 10, Global.Settings.BOARD_HEIGHT);
+		
+		// bottom wall
+		g.fillRect(0, Settings.BOARD_HEIGHT-10, Settings.BOARD_WIDTH, 10);
+		
+		// right wall
+		g.fillRect(Settings.BOARD_WIDTH - 10, 0, 10, Settings.BOARD_HEIGHT);
+		g.setColor(Color.black);
+	}
+	
 	public void drawBarriers(Graphics g) {
 		log("GAMEPANEL: DRAW BARRIERS");
 		for (Barrier barrier: gameState.barriers) {
 			g.setColor(Barrier.color);
-			g.fillRect(barrier.x, barrier.y, barrier.getWidth(), barrier.getHeight());
+			g.fillRect(barrier.x, barrier.y, barrier.width, barrier.height);
 		}
 	}
 	
@@ -142,7 +162,7 @@ public class GamePanel extends JPanel {
 	}
 	
     public void log(String msg) {
-    	if (Globals.DEBUG) {
+    	if (Settings.DEBUG) {
     		System.out.println(msg);
     	}
     }
