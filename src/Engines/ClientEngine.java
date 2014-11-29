@@ -73,7 +73,7 @@ public class ClientEngine extends Engine {
 
 		while (gameState.inGame) {
 			getGameStateFromServer();
-			processUserInput();
+			processInput();
 			gameState.update();
 			gamePanel.repaint();
 			waitIfDoneEarly(beforeTime);
@@ -94,7 +94,7 @@ public class ClientEngine extends Engine {
 		try {
 			Thread.sleep(sleep);
 		} catch (InterruptedException e) {
-			log("interrupted");
+			Helper.log("interrupted");
 		}
 	}
 	
