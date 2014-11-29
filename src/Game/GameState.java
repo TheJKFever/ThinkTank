@@ -3,6 +3,7 @@ package Game;
 import java.awt.Color;
 import java.io.Serializable;
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 
 import Entities.Barrier;
 import Entities.Brain;
@@ -24,6 +25,10 @@ public class GameState implements Serializable {
 	public Vector<ThoughtPool> thoughtPools;
 //	public Vector<Turret> turrets; TODO: ADD TURRETS
 	public boolean inGame;
+	public long timeRemaining;
+	public long startTime;
+	public long timeElapsed;
+	public String displayTime;
 	
 	public GameState() {
 		System.out.println("GAMESTATE: CONSTRUCTOR");
@@ -47,7 +52,25 @@ public class GameState implements Serializable {
 		} // TODO: make all the same style
 		
 		setUpMap();
+		
+		//Initially
+		timeRemaining = TimeUnit.MINUTES.toNanos(10L);
+		timeElapsed = 0L;
 	}
+	
+	public void startGameClock() {
+		startTime = System.nanoTime();
+	}
+	
+	
+	public void updateGameClock() {
+		timeRemaining = TimeUnit.MINUTES.toNanos(10) - (System.nanoTime() - startTime);
+		
+		long minutes = TimeUnit.NANOSECONDS.toMinutes(timeRemaining);
+		long seconds = TimeUnit.NANOSECONDS.toSeconds(timeRemaining - TimeUnit.MINUTES.toNanos(minutes));
+		displayTime = String.format("%02d:%02d", minutes, seconds);
+	}
+	
 	
 	public boolean playable() {
 		System.out.println("GAMESTATE: PLAYABLE()?");
@@ -123,9 +146,9 @@ public class GameState implements Serializable {
 //		for (ThoughtPool tp: thoughtPools) {
 //			tp.update();
 //		}
-		
+		updateGameClock();
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

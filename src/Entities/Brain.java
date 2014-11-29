@@ -32,10 +32,10 @@ public class Brain extends Entity  {
         // TODO: position brain more precisely
 		if (team.num == 1) {
 			this.setImagePath(IMAGE_BRAIN_1); 
-			this.y = Settings.BOARD_HEIGHT - this.getHeight() - 10;
+			this.y = Settings.BOARD_HEIGHT - this.getHeight() - 20;
 		} else if (team.num == 2) {
 			this.setImagePath(IMAGE_BRAIN_2);
-	        this.y = 10;
+	        this.y = 20;
 		}
 	}
 	

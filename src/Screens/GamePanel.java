@@ -14,6 +14,7 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
+import sun.security.jgss.GSSCaller;
 import Entities.Barrier;
 import Entities.Brain;
 import Entities.Entity;
@@ -71,11 +72,20 @@ public class GamePanel extends JPanel {
 		drawBrains(g);
 		drawTanks(g);
 		drawShots(g);
+		drawTime(g);
 	
 		Toolkit.getDefaultToolkit().sync();
 		g.dispose();
 	}
 
+	
+	public void drawTime(Graphics g) {
+		Font clockFont = new Font("Helvetica", Font.BOLD, 18);
+		g.setColor(Color.white);
+		g.setFont(clockFont);
+		g.drawString(gameState.displayTime, Settings.BOARD_WIDTH/2-10, 25);
+	}
+	
 	public void drawMap(Graphics g) {
 		g.setColor(Color.black);
 		// black background

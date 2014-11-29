@@ -5,7 +5,7 @@ import javax.swing.ImageIcon;
 import Client.GameState;
 import Client.Globals;
 
-public class Shot extends Entity {
+public class KevinShot extends Entity {
 	/*
 	 * static final String IMAGE_SHOT_UP = "images/bulletUp.png"; static final
 	 * String IMAGE_SHOT_RIGHT = "images/bulletRight.png"; static final String

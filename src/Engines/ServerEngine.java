@@ -71,6 +71,7 @@ public class ServerEngine implements Runnable {
 
 	private void startGame() {
 		log("GAMESERVER: START GAME");
+		gameState.startGameClock();
 		for (GameServerConnectionToClient client:clients) {
 			client.sendEvent(new Event("start game"));
 		}
