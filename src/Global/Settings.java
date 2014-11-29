@@ -1,14 +1,14 @@
-package Game;
+package Global;
 
-public interface Globals {
+public interface Settings {
 
     public static final int BOARD_WIDTH = 800;
     public static final int BOARD_HEIGHT = 600;
     
     public static final int GUI_WIDTH = 1000;
-    public static final int GUI_HEIGHT = 600;
+    public static final int GUI_HEIGHT = 800;
     
-    public static final int DELAY = 50;
+    public static final int DELAY = 20;
 	
     public static final boolean DEBUG = true;
     

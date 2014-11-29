@@ -6,9 +6,9 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 import Game.Event;
 import Game.GameState;
-import Game.Globals;
 import Game.Helper;
 import Game.SimpleKeyEvent;
+import Global.Settings;
 import Server.GameServerConnectionToClient;
 
 public class ServerEngine extends Engine {
@@ -48,7 +48,7 @@ public class ServerEngine extends Engine {
 			
 			// TODO: Calibrate server time step, faster or slower?
 			timeDiff = System.currentTimeMillis() - beforeTime;
-			sleep = Globals.DELAY - timeDiff;
+			sleep = Settings.DELAY - timeDiff;
 
 			if (sleep < 0)
 				sleep = 1;

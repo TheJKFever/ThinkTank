@@ -3,8 +3,8 @@ package Entities;
 import java.io.Serializable;
 
 import Game.GameState;
-import Game.Globals;
 import Game.Team;
+import Global.Settings;
 
 public class Brain extends Entity implements Serializable  {
 	
@@ -28,13 +28,13 @@ public class Brain extends Entity implements Serializable  {
 		this.setHeight(BRAIN_HEIGHT);
 		
 		// center brain horizontally
-        this.x = (Globals.BOARD_WIDTH/2) - (getWidth()/2);
+        this.x = (Settings.BOARD_WIDTH/2) - (getWidth()/2);
         
         // set brain's vertical position based on team
         // TODO: position brain more precisely
 		if (team.num == 1) {
 			this.setImagePath(IMAGE_BRAIN_1); 
-			this.y = Globals.BOARD_HEIGHT - (this.getHeight() + 20);
+			this.y = Settings.BOARD_HEIGHT - this.getHeight() - 10;
 		} else if (team.num == 2) {
 			this.setImagePath(IMAGE_BRAIN_2);
 	        this.y = 10;
@@ -43,6 +43,7 @@ public class Brain extends Entity implements Serializable  {
 	}
 	
 	public void update() {
+    	super.update();
         checkForCollisionWithShots();
 	}
 }

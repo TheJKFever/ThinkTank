@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import Game.Event;
 import Game.Helper;
 import Game.Player;
+import Global.Settings;
 
 public class GameServerConnectionToClient extends ServerThread {
 	private static Logger logger = Logger.getLogger("GameServer.log");
@@ -17,6 +18,7 @@ public class GameServerConnectionToClient extends ServerThread {
 	
 	public GameServerConnectionToClient(GameServer game, Socket client) {
 		super(client);
+		Helper.log("GSCONNECTIONTOCLIENT: CONSTRUCTOR");
 		this.gameServer = game;
 		Helper.log("Created new GameServerConnectionToClient");
 	}

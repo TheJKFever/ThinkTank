@@ -6,9 +6,9 @@ import java.io.Serializable;
 import Game.Player;
 import Game.Rect;
 import Game.GameState;
-import Game.Globals;
 import Game.SimpleKeyEvent;
 import Game.Team;
+import Global.Settings;
 
 public class Tank extends Entity implements Serializable  {
 
@@ -61,7 +61,7 @@ public class Tank extends Entity implements Serializable  {
     	if (team.num == 1) {
     		this.y = TANK_SPAWN_Y;
     	} else {
-    		this.y = Globals.BOARD_HEIGHT - TANK_SPAWN_Y;
+    		this.y = Settings.BOARD_HEIGHT - TANK_SPAWN_Y;
     	}
     }
     
@@ -114,6 +114,10 @@ public class Tank extends Entity implements Serializable  {
     }
     
     public void update() {
+    	super.update();
+    	log("TANK: UPDATE() BEFORE");
+    	log(this.toString());
+    	
     	prevY = y;
     	prevX = x;
     	
@@ -122,16 +126,17 @@ public class Tank extends Entity implements Serializable  {
     	
     	// TODO: Subtract health when run into things?
     	checkForCollisionWithWalls();
-    	checkForCollisionWithObjects(gs.tanks);
+    	checkForCollisionWithObjects(gs.barriers);
         checkForCollisionWithObjects(gs.brains);
-        checkForCollisionWithObjects(gs.barriers);
         checkForCollisionWithShots();
+        checkForCollisionWithObjects(gs.tanks);
         
         if (this.firing) {
         	fireShot();
         }
-        
-        // log("TANK X: " + this.x + " Y: " + this.y + " WIDTH: " + this.getWidth() + " HEIGHT: " + this.getHeight());
+     
+        log("TANK: UPDATE() AFTER");
+    	log(this.toString());
     }
     
     public void updateOrientation() {
@@ -167,17 +172,29 @@ public class Tank extends Entity implements Serializable  {
     }
     
     public void checkForCollisionWithWalls() {
-        if (x < 0) {
-            x = 0;
-        } else if (x >= (Globals.BOARD_WIDTH - width)) { 
-        	setX(Globals.BOARD_WIDTH - width);
+    	log("TANK: Checking for collision with walls");
+    	
+    	log("BEFORE");
+    	log(this.toString());
+    	
+        if (x < 10) {
+        	log("TANK: Collided on left wall and reset");
+            x = 10;
+        } else if (x > Settings.BOARD_WIDTH - width - 10) { 
+        	log("TANK: Collided on right wall and reset");
+        	x = Settings.BOARD_WIDTH - width - 10;
         }
         
-        if (y < 0) {
-        	y = 0;
-        } else if (y >= Globals.BOARD_HEIGHT - height) {
-        	y = (Globals.BOARD_HEIGHT - height);
+        if (y < 10) {
+        	log("TANK: Collided on top wall and reset");
+        	y = 10;
+        } else if (y > Settings.BOARD_HEIGHT - height - 10) {
+        	log("TANK: Collided on bottom wall and reset");
+        	y = Settings.BOARD_HEIGHT - height - 10;
         }
+        
+        log("AFTER");
+    	log(this.toString());
     }
     
     public void fireShot() {

@@ -3,7 +3,7 @@ package Entities;
 import java.io.Serializable;
 
 import Game.GameState;
-import Game.Globals;
+import Global.Settings;
 
 public class Shot extends Entity implements Serializable  {
 
@@ -53,6 +53,7 @@ public class Shot extends Entity implements Serializable  {
     }
  
     public void update() {
+    	super.update();
 //        int shotX = getX();
 //        int shotY = getY();
         updatePosition();
@@ -66,12 +67,12 @@ public class Shot extends Entity implements Serializable  {
             }
         } else if (theta == 180) {
         	y += shotSpeed;
-        	if (y > Globals.BOARD_HEIGHT) {
+        	if (y > Settings.BOARD_HEIGHT) {
         		die();
         	}
         }  else if (theta == 90) {
         	x += shotSpeed;
-        	if (x > Globals.BOARD_WIDTH) {
+        	if (x > Settings.BOARD_WIDTH) {
         		die();
         	}
         }  else if (theta == 270) {

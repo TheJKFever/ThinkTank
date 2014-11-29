@@ -12,6 +12,7 @@ import Client.ConnectionToGameServer;
 import Client.ThinkTankGUI;
 import Engines.ClientEngine;
 import Game.Helper;
+import Global.Settings;
 
 public class GameScreen extends JPanel {
 	
@@ -31,11 +32,13 @@ public class GameScreen extends JPanel {
 		super();
 		Helper.log("Creating new GameScreen");
 		this.gui = gui;
-		setLayout(new BorderLayout());
+//		setLayout(new BorderLayout());
 		gamePanel = new GamePanel(this);
+		gamePanel.setPreferredSize(new Dimension(Settings.BOARD_WIDTH, Settings.BOARD_HEIGHT));
 		chatPanel = new ChatClient(gameConnection);
+		chatPanel.setPreferredSize(new Dimension(140, Settings.BOARD_HEIGHT));
 		sidePanel = new JPanel();
-		sidePanel.setPreferredSize(new Dimension(200, 600));
+		sidePanel.setPreferredSize(new Dimension(150, Settings.BOARD_HEIGHT));
 		sidePanel.add(chatPanel);
 		add(gamePanel, BorderLayout.CENTER);
 		add(sidePanel, BorderLayout.EAST);

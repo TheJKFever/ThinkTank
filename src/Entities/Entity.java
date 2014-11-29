@@ -5,18 +5,28 @@ import java.util.Vector;
 
 import Game.Rect;
 import Game.GameState;
-import Game.Globals;
+import Global.Settings;
 
 public abstract class Entity implements Serializable {
 
 	private static final long serialVersionUID = -4882402415044435970L;
 	
+	GameState gs;
 	public boolean visible;
     public String imagePath;
     public boolean dying;
+    public int x, y, dx, dy, dp, prevX, prevY, theta, dtheta, height, width, health;    
     
-    public int x, y, dx, dy, dp, prevX, prevY, theta, dtheta, height, width, health;
-    GameState gs;
+    public boolean yCollision = false;
+    public boolean xCollision = false;
+    //public boolean xCollisionPrev = false;
+    //public boolean yCollisionPrev = false;
+	
+    public boolean topCollision = false;
+	public boolean bottomCollision = false;
+	public boolean leftCollision = false;
+	public boolean rightCollision = false;
+	
     
     public Entity() {
         visible = true;
@@ -94,10 +104,8 @@ public abstract class Entity implements Serializable {
     
     public void checkForCollisionWithShots() {
 		for (Shot shot: gs.shots) {
-			if (shot.x >= this.x && 
-				shot.x <= (this.x + this.width) &&
-				shot.y >= this.y && 
-				shot.y <= (this.y + this.height)) {
+			Rect rect = shot.getRect();
+			if (collidesWith(rect)) {
 				hitBy(shot);
 			}
 		}
@@ -116,56 +124,84 @@ public abstract class Entity implements Serializable {
 		return new Rect(this.getX(), this.getY(), this.getWidth(), this.getHeight());
 	}
 	
+	public void update() {
+		prevX = x;
+		prevY = y;
+	}
 	public boolean collidesWith(Rect other) {
-		boolean yCollision = false;
-		boolean xCollision = false;
+		log(this.getClass().getName() + ": collidesWith()");
+		
+		// reset values
+		yCollision = false;
+		xCollision = false;
+		leftCollision = false;
+		rightCollision = false;
+		topCollision = false;
+		bottomCollision = false;
 		
 		Rect my = this.getRect();
 		
 		if (my.top <= other.bottom && my.top >= other.top) {
 			yCollision = true;
+			topCollision = true;
 		} else if (my.bottom >= other.top && my.bottom <= other.bottom) {
 			yCollision = true;
+			bottomCollision = true;
 		}
 
 		if (my.right >= other.left && my.right <= other.right) {
 			xCollision = true;
+			rightCollision = true;
 		} else if (my.left <= other.right && my.left >= other.left) {
 			xCollision = true;
+			leftCollision = true;
 		}
-		
-//        log("MY X: " + my.x + " Y: " + my.y + " WIDTH: " + my.width + " HEIGHT: " + my.height);
-//        log("OT X: " + other.x + " Y: " + other.y + " WIDTH: " + other.width + " HEIGHT: " + other.height);
-
+	
 		return (xCollision && yCollision);
 	}
 	
     public void resetPositionOnCollision(Rect rect) {
-    	int deltaY = y - prevY;
-    	int deltaX = x -  prevX;
+    	log(this.getClass().getName() + ": resetPositionOnCollision()");
+    	log("xCollision: " + xCollision + " yCollision: " + yCollision);
     	
-    	if (deltaY != 0) {
-			if (deltaY > 0) {
-				this.y = rect.top - 10;
-			} else {
-				this.y = rect.bottom + 10;
-			}
-    	} else if (deltaX != 0) {
-			if (deltaX > 0) {
-				this.x = rect.left - 10;
-			} else {
-				this.x = rect.right + 10;	
-			}
+    	boolean movedUp = false;
+    	boolean movedDown = false;
+    	boolean movedLeft = false;
+    	boolean movedRight = false;
+    	
+    	if (y - prevY > 0) {
+    		movedDown = true;
+    	} else if (y - prevY < 0) {
+    		movedUp = true;
+    	}
+    	
+    	if (x - prevX > 0) {
+    		movedRight = true;
+    	} else if (x - prevX < 0) {
+    		movedLeft = true;
+    	}
+    	
+		if (movedUp) {
+			y = rect.bottom + 1;
+		} else if (movedDown) {
+			y = rect.top - height - 1;
 		}
+    	
+		if (movedRight) {
+			x = rect.left - width - 1;
+		} else if (movedLeft){
+			x = rect.right + 1;
+		}	
     }
     
 	public void checkForCollisionWithObjects(Vector<? extends Entity> obstacles) {
     	for (Entity obstacle: obstacles) {
-    		
-    		Rect rect = obstacle.getRect();
-			if (collidesWith(rect)) {
-				resetPositionOnCollision(rect);
-			}
+    		if ((this.hashCode() != obstacle.hashCode())) {
+	    		Rect rect = obstacle.getRect();
+				if (collidesWith(rect)) {
+					resetPositionOnCollision(rect);
+				}
+    		}
 		}
     }
 
@@ -180,7 +216,7 @@ public abstract class Entity implements Serializable {
     }
     
 	public void log(String msg) {
-		if (Globals.DEBUG) {
+		if (Settings.DEBUG) {
 			System.out.println(msg);
 		}
 	}

@@ -7,8 +7,8 @@ import java.util.Vector;
 import java.util.logging.Logger;
 
 import Engines.ServerEngine;
-import Game.Globals;
 import Game.Player;
+import Global.Settings;
 
 public class GameServer extends ServerSocket implements Runnable {
 	private static Logger logger = Logger.getLogger("GameServer.log");
@@ -20,10 +20,10 @@ public class GameServer extends ServerSocket implements Runnable {
 		
 	public GameServer(int port) throws IOException{
 		super(port);
-		if (Globals.DEBUG) System.out.println("CREATED GAME SERVER SOCKET");
+		if (Settings.DEBUG) System.out.println("CREATED GAME SERVER SOCKET");
 		clients = new Vector<GameServerConnectionToClient>();
 		engine = new ServerEngine(clients);
-		if (Globals.DEBUG) System.out.println("CREATED SERVER ENGINE");
+		if (Settings.DEBUG) System.out.println("CREATED SERVER ENGINE");
 		name = "" + ID++;
 		this.thread = new Thread(this);
 	}
@@ -33,7 +33,7 @@ public class GameServer extends ServerSocket implements Runnable {
 	}
 	
 	private void listenForClients() {
-		if (Globals.DEBUG) System.out.println("GAMESERVER: LISTENING FOR CLIENTS");
+		if (Settings.DEBUG) System.out.println("GAMESERVER: LISTENING FOR CLIENTS");
 		int teamNumber = 0;
 		while(!engine.gameState.playable()) {
 			try {

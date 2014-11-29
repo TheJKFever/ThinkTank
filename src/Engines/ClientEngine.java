@@ -7,10 +7,10 @@ import java.util.concurrent.ArrayBlockingQueue;
 import Client.UserInputHandler;
 import Game.Event;
 import Game.GameState;
-import Game.Globals;
 import Game.Helper;
 import Game.Player;
 import Game.SimpleKeyEvent;
+import Global.Settings;
 import Screens.GamePanel;
 import Screens.GameScreen;
 
@@ -39,8 +39,16 @@ public class ClientEngine extends Engine {
 		Helper.log("CLIENT ENGINE: GETTING GAME STATE FROM SERVER");
 		
 		GameState newGameState = gameScreen.gameConnection.getGameStateFromServer();
-		if (newGameState!=null) {
-			gameState = newGameState;
+//		if (newGameState!=null) {
+//			gameState = newGameState;
+		while (newGameState == null) {
+			Helper.log("CLIENT ENGINE: GAME STATE == NULL, TRYING AGAIN in a few");
+			newGameState = gameScreen.gameConnection.getGameStateFromServer();
+			try {
+				Thread.sleep(Settings.DELAY/3);
+			} catch (InterruptedException ie) {
+				System.out.println("CLIENT ENGINE: INTERRUPTED WHILE WAITING FOR GAME STATE");
+			}
 		}
 		
 //		while (newGameState == null) {
@@ -85,7 +93,7 @@ public class ClientEngine extends Engine {
 		long timeDiff, sleep;
 		
 		timeDiff = System.currentTimeMillis() - beforeTime;
-		sleep = Globals.DELAY - timeDiff;
+		sleep = Settings.DELAY - timeDiff;
 
 		if (sleep < 0) {
 			sleep = 1;
