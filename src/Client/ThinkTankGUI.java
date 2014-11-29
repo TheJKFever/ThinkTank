@@ -1,6 +1,7 @@
 package Client;
 
 import java.awt.CardLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import Game.Event;
@@ -34,7 +36,7 @@ public class ThinkTankGUI extends JFrame {
 	public CreateGameScreen createGame;
 	public WaitingScreen waiting;
 	public LobbyScreen lobby;
-	public GameScreen gameScree;
+	public GameScreen gameScreen;
 	//	private GameOverScreen gameOver;
 	private JMenuBar menuBar;
 	private JMenu menu;
@@ -53,13 +55,15 @@ public class ThinkTankGUI extends JFrame {
 			    @Override
 			    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
 			    	try {
-			    		centralConnection.close();
-				    	if (gameScree.gameConnection !=null) {
-				    		gameScree.gameConnection.thread.interrupt();
-				    		gameScree.gameConnection.close();
-				    	}
-				    	ThinkTankGUI.this.dispose();
-				    } catch (IOException e) {
+			    		if (inGameConfirmForeit(ThinkTankGUI.this)) {
+				    		centralConnection.close();
+					    	if (gameScreen.gameConnection !=null) {
+					    		gameScreen.gameConnection.thread.interrupt();
+					    		gameScreen.gameConnection.close();
+					    	}
+					    	ThinkTankGUI.this.dispose();
+			    		}
+		    		} catch (IOException e) {
 						e.printStackTrace();
 			            System.exit(0);
 					}
@@ -100,7 +104,7 @@ public class ThinkTankGUI extends JFrame {
 			 createGame = new CreateGameScreen(this);
 			 waiting = new WaitingScreen(); 
 			 lobby = new LobbyScreen(this);
-			 gameScree = new GameScreen(this);
+			 gameScreen = new GameScreen(this);
 //			 gameOver = new GameOverScreen(this); 
 
 			 mainPanel.add("mainMenu", mainMenu);
@@ -108,19 +112,12 @@ public class ThinkTankGUI extends JFrame {
 //			 mainPanel.add("createProfile", createProfile);
 			 mainPanel.add("createGame", createGame);
 			 mainPanel.add("waiting", waiting);
-			 mainPanel.add("gameScreen", gameScree);
+			 mainPanel.add("gameScreen", gameScreen);
 			 mainPanel.add("lobby", lobby);
 			
 //			 mainPanel.add(gameOver);
 
-			// TODO: put all  of these in action listeners
 			 cardLayout.show(mainPanel, "mainMenu");
-//			 cardLayout.show(mainPanel, "stats");
-//			 cardLayout.show(mainPanel, "createProfile");
-//			 cardLayout.show(mainPanel, "createGame");
-//			 cardLayout.show(mainPanel, "waiting");
-//			 cardLayout.show(mainPanel, "gameScreen");
-//			 cardLayout.show(mainPanel, "lobby");
 
 			 Helper.log("Finished ThinkTankGUI Constructor");
 		} catch (UnknownHostException e) {
@@ -128,6 +125,25 @@ public class ThinkTankGUI extends JFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private boolean inGameConfirmForeit(ThinkTankGUI gui) {
+		if (currentScreenIsGameScreen()) {
+			int confirmation = JOptionPane.showConfirmDialog (null, "Are you sure you want to forfeit this game?","Warning",JOptionPane.YES_NO_OPTION);
+			if(confirmation == JOptionPane.YES_OPTION) return false;
+		} 
+		return true;
+	}
+
+	private boolean currentScreenIsGameScreen() {
+	    for (Component comp : mainPanel.getComponents() ) {
+	        if (comp.isVisible() == true) {
+	            JPanel card = (JPanel)comp;
+	            if (card.getName().equalsIgnoreCase("gameScreen")) return true;
+	            return false;
+	        }
+	    }
+	    return false;
 	}
 
 	public void startNewGame(String name) {
@@ -149,10 +165,10 @@ public class ThinkTankGUI extends JFrame {
 		// make connection to game server
 		// store connection in gameScreen
 		// if connection made go to waiting screen
-		if (gameScree.connectToGameServer(Settings.Development.HOST, port)) {
+		if (gameScreen.connectToGameServer(Settings.Development.HOST, port)) {
 			System.out.println("GUI: gameScreen connected to game server");
 			goTo("waiting");
-			gameScree.gameConnection.thread.start();
+			gameScreen.gameConnection.thread.start();
 		} else {
 			throw new RuntimeException("Could not create game in joinGame");
 		}
@@ -170,7 +186,9 @@ public class ThinkTankGUI extends JFrame {
 		}
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO: if in the game, option page to confirm, are you sure you want to forfeit?
-			gui.goTo("mainMenu");
+    		if (inGameConfirmForeit(gui)) {
+    			gui.goTo("mainMenu");
+    		}
 		}
 	}
 		
@@ -181,12 +199,14 @@ public class ThinkTankGUI extends JFrame {
 		}
 		public void actionPerformed(ActionEvent e) {
 	    	try {
-	    		gui.centralConnection.close();
-		    	if (gui.gameScree.gameConnection !=null) {
-		    		gui.gameScree.gameConnection.thread.interrupt();
-		    		gui.gameScree.gameConnection.close();
-		    	}
-		    	gui.dispose();
+	    		if (inGameConfirmForeit(gui)) {
+		    		gui.centralConnection.close();
+			    	if (gui.gameScreen.gameConnection !=null) {
+			    		gui.gameScreen.gameConnection.thread.interrupt();
+			    		gui.gameScreen.gameConnection.close();
+			    	}
+			    	gui.dispose();
+	    		}
 		    } catch (IOException ioe) {
 		    	ioe.printStackTrace();
 	            System.exit(0);
