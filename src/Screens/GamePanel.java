@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -26,9 +28,16 @@ public class GamePanel extends JPanel {
 		super();
 		Helper.log("Creating new GamePanel");
 		this.gameScreen = gameScreen;
-		this.setFocusable(true);
 		this.setBackground(Color.black);
 		this.setDoubleBuffered(true);
+		this.setFocusable(true);
+		this.requestFocusInWindow();
+		this.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent me) {
+				GamePanel.this.requestFocusInWindow();
+			}
+		});
 		Helper.log("Created new GamePanel");
 	}
 	

@@ -20,6 +20,16 @@ public abstract class Entity implements Serializable {
     
     public Entity() {
         visible = true;
+        x = 0;
+        y = 0;
+        dx = 0;
+        dy = 0;
+        dp = 0;
+        prevX = 0;
+        prevY = 0;
+        theta = 0;
+        dtheta = 0;
+        health = 0;
     }
 
     public void die() {
@@ -124,8 +134,8 @@ public abstract class Entity implements Serializable {
 			xCollision = true;
 		}
 		
-        log("MY X: " + my.x + " Y: " + my.y + " WIDTH: " + my.width + " HEIGHT: " + my.height);
-        log("OT X: " + other.x + " Y: " + other.y + " WIDTH: " + other.width + " HEIGHT: " + other.height);
+//        log("MY X: " + my.x + " Y: " + my.y + " WIDTH: " + my.width + " HEIGHT: " + my.height);
+//        log("OT X: " + other.x + " Y: " + other.y + " WIDTH: " + other.width + " HEIGHT: " + other.height);
 
 		return (xCollision && yCollision);
 	}
@@ -149,7 +159,7 @@ public abstract class Entity implements Serializable {
 		}
     }
     
-	public void checkForCollisionWithObstacles(Vector<? extends Entity> obstacles) {
+	public void checkForCollisionWithObjects(Vector<? extends Entity> obstacles) {
     	for (Entity obstacle: obstacles) {
     		
     		Rect rect = obstacle.getRect();
@@ -160,9 +170,10 @@ public abstract class Entity implements Serializable {
     }
 
     public int wrapDegrees(int d) {
-    	if (d < 0) {
+    	while (d < 0) {
     		d += 360;
-    	} else if (d >= 360) {
+    	}
+    	while (d >= 360) {
     		d -= 360;
     	}
     	return d;
@@ -176,6 +187,6 @@ public abstract class Entity implements Serializable {
 	
 	@Override
 	public String toString() {
-		return this.getClass().getName() + " {\n\tx: " + x + ", y: " + y + ", theta: " + theta + ",\n\theight: " + height + ", width: " + width + ",\n\thealth: " + health + ", visible: " + visible + "\n}\n";
+		return this.getClass().getName() + " {\n\tx: " + x + ", y: " + y + ", theta: " + theta + "\n\tdp: " + dp + ", dx: " + dx + ", dy: " + dy + ", dtheta: " + dtheta + ",\n\theight: " + height + ", width: " + width + ",\n\thealth: " + health + ", visible: " + visible + "\n}\n";
 	}
 }

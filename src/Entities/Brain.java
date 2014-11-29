@@ -17,6 +17,9 @@ public class Brain extends Entity implements Serializable  {
 	public static int BRAIN_HEIGHT = 88;
 	public Team team;
 	
+	//TODO: Create explosion animation brain when it dies
+	//TODO: End game when brain dies
+	
 	public Brain(Team team, GameState gs) {
 		this.gs = gs;
 		this.team = team;

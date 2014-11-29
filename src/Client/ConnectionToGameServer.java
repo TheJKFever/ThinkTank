@@ -51,6 +51,7 @@ public class ConnectionToGameServer extends ConnectionToServer {
 			gameScreen.engine.start();
 			break;
 		case "chat":
+			System.out.println("ConnectionToGameServer: RECEIVED CHAT EVENT");
 //			gui.chatPanel.
 			break;
 		default:

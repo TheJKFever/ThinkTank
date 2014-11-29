@@ -33,27 +33,29 @@ public class Tank extends Entity implements Serializable  {
     Team team;
     Player player;
 
-    // TODO: ALLOW TANKS TO TAKE DAMAGE FROM OTHER TANKS
-    // TODO: ALLOW TANKS TO DIE AND RESPAWN
-    // TODO: ADD WAITING PERIOD BETWEEN RESPAWN PERIOD
+    // TODO: Allow tanks to detect collisions and tank damage from shots
+    // TODO: Allow tanks to die and re-spawn
+    // TODO: Create explosion animation tank dies 
+    // TODO: Add waiting period between re-spawns
     
     public Tank(Player p, GameState gs) {
     	this.tankID = TankCount++;
     	this.player = p;
     	this.team = player.team;
     	this.gs = gs;
-        gs.tanks.addElement(this);
+    	this.gs.tanks.addElement(this);
+    	this.health = MAX_TANK_HEALTH;
+    	this.setWidth(TANK_HEIGHT);
+        this.setHeight(TANK_WIDTH);
         this.theta = 0;
         this.dtheta = 0;
-        this.health = MAX_TANK_HEALTH;
         this.firing = false;
-        spawn();
-        updateImage(theta);
-        this.setWidth(TANK_HEIGHT);
-        this.setHeight(TANK_WIDTH);
+        this.spawn(); // sets x and y
+        this.updateImagePath();
     }
     
     public void spawn() {
+        // TODO: Spawn tanks properly
     	this.x = 100;
 //    	this.x = TANK_SPAWN_X + (50 * this.tankID);
     	if (team.num == 1) {
@@ -63,7 +65,7 @@ public class Tank extends Entity implements Serializable  {
     	}
     }
     
-    public void updateImage(int theta) {
+    public void updateImagePath() {
     	if (theta == 0) {
     		this.imagePath = IMAGE_TANK_UP;
     	} else if (theta == 90) {
@@ -73,71 +75,6 @@ public class Tank extends Entity implements Serializable  {
     	} else if (theta == 270) {
     		this.imagePath = IMAGE_TANK_LEFT;
     	}
-    }
-
-    public void update() {
-    	theta = wrapDegrees(theta + dtheta); 
-    	dtheta = 0;
-    	updateImage(theta);
-    	
-    	prevY = y;
-    	prevX = x;
-    	
-    	// apply movement
-    	if (theta == 0) {
-    		setY(getY() - dp);
-    	} else if (theta == 180) {
-    		setY(getY() + dp);
-    	} else if (theta == 90) {
-    		setX(getX() + dp);
-    	} else if (theta == 270) {
-    		setX(getX() - dp);
-    	}
-    	
-    	// check for collision with walls
-        if (x <= 2) 
-            setX(2);
-        if (x >= Globals.BOARD_WIDTH - getWidth()) { 
-        	setX(Globals.BOARD_WIDTH - getWidth());
-        }
-        
-        if (y < 0) {
-        	setY(0);
-        } else if (y >= Globals.BOARD_HEIGHT - 50) {
-        	setY(Globals.BOARD_HEIGHT - 50);
-        }
-        
-        checkForCollisionWithShots();
-        checkForCollisionWithObstacles(gs.brains);
-        checkForCollisionWithObstacles(gs.barriers);
-        
-        if (this.firing) {
-        	fireShot();
-        }
-        
-//        log("TANK X: " + this.x + " Y: " + this.y + " WIDTH: " + this.getWidth() + " HEIGHT: " + this.getHeight());
-    }
-    
-    public void fireShot() {
-    	int shotX = 0;
-    	int shotY = 0;
-    	
-    	if (theta == 0) {
-    		shotX = this.x + this.getWidth()/2 - Shot.SHOT_WIDTH_VERTICAL/2;
-    		shotY = this.y - Shot.SHOT_HEIGHT_VERTICAL;
-    	} else if (theta == 90) {
-    		shotX = this.x + this.getWidth();
-    		shotY = this.y + this.getHeight()/2 - Shot.SHOT_HEIGHT_HORIZONTAL/2;
-    	} else if (theta == 180) {
-    		shotX = this.x + this.getWidth()/2 - Shot.SHOT_WIDTH_VERTICAL/2;
-    		shotY = this.y + this.getHeight();
-    	} else if (theta == 270) {
-    		shotX = this.x - Shot.SHOT_WIDTH_HORIZONTAL;
-    		shotY = this.y + this.getHeight()/2 - Shot.SHOT_HEIGHT_HORIZONTAL/2;
-    	}
-    	
-    	gs.shots.add(new Shot(shotX, shotY, this.theta, this.gs));
-    	this.firing = false;
     }
     
     public void keyPressed(SimpleKeyEvent e) { 
@@ -156,6 +93,7 @@ public class Tank extends Entity implements Serializable  {
     	log("TANK: KEY RELEASED");
         int key = e.getKeyCode();
 
+        // Sets velocity back to 0 when user lets go of up/down arrow 
         if (key == KeyEvent.VK_UP) {
             dp = 0;
         }
@@ -163,35 +101,104 @@ public class Tank extends Entity implements Serializable  {
             dp = 0;
         }
         if (key == KeyEvent.VK_LEFT) {
-			  dtheta = -90;
+        	dtheta -= 90;
         }
 		if (key == KeyEvent.VK_RIGHT) {
-			  dtheta = 90;
+			dtheta += 90;
 		}
+		// TODO: Enable tank to shoot multiple shots 
+		// (use counter instead of boolean)
         if (key == KeyEvent.VK_SPACE) {
 			this.firing = true;
 		}
     }
     
-    public boolean collidesWith(Rect other) {
-		boolean yCollision = false;
-		boolean xCollision = false;
-		
-		Rect my = this.getRect();
-		
-		if (my.top <= other.bottom && my.top >= other.top) {
-			yCollision = true;
-		} else if (my.bottom >= other.top && my.bottom <= other.bottom) {
-			yCollision = true;
-		}
-
-		if (my.right >= other.left && my.right <= other.right) {
-			xCollision = true;
-		} else if (my.left <= other.right && my.left >= other.left) {
-			xCollision = true;
-		}
-		
-		
-		return (xCollision && yCollision);
-	}
+    public void update() {
+    	prevY = y;
+    	prevX = x;
+    	
+    	updateOrientation();
+    	updatePosition();
+    	
+    	// TODO: Subtract health when run into things?
+    	checkForCollisionWithWalls();
+    	checkForCollisionWithObjects(gs.tanks);
+        checkForCollisionWithObjects(gs.brains);
+        checkForCollisionWithObjects(gs.barriers);
+        checkForCollisionWithShots();
+        
+        if (this.firing) {
+        	fireShot();
+        }
+        
+        // log("TANK X: " + this.x + " Y: " + this.y + " WIDTH: " + this.getWidth() + " HEIGHT: " + this.getHeight());
+    }
+    
+    public void updateOrientation() {
+    	log("TANK: Updating Orientation");
+    	log("Before:");
+    	log("theta = " + theta);
+    	log("dtheta = " + dtheta);
+    	theta = wrapDegrees(theta + dtheta); 
+    	dtheta = 0; // reset to 0 after updating position
+    	updateImagePath();	
+    	log("After:");
+    	log("theta = " + theta);
+    	log("dtheta = " + dtheta);
+    }
+    
+    public void updatePosition() {
+    	log("TANK: UPDATING POSITION");
+    	log("BEFORE");
+    	log(this.toString());
+    	
+    	if (theta == 0) {
+    		y -= dp;
+    	} else if (theta == 180) {
+    		y += dp;
+    	} else if (theta == 90) {
+    		x += dp;
+    	} else if (theta == 270) {
+    		x -= dp;
+    	}
+    	
+    	log("AFTER");
+    	log(this.toString());
+    }
+    
+    public void checkForCollisionWithWalls() {
+        if (x < 0) {
+            x = 0;
+        } else if (x >= (Globals.BOARD_WIDTH - width)) { 
+        	setX(Globals.BOARD_WIDTH - width);
+        }
+        
+        if (y < 0) {
+        	y = 0;
+        } else if (y >= Globals.BOARD_HEIGHT - height) {
+        	y = (Globals.BOARD_HEIGHT - height);
+        }
+    }
+    
+    public void fireShot() {
+    	int shotX = 0;
+    	int shotY = 0;
+    	
+    	if (theta == 0) {
+    		shotX = x + width/2 - Shot.SHOT_WIDTH_VERTICAL/2;
+    		shotY = y - Shot.SHOT_HEIGHT_VERTICAL;
+    	} else if (theta == 90) {
+    		shotX = x + width;
+    		shotY = y + height/2 - Shot.SHOT_HEIGHT_HORIZONTAL/2;
+    	} else if (theta == 180) {
+    		shotX = x + width/2 - Shot.SHOT_WIDTH_VERTICAL/2;
+    		shotY = y + height;
+    	} else if (theta == 270) {
+    		shotX = x - Shot.SHOT_WIDTH_HORIZONTAL;
+    		shotY = y + height/2 - Shot.SHOT_HEIGHT_HORIZONTAL/2;
+    	}
+    	
+    	gs.shots.add(new Shot(shotX, shotY, theta, gs));
+    	firing = false;
+    }
 }

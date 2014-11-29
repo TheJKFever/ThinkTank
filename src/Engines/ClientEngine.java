@@ -70,33 +70,32 @@ public class ClientEngine extends Engine {
 		Helper.log("CLIENT ENGINE: Adding UserInputHandler");
 		gamePanel.addKeyListener(new UserInputHandler(this.gameScreen));
 
-		while (true) {
-//		while (gameState.inGame) {
-			Helper.log("CLIENT ENGINE: entered main loop");
-			
-			getGameStateFromServer();
-		
-			processInput();
-			
-			Helper.log("CLIENT ENGINE: ABOUT TO UPDATE GAME STATE");
-			gameState.update();
-			
-			Helper.log("CLIENT ENGINE: ABOUT TO REPAINT GAMEPANEL");
-			gamePanel.repaint();
-			
-			timeDiff = System.currentTimeMillis() - beforeTime;
-			sleep = Globals.DELAY - timeDiff;
 
-			if (sleep < 0)
-				sleep = 1;
-			try {
-				Thread.sleep(sleep);
-			} catch (InterruptedException e) {
-				Helper.log("interrupted");
-			}
+		while (gameState.inGame) {
+			getGameStateFromServer();
+			processUserInput();
+			gameState.update();
+			gamePanel.repaint();
+			waitIfDoneEarly(beforeTime);
 			beforeTime = System.currentTimeMillis();
 		}
-//		Helper.log("CLIENT ENGINE: GAMESTATE.INGAME == FALSE");
+	}
+	
+	public void waitIfDoneEarly(long beforeTime) {
+		long timeDiff, sleep;
+		
+		timeDiff = System.currentTimeMillis() - beforeTime;
+		sleep = Globals.DELAY - timeDiff;
+
+		if (sleep < 0) {
+			sleep = 1;
+		}
+		
+		try {
+			Thread.sleep(sleep);
+		} catch (InterruptedException e) {
+			log("interrupted");
+		}
 	}
 	
 	public void processInput() {
