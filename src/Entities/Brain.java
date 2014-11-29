@@ -47,7 +47,8 @@ public class Brain extends Entity  {
     	// TODO: BRAIN DEATH
     	visible = false;
     	exploding = true;
+    	gs.endGame();
     }
 	
-	public void collideWith(Entity e) {}
+	public void executeCollisionWith(Entity e) {}
 }

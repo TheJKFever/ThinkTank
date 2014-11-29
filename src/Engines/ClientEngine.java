@@ -69,11 +69,16 @@ public class ClientEngine implements Runnable {
 
 		while (gameState.inGame) {
 			getGameStateFromServer();
+			this.player.tank = gameState.tankForThisClient;
 			processUserInput();
 			gameState.update();
 			gamePanel.repaint();
 			waitIfDoneEarly(beforeTime);
 			beforeTime = System.currentTimeMillis();
+			log("Thoughts: " + player.tank.thoughts);
+			log("Health: " + player.tank.health + "/10");
+			log("Tank.y: " + player.tank.y);
+			log("Tank.x: " + player.tank.x);
 		}
 	}
 	

@@ -24,12 +24,15 @@ public class Tank extends Entity {
     
     static final int TANK_SPAWN_X  = 0;
     static final int TANK_SPAWN_Y  = 50;
-    public static int TankCount=0;
-    public int tankID;
     
-    public boolean firing;
+    public static int TankCount=0;
+    
     Team team;
     Player player;
+    public int tankID;
+    public boolean firing;
+    public boolean mining;
+    public int thoughts;
 
     // TODO: Allow tanks to detect collisions and tank damage from shots
     // TODO: Allow tanks to die and re-spawn
@@ -50,6 +53,8 @@ public class Tank extends Entity {
         this.firing = false;
         this.spawn(); // sets x and y
         this.updateImagePath();
+        this.thoughts = 0;
+        this.mining = false;
     }
     
     public void spawn() {
@@ -84,6 +89,9 @@ public class Tank extends Entity {
         }
         if (key == KeyEvent.VK_DOWN) {
         	dp = -2;
+        } 
+        if (key == KeyEvent.VK_M) {
+        	mining = true;
         }
     }
 
@@ -104,8 +112,10 @@ public class Tank extends Entity {
 		if (key == KeyEvent.VK_RIGHT) {
 			dtheta += 90;
 		}
-		// TODO: Enable tank to shoot multiple shots 
-		// (use counter instead of boolean)
+		if (key == KeyEvent.VK_M) {
+			mining = false;
+		}
+		
         if (key == KeyEvent.VK_SPACE) {
 			this.firing = true;
 		}
@@ -113,28 +123,33 @@ public class Tank extends Entity {
     
     public void update() {
     	super.update();
-    	log("TANK: UPDATE() BEFORE");
-    	log(this.toString());
-    	
-    	prevY = y;
-    	prevX = x;
+//    	log("TANK: UPDATE() BEFORE");
+//    	log(this.toString());	
     	
     	updateOrientation();
     	updatePosition();
     	
     	// TODO: Subtract health when run into things?
-//    	checkForCollisionWithWalls();
     	checkForCollisionWithEntities(gs.barriers);
         checkForCollisionWithEntities(gs.brains);
-//        checkForCollisionWithShots();
         checkForCollisionWithEntities(gs.tanks);
         
-        if (this.firing) {
+        if (this.mining) {
+        	mineForThoughts();
+        } else if (this.firing) {
         	fireShot();
         }
      
         log("TANK: UPDATE() AFTER");
     	log(this.toString());
+    }
+    
+    public void mineForThoughts() {
+    	for (ThoughtPool thoughtPool: gs.thoughtPools) {
+    		if (checkForCollisionWith(thoughtPool.getRect())) {
+    			this.thoughts += thoughtPool.miningRate;
+    		}
+    	}
     }
     
     public void updateOrientation() {
@@ -169,7 +184,7 @@ public class Tank extends Entity {
 //    	log(this.toString());
     }
     
-    public void collideWith(Entity entity) {
+    public void executeCollisionWith(Entity entity) {
     	resetPositionOnCollision(entity.getRect());
     }
     

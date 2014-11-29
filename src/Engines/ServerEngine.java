@@ -24,13 +24,13 @@ public class ServerEngine implements Runnable {
 		this.clients = clientConnections;
 		this.gameState = new GameState();	
 		engineThread = new Thread(this);
-		log("SERVER ENGINE: INITIAL GAME STATE");
-		log(gameState.toString());
+//		log("SERVER ENGINE: INITIAL GAME STATE");
+//		log(gameState.toString());
 	}
 	
 	
 	public void run() {
-		log("GSCONNECTIONTOCLIENT: RUN()");
+		log("ServerEngine: run()");
 		long beforeTime, timeDiff, sleep;
 		beforeTime = System.currentTimeMillis();
 		
@@ -62,9 +62,11 @@ public class ServerEngine implements Runnable {
 	public void broadcastGameState() {
 		log("GAMESERVER: BROADCAST GAME STATE");
 		log(gameState.toString());
-		Event e = new Event("game update", gameState);
 		
+		Event e;
 		for (GameServerConnectionToClient client: clients) {
+			gameState.tankForThisClient = client.player.tank;
+			e = new Event("game update", gameState);
 			client.sendEvent(e);
 		}
 	}

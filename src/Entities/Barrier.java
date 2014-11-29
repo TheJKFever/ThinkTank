@@ -24,5 +24,5 @@ public class Barrier extends Entity {
     	super.update();
 	}
 	
-	public void collideWith(Entity e) {}
+	public void executeCollisionWith(Entity e) {}
 }

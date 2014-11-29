@@ -103,16 +103,7 @@ public abstract class Entity implements Serializable {
     public boolean isDying() {
         return this.dying;
     }
-    
-//    public void checkForCollisionWithShots() {
-//		for (Shot shot: gs.shots) {
-//			Rect rect = shot.getRect();
-//			if (collidesWith(rect)) {
-//				hitBy(shot);
-//			}
-//		}
-//    }
-    
+
 	public void hitBy(Shot shot) {
 		this.health -= shot.damage;
 //		log(this.getClass().getName() + " HEALTH = " + health);
@@ -129,7 +120,8 @@ public abstract class Entity implements Serializable {
 		prevX = x;
 		prevY = y;
 	}
-	public boolean collidesWith(Rect other) {
+	
+	public boolean checkForCollisionWith(Rect other) {
 		log(this.getClass().getName() + ": collidesWith()");
 		
 		// reset values
@@ -195,32 +187,17 @@ public abstract class Entity implements Serializable {
 		}	
     }
     
-//    public void checkForCollisionWithWalls() {
-//        if (x < 10) {
-//        	log("TANK: Collided on left wall and reset");
-//            x = 10;
-//        } else if (x > Settings.BOARD_WIDTH - width - 10) { 
-//        	log("TANK: Collided on right wall and reset");
-//        	x = Settings.BOARD_WIDTH - width - 10;
-//        }
-//        if (y < 10) {
-//        	y = 10;
-//        } else if (y > Settings.BOARD_HEIGHT - height - 10) {
-//        	y = Settings.BOARD_HEIGHT - height - 10;
-//        }
-//    }
-    
 	public void checkForCollisionWithEntities(Vector<? extends Entity> entities) {
     	for (Entity entity: entities) {
     		if ((this.hashCode() != entity.hashCode())) {
-				if (collidesWith(entity.getRect())) {
-					collideWith(entity);	
+				if (checkForCollisionWith(entity.getRect())) {
+					executeCollisionWith(entity);	
 				}
     		}
 		}
     }
 
-	public abstract void collideWith(Entity e);
+	public abstract void executeCollisionWith(Entity e);
 	
     public int wrapDegrees(int d) {
     	while (d < 0) {

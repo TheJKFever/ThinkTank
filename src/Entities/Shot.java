@@ -60,7 +60,7 @@ public class Shot extends Entity {
         checkForCollisionWithEntities(gs.tanks);
     }
     
-    public void collideWith(Entity entity) {
+    public void executeCollisionWith(Entity entity) {
     	entity.hitBy(this);
     	die();
     }

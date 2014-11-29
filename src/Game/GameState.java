@@ -29,6 +29,7 @@ public class GameState implements Serializable {
 	public long startTime;
 	public long timeElapsed;
 	public String displayTime;
+	public Tank tankForThisClient = null;
 	
 	public GameState() {
 		System.out.println("GAMESTATE: CONSTRUCTOR");
@@ -69,8 +70,20 @@ public class GameState implements Serializable {
 		long minutes = TimeUnit.NANOSECONDS.toMinutes(timeRemaining);
 		long seconds = TimeUnit.NANOSECONDS.toSeconds(timeRemaining - TimeUnit.MINUTES.toNanos(minutes));
 		displayTime = String.format("%02d:%02d", minutes, seconds);
+		if (timeRemaining <= 0L) {
+			endGame();
+		}
 	}
 	
+	public void endGame() {
+		// TODO: implement endGame()
+		// mark game as not inGame
+		// calculate winner based on brain health
+		// display GAME OVER
+		// display winner
+		// display stats
+		// display replay button
+	}
 	
 	public boolean playable() {
 		System.out.println("GAMESTATE: PLAYABLE()?");
