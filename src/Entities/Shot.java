@@ -53,6 +53,7 @@ public class Shot extends Entity implements Serializable  {
     }
  
     public void update() {
+    	super.update();
 //        int shotX = getX();
 //        int shotY = getY();
         updatePosition();

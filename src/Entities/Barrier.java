@@ -21,6 +21,7 @@ public class Barrier extends Entity implements Serializable  {
     }
 
 	public void update() {
+    	super.update();
 //		for (Shot shot: gs.shots) {
 //			if (collidesWith(shot.getRect())) {
 //				hitBy(shot);

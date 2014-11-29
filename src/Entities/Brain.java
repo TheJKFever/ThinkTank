@@ -42,6 +42,7 @@ public class Brain extends Entity implements Serializable  {
 	}
 	
 	public void update() {
+    	super.update();
         checkForCollisionWithShots();
 	}
 }

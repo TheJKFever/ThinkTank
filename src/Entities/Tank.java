@@ -114,6 +114,7 @@ public class Tank extends Entity implements Serializable  {
     }
     
     public void update() {
+    	super.update();
     	log("TANK: UPDATE() BEFORE");
     	log(this.toString());
     	
@@ -126,10 +127,9 @@ public class Tank extends Entity implements Serializable  {
     	// TODO: Subtract health when run into things?
     	checkForCollisionWithWalls();
     	checkForCollisionWithObjects(gs.barriers);
-//    	checkForCollisionWithObjects(gs.tanks);
-//        checkForCollisionWithObjects(gs.brains);
-        
-//        checkForCollisionWithShots();
+        checkForCollisionWithObjects(gs.brains);
+        checkForCollisionWithShots();
+        checkForCollisionWithObjects(gs.tanks);
         
         if (this.firing) {
         	fireShot();

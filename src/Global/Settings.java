@@ -8,7 +8,7 @@ public interface Settings {
     public static final int GUI_WIDTH = 1000;
     public static final int GUI_HEIGHT = 800;
     
-    public static final int DELAY = 50;
+    public static final int DELAY = 20;
 	
     public static final boolean DEBUG = true;
     
