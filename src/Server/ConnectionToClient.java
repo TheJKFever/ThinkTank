@@ -8,17 +8,16 @@ import java.net.Socket;
 import Game.Event;
 import Game.Helper;
 
-public abstract class ServerThread extends Thread {
-	private Heartbeat hb;
+public abstract class ConnectionToClient extends Thread {
+	
 	public ObjectInputStream in;
 	public ObjectOutputStream out;	
 
-	public ServerThread(Socket connection) {
+	public ConnectionToClient(Socket connection) {
+		System.out.println("ConnectionToClient: IN CONSTRUCTOR");
 		try {
 			out = new ObjectOutputStream(connection.getOutputStream());
 			in = new ObjectInputStream(connection.getInputStream());
-			//			hb = new Heartbeat(connection);
-			//			hb.start();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

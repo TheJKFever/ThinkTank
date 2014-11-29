@@ -15,6 +15,7 @@ public abstract class Entity implements Serializable {
 	public boolean visible;
     public String imagePath;
     public boolean dying;
+    public boolean exploding;
     public int x, y, dx, dy, dp, prevX, prevY, theta, dtheta, height, width, health;    
     
     public boolean yCollision = false;
@@ -40,6 +41,7 @@ public abstract class Entity implements Serializable {
         theta = 0;
         dtheta = 0;
         health = 0;
+        exploding = false;
     }
 
     public void die() {
@@ -101,23 +103,13 @@ public abstract class Entity implements Serializable {
     public boolean isDying() {
         return this.dying;
     }
-    
-    public void checkForCollisionWithShots() {
-		for (Shot shot: gs.shots) {
-			Rect rect = shot.getRect();
-			if (collidesWith(rect)) {
-				hitBy(shot);
-			}
-		}
-    }
-    
+
 	public void hitBy(Shot shot) {
 		this.health -= shot.damage;
-		log(this.getClass().getName() + " HEALTH = " + health);
+//		log(this.getClass().getName() + " HEALTH = " + health);
 		if (this.health == 0) {
-			this.setDying(true);
+			this.die();
 		}
-		shot.hitSomething();
 	}
 	
 	public Rect getRect() {
@@ -128,7 +120,8 @@ public abstract class Entity implements Serializable {
 		prevX = x;
 		prevY = y;
 	}
-	public boolean collidesWith(Rect other) {
+	
+	public boolean checkForCollisionWith(Rect other) {
 		log(this.getClass().getName() + ": collidesWith()");
 		
 		// reset values
@@ -194,17 +187,18 @@ public abstract class Entity implements Serializable {
 		}	
     }
     
-	public void checkForCollisionWithObjects(Vector<? extends Entity> obstacles) {
-    	for (Entity obstacle: obstacles) {
-    		if ((this.hashCode() != obstacle.hashCode())) {
-	    		Rect rect = obstacle.getRect();
-				if (collidesWith(rect)) {
-					resetPositionOnCollision(rect);
+	public void checkForCollisionWithEntities(Vector<? extends Entity> entities) {
+    	for (Entity entity: entities) {
+    		if ((this.hashCode() != entity.hashCode())) {
+				if (checkForCollisionWith(entity.getRect())) {
+					executeCollisionWith(entity);	
 				}
     		}
 		}
     }
 
+	public abstract void executeCollisionWith(Entity e);
+	
     public int wrapDegrees(int d) {
     	while (d < 0) {
     		d += 360;

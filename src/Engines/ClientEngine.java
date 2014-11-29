@@ -82,10 +82,15 @@ public class ClientEngine extends Engine {
 		while (gameState.inGame) {
 			getGameStateFromServer();
 			processInput();
+			this.player.tank = gameState.tankForThisClient;
 			gameState.update();
 			gamePanel.repaint();
 			waitIfDoneEarly(beforeTime);
 			beforeTime = System.currentTimeMillis();
+			Helper.log("Thoughts: " + player.tank.thoughts);
+			Helper.log("Health: " + player.tank.health + "/10");
+			Helper.log("Tank.y: " + player.tank.y);
+			Helper.log("Tank.x: " + player.tank.x);
 		}
 	}
 	

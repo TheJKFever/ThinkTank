@@ -1,12 +1,10 @@
 package Entities;
 
-import java.io.Serializable;
-
 import Game.GameState;
 import Game.Team;
 import Global.Settings;
 
-public class Brain extends Entity implements Serializable  {
+public class Brain extends Entity  {
 	
 	private static final long serialVersionUID = 6669994797629316542L;
 	
@@ -34,16 +32,24 @@ public class Brain extends Entity implements Serializable  {
         // TODO: position brain more precisely
 		if (team.num == 1) {
 			this.setImagePath(IMAGE_BRAIN_1); 
-			this.y = Settings.BOARD_HEIGHT - this.getHeight() - 10;
+			this.y = Settings.BOARD_HEIGHT - this.getHeight() - 20;
 		} else if (team.num == 2) {
 			this.setImagePath(IMAGE_BRAIN_2);
-	        this.y = 10;
+	        this.y = 20;
 		}
 		gs.brains.addElement(this);
 	}
 	
 	public void update() {
     	super.update();
-        checkForCollisionWithShots();
 	}
+	
+	public void die() {
+    	// TODO: BRAIN DEATH
+    	visible = false;
+    	exploding = true;
+    	gs.endGame();
+    }
+	
+	public void executeCollisionWith(Entity e) {}
 }

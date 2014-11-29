@@ -10,7 +10,7 @@ import Game.Helper;
 import Game.Player;
 import Global.Settings;
 
-public class GameServerConnectionToClient extends ServerThread {
+public class GameServerConnectionToClient extends ConnectionToClient {
 	private static Logger logger = Logger.getLogger("GameServer.log");
 	private static int ID = 0;
 	public Player player;

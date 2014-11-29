@@ -7,6 +7,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -15,8 +16,10 @@ import javax.swing.JPanel;
 import Entities.Barrier;
 import Entities.Brain;
 import Entities.Entity;
+import Entities.ThoughtPool;
 import Game.GameState;
 import Game.Helper;
+import Game.Player;
 import Global.Settings;
 
 public class GamePanel extends JPanel {
@@ -24,6 +27,8 @@ public class GamePanel extends JPanel {
 	private static final long serialVersionUID = 123783444588707640L; // not necessary
 	public GameState gameState;
 	private GameScreen gameScreen;
+	HashMap<String, Image> imageCache;
+	Player player;
 	
 	public GamePanel(GameScreen gameScreen) {
 		super();
@@ -39,23 +44,25 @@ public class GamePanel extends JPanel {
 				GamePanel.this.requestFocusInWindow();
 			}
 		});
-		Helper.log("Created new GamePanel");
+		this.imageCache = new HashMap<String, Image>();
+		this.player = null;
 	}
-	
+
 	public void paint(Graphics g) {
 		super.paint(g);
-		updateGameState();
-		System.out.println("GAMEPANEL: ABOUT TO REPAINT");
+		this.gameState = this.gameScreen.engine.gameState;
+		this.player = gameScreen.engine.player;
 		render(g);
 	}
 	
-	private void updateGameState() {
-		this.gameState = this.gameScreen.engine.gameState;
-	}
-
 	public Image getImg(String path) {
-		// TODO: CREATE A HASH MAP THAT CACHES IMAGES IT HAS ALREADY CREATED
-		return new ImageIcon(path).getImage();
+		if (imageCache.containsKey(path)) {
+			return imageCache.get(path);
+		} else {
+			Image img = new ImageIcon(path).getImage();
+			imageCache.put(path, img);
+			return img;
+		} 
 	}
 	
 	public void render(Graphics g) {
@@ -63,35 +70,50 @@ public class GamePanel extends JPanel {
 		g.setColor(Color.black);
 		g.fillRect(0, 0, Settings.BOARD_WIDTH, Settings.BOARD_HEIGHT);
 		drawMap(g);
+		drawThoughtPools(g);
 		drawBarriers(g);
 		drawBrains(g);
 		drawTanks(g);
 		drawShots(g);
+		drawHUD(g);
 	
 		Toolkit.getDefaultToolkit().sync();
 		g.dispose();
 	}
 
+	
+	public void drawHUD(Graphics g) {
+		Font clockFont = new Font("Helvetica", Font.BOLD, 18);
+		g.setColor(Color.white);
+		g.setFont(clockFont);
+		
+		g.drawString(gameState.displayTime, Settings.BOARD_WIDTH/2-10, 25);
+		g.drawString("Thoughts: " + player.tank.thoughts, 20, 40);
+		g.drawString("Health: " + player.tank.health + "/10", 20, 60);
+	}
+	
 	public void drawMap(Graphics g) {
 		g.setColor(Color.black);
-		
 		// black background
-		g.fillRect(0, 0, Settings.BOARD_WIDTH, Settings.BOARD_HEIGHT);
-		
-		
-		// top wall
-		g.setColor(Color.green);
-		g.fillRect(0, 0, Settings.BOARD_WIDTH, 10);
-		
-		// left wall
-		g.fillRect(0, 0, 10, Settings.BOARD_HEIGHT);
-		
-		// bottom wall
-		g.fillRect(0, Settings.BOARD_HEIGHT-10, Settings.BOARD_WIDTH, 10);
-		
-		// right wall
-		g.fillRect(Settings.BOARD_WIDTH - 10, 0, 10, Settings.BOARD_HEIGHT);
-		g.setColor(Color.black);
+//<<<<<<< HEAD
+//		g.fillRect(0, 0, Settings.BOARD_WIDTH, Settings.BOARD_HEIGHT);
+//		
+//		
+//		// top wall
+//		g.setColor(Color.green);
+//		g.fillRect(0, 0, Settings.BOARD_WIDTH, 10);
+//		
+//		// left wall
+//		g.fillRect(0, 0, 10, Settings.BOARD_HEIGHT);
+//		
+//		// bottom wall
+//		g.fillRect(0, Settings.BOARD_HEIGHT-10, Settings.BOARD_WIDTH, 10);
+//		
+//		// right wall
+//		g.fillRect(Settings.BOARD_WIDTH - 10, 0, 10, Settings.BOARD_HEIGHT);
+//		g.setColor(Color.black);
+//=======
+		g.fillRect(0, 0, Global.Settings.BOARD_WIDTH, Global.Settings.BOARD_HEIGHT);
 	}
 	
 	public void drawBarriers(Graphics g) {
@@ -99,6 +121,14 @@ public class GamePanel extends JPanel {
 		for (Barrier barrier: gameState.barriers) {
 			g.setColor(Barrier.color);
 			g.fillRect(barrier.x, barrier.y, barrier.width, barrier.height);
+		}
+	}
+
+	public void drawThoughtPools(Graphics g) {
+		Helper.log("GAMEPANEL: DRAW THOUGHT POOLS");
+		for (ThoughtPool thoughtPool: gameState.thoughtPools) {
+			g.setColor(thoughtPool.color);
+			g.fillRect(thoughtPool.x, thoughtPool.y, thoughtPool.width, thoughtPool.height);
 		}
 	}
 	

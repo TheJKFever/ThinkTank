@@ -1,16 +1,14 @@
 package Entities;
 
 import java.awt.event.KeyEvent;
-import java.io.Serializable;
 
-import Game.Player;
-import Game.Rect;
 import Game.GameState;
+import Game.Player;
 import Game.SimpleKeyEvent;
 import Game.Team;
 import Global.Settings;
 
-public class Tank extends Entity implements Serializable  {
+public class Tank extends Entity {
 
 	private static final long serialVersionUID = 4397815103071777225L;
 	
@@ -26,12 +24,15 @@ public class Tank extends Entity implements Serializable  {
     
     static final int TANK_SPAWN_X  = 0;
     static final int TANK_SPAWN_Y  = 50;
-    public static int TankCount=0;
-    public int tankID;
     
-    public boolean firing;
+    public static int TankCount=0;
+    
     Team team;
     Player player;
+    public int tankID;
+    public boolean firing;
+    public boolean mining;
+    public int thoughts;
 
     // TODO: Allow tanks to detect collisions and tank damage from shots
     // TODO: Allow tanks to die and re-spawn
@@ -52,6 +53,8 @@ public class Tank extends Entity implements Serializable  {
         this.firing = false;
         this.spawn(); // sets x and y
         this.updateImagePath();
+        this.thoughts = 0;
+        this.mining = false;
     }
     
     public void spawn() {
@@ -86,6 +89,9 @@ public class Tank extends Entity implements Serializable  {
         }
         if (key == KeyEvent.VK_DOWN) {
         	dp = -2;
+        } 
+        if (key == KeyEvent.VK_M) {
+        	mining = true;
         }
     }
 
@@ -106,8 +112,10 @@ public class Tank extends Entity implements Serializable  {
 		if (key == KeyEvent.VK_RIGHT) {
 			dtheta += 90;
 		}
-		// TODO: Enable tank to shoot multiple shots 
-		// (use counter instead of boolean)
+		if (key == KeyEvent.VK_M) {
+			mining = false;
+		}
+		
         if (key == KeyEvent.VK_SPACE) {
 			this.firing = true;
 		}
@@ -115,23 +123,20 @@ public class Tank extends Entity implements Serializable  {
     
     public void update() {
     	super.update();
-    	log("TANK: UPDATE() BEFORE");
-    	log(this.toString());
-    	
-    	prevY = y;
-    	prevX = x;
+//    	log("TANK: UPDATE() BEFORE");
+//    	log(this.toString());	
     	
     	updateOrientation();
     	updatePosition();
     	
     	// TODO: Subtract health when run into things?
-    	checkForCollisionWithWalls();
-    	checkForCollisionWithObjects(gs.barriers);
-        checkForCollisionWithObjects(gs.brains);
-        checkForCollisionWithShots();
-        checkForCollisionWithObjects(gs.tanks);
+    	checkForCollisionWithEntities(gs.barriers);
+        checkForCollisionWithEntities(gs.brains);
+        checkForCollisionWithEntities(gs.tanks);
         
-        if (this.firing) {
+        if (this.mining) {
+        	mineForThoughts();
+        } else if (this.firing) {
         	fireShot();
         }
      
@@ -139,22 +144,30 @@ public class Tank extends Entity implements Serializable  {
     	log(this.toString());
     }
     
+    public void mineForThoughts() {
+    	for (ThoughtPool thoughtPool: gs.thoughtPools) {
+    		if (checkForCollisionWith(thoughtPool.getRect())) {
+    			this.thoughts += thoughtPool.miningRate;
+    		}
+    	}
+    }
+    
     public void updateOrientation() {
-    	log("TANK: Updating Orientation");
-    	log("Before:");
-    	log("theta = " + theta);
-    	log("dtheta = " + dtheta);
+//    	log("TANK: Updating Orientation");
+//    	log("Before:");
+//    	log("theta = " + theta);
+//    	log("dtheta = " + dtheta);
     	theta = wrapDegrees(theta + dtheta); 
     	dtheta = 0; // reset to 0 after updating position
     	updateImagePath();	
-    	log("After:");
-    	log("theta = " + theta);
-    	log("dtheta = " + dtheta);
+//    	log("After:");
+//    	log("theta = " + theta);
+//    	log("dtheta = " + dtheta);
     }
     
     public void updatePosition() {
-    	log("TANK: UPDATING POSITION");
-    	log("BEFORE");
+//    	log("TANK: UPDATING POSITION");
+//    	log("BEFORE");
     	log(this.toString());
     	
     	if (theta == 0) {
@@ -167,36 +180,19 @@ public class Tank extends Entity implements Serializable  {
     		x -= dp;
     	}
     	
-    	log("AFTER");
-    	log(this.toString());
+//    	log("AFTER");
+//    	log(this.toString());
     }
     
-    public void checkForCollisionWithWalls() {
-    	log("TANK: Checking for collision with walls");
-    	
-    	log("BEFORE");
-    	log(this.toString());
-    	
-        if (x < 10) {
-        	log("TANK: Collided on left wall and reset");
-            x = 10;
-        } else if (x > Settings.BOARD_WIDTH - width - 10) { 
-        	log("TANK: Collided on right wall and reset");
-        	x = Settings.BOARD_WIDTH - width - 10;
-        }
-        
-        if (y < 10) {
-        	log("TANK: Collided on top wall and reset");
-        	y = 10;
-        } else if (y > Settings.BOARD_HEIGHT - height - 10) {
-        	log("TANK: Collided on bottom wall and reset");
-        	y = Settings.BOARD_HEIGHT - height - 10;
-        }
-        
-        log("AFTER");
-    	log(this.toString());
+    public void executeCollisionWith(Entity entity) {
+    	resetPositionOnCollision(entity.getRect());
     }
     
+    public void die() {
+    	// TODO: TANK DEATH
+    	visible = false;
+    	exploding = true;
+    }
     public void fireShot() {
     	int shotX = 0;
     	int shotY = 0;

@@ -1,11 +1,9 @@
 package Entities;
 
-import java.io.Serializable;
-
 import Game.GameState;
 import Global.Settings;
 
-public class Shot extends Entity implements Serializable  {
+public class Shot extends Entity {
 
 	private static final long serialVersionUID = -5027836598744895479L;
 	
@@ -54,36 +52,33 @@ public class Shot extends Entity implements Serializable  {
  
     public void update() {
     	super.update();
-//        int shotX = getX();
-//        int shotY = getY();
-        updatePosition();
+    	updatePosition();
+    	// TODO: replace this will barriers at the walls of the map
+//    	checkForCollisionWithWalls();
+    	checkForCollisionWithEntities(gs.barriers);
+        checkForCollisionWithEntities(gs.brains);
+        checkForCollisionWithEntities(gs.tanks);
+    }
+    
+    public void executeCollisionWith(Entity entity) {
+    	entity.hitBy(this);
+    	die();
     }
     
     public void updatePosition() {
         if (theta == 0) {
         	y -= shotSpeed;
-            if (y < 0) {
-                die();
-            }
         } else if (theta == 180) {
         	y += shotSpeed;
-        	if (y > Settings.BOARD_HEIGHT) {
-        		die();
-        	}
         }  else if (theta == 90) {
         	x += shotSpeed;
-        	if (x > Settings.BOARD_WIDTH) {
-        		die();
-        	}
         }  else if (theta == 270) {
         	x -= shotSpeed;
-        	if (x < 0) { // TODO: FIX THIS TO BE SOME GLOBAL CONSTANT
-        		die();
-        	}
         }
     }
     
-    public void hitSomething() {
+    public void die() {
+    	// TODO: SHOT EXPLOSION ON DEATH
     	this.exploding = true;
     	this.dying = true;
     	this.visible = false;

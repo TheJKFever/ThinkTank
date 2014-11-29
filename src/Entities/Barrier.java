@@ -1,11 +1,11 @@
 package Entities;
 
 import java.awt.Color;
-import java.io.Serializable;
 
 import Game.GameState;
 
-public class Barrier extends Entity implements Serializable  {
+public class Barrier extends Entity {
+	
 	private static final long serialVersionUID = -1039864192350379044L;
 	
 	//	final String IMAGE_BARRIER = "images"
@@ -23,12 +23,7 @@ public class Barrier extends Entity implements Serializable  {
 
 	public void update() {
     	super.update();
-//		for (Shot shot: gs.shots) {
-//			if (collidesWith(shot.getRect())) {
-//				hitBy(shot);
-//			}
-//		}
-//        log("BARRIER X: " + this.x + " Y: " + this.y + " WIDTH: " + this.getWidth() + " HEIGHT: " + this.getHeight());
-//        checkForCollisionWithShots();
 	}
+	
+	public void executeCollisionWith(Entity e) {}
 }
