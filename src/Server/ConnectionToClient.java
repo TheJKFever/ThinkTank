@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 import Game.Event;
 import Game.Helper;
@@ -29,10 +30,17 @@ public abstract class ConnectionToClient extends Thread {
 			out.reset();
 			out.writeObject(obj);
 			out.flush();
-		} catch (IOException e) {
+		} catch (SocketException se) {
+			try {				
+				in.close();
+				this.yield();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} catch (IOException ioe) {
 			Helper.log("ERROR SENDING DATA TO CLIENT");
 			this.interrupt();
-			e.printStackTrace();
+			ioe.printStackTrace();
 		}
 	}
 

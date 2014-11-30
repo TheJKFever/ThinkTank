@@ -98,22 +98,27 @@ public class ThinkTankGUI extends JFrame {
 			 * Battle
 			 * Game Over
 			 */
-			 mainMenu = new MainMenuScreen(this); 
+			 mainMenu = new MainMenuScreen(this);
+			 mainMenu.setName("mainMenu");
 //			 stats = new StatsScreen(this); 
 //			 createProfile = new CreateProfileScreen(this); 
 			 createGame = new CreateGameScreen(this);
+			 createGame.setName("createGame");
 			 waiting = new WaitingScreen(); 
+			 waiting.setName("waiting");
 			 lobby = new LobbyScreen(this);
+			 lobby.setName("lobby");
 			 gameScreen = new GameScreen(this);
+			 gameScreen.setName("gameScreen");
 //			 gameOver = new GameOverScreen(this); 
 
-			 mainPanel.add("mainMenu", mainMenu);
+			 mainPanel.add(mainMenu.getName(), mainMenu);
 //			 mainPanel.add("stats", stats);
 //			 mainPanel.add("createProfile", createProfile);
-			 mainPanel.add("createGame", createGame);
-			 mainPanel.add("waiting", waiting);
-			 mainPanel.add("gameScreen", gameScreen);
-			 mainPanel.add("lobby", lobby);
+			 mainPanel.add(createGame.getName(), createGame);
+			 mainPanel.add(waiting.getName(), waiting);
+			 mainPanel.add(gameScreen.getName(), gameScreen);
+			 mainPanel.add(lobby.getName(), lobby);
 			
 //			 mainPanel.add(gameOver);
 
@@ -136,10 +141,10 @@ public class ThinkTankGUI extends JFrame {
 	}
 
 	private boolean currentScreenIsGameScreen() {
-	    for (Component comp : cardLayout.getComponents() ) {
-            JPanel card = (JPanel)comp;
-            System.out.println(card.getName());
+	    for (Component comp : mainPanel.getComponents() ) {
 	        if (comp.isVisible() == true) {
+	            JPanel card = (JPanel)comp;
+	            System.out.println(card.getName());
 	            if (card.getName().equalsIgnoreCase("gameScreen")) return true;
 	            return false;
 	        }
