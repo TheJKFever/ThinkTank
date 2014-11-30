@@ -3,6 +3,7 @@ package Server;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -28,17 +29,17 @@ public class CentralServerConnectionToClient extends ConnectionToClient {
 			case "new game":
 				System.out.println("ATTEMPTING TO CREATE NEW GAME");
 				try {
-					port = centralServer.newGame();
+					port = centralServer.newGame((String)event.data);
 					System.out.println("GAME CREATED, SENDING INFO TO CLIENT");
 					sendEvent(new Event("new game", port));
+					centralServer.broadcast(new Event("games info", centralServer.getGamesVector()));
 					System.out.println("NEW GAME CREATED SUCCESSFULLY");
 				} catch (PortNotAvailableException pnae) {
 					System.out.println("FAILED TO CREATE NEW GAME");
-					sendEvent(new Event("new game", -1));
+					sendEvent(new Event("new game", "No ports available", false));
 				}
 				break;
 			case "join game":
-				// TODO: this should send a list of games with their ports back to the client
 				List<Integer> activePorts = new ArrayList<Integer>(centralServer.games.keySet());
 				System.out.println("PRINTING ACTIVE PORTS");
 				for (Integer i: activePorts) {
@@ -48,6 +49,8 @@ public class CentralServerConnectionToClient extends ConnectionToClient {
 				sendEvent(new Event("join game", port));
 				System.out.println("TOLD CLIENT TO JOIN GAME ON PORT " + port);
 				break;
+			case "update games":
+				this.sendEvent(new Event("games info", centralServer.getGamesVector()));
 			case "create profile":
 				// TODO: Handle Create Profile
 				break;
@@ -74,7 +77,7 @@ public class CentralServerConnectionToClient extends ConnectionToClient {
 			while ((dataFromClient = in.readObject()) != null) {
 				receive(dataFromClient);
 			}
-		} catch (EOFException eof) {
+		} catch (EOFException|SocketException e) {
 			centralServer.release(this);
 		} catch (IOException e) {
 			e.printStackTrace();

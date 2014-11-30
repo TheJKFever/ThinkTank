@@ -1,34 +1,46 @@
 package Client;
 
 import java.awt.CardLayout;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.logging.Logger;
 
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import Game.Event;
+import Game.Helper;
 import Global.Settings;
+import Screens.CreateGameScreen;
 import Screens.GameScreen;
+import Screens.LobbyScreen;
 import Screens.MainMenuScreen;
 import Screens.WaitingScreen;
 
 public class ThinkTankGUI extends JFrame {
 	public static Logger logger = Logger.getLogger("ThinkTankClient.log");
-	private ConnectionToCentralServer centralConnection;
+	public ConnectionToCentralServer centralConnection;
 	private CardLayout cardLayout = new CardLayout();
 	private JPanel mainPanel;
 	public MainMenuScreen mainMenu;
 	//	private StatsScreen stats;
 	//	private CreateProfileScreen createProfile;
-	//	private CreateGameScreen createGame;
+	public CreateGameScreen createGame;
 	public WaitingScreen waiting;
-	//	private JoinGameScreen joinGame;
+	public LobbyScreen lobby;
 	public GameScreen gameScreen;
 	//	private GameOverScreen gameOver;
+	private JMenuBar menuBar;
+	private JMenu menu;
+	private JMenuItem mainMenuItem, exitItem;
 	public boolean loggedIn = false;
 	
 	public ThinkTankGUI(String host, int port) {
@@ -43,25 +55,38 @@ public class ThinkTankGUI extends JFrame {
 			    @Override
 			    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
 			    	try {
-			    		centralConnection.close();
-				    	if (gameScreen.gameConnection !=null) {
-				    		gameScreen.gameConnection.thread.interrupt();
-				    		gameScreen.gameConnection.close();
-				    	}
-					} catch (IOException e) {
+			    		if (inGameConfirmForeit(ThinkTankGUI.this)) {
+				    		centralConnection.close();
+					    	if (gameScreen.gameConnection !=null) {
+					    		gameScreen.gameConnection.thread.interrupt();
+					    		gameScreen.gameConnection.close();
+					    	}
+					    	ThinkTankGUI.this.dispose();
+			    		}
+		    		} catch (IOException e) {
 						e.printStackTrace();
+			            System.exit(0);
 					}
-		            System.exit(0);
 			    }
 			});
 
-			System.out.println("host: " + host + " and port: " + port);
+			Helper.log("Connecting to " + host + ":" + port);
 			centralConnection = new ConnectionToCentralServer(this, host, port); // Connects to central server
-			System.out.println("Got here");
 			mainPanel = new JPanel();
 			mainPanel.setPreferredSize(new Dimension(Settings.GUI_WIDTH, Settings.GUI_HEIGHT));
 			mainPanel.setLayout(cardLayout);
 			add(mainPanel);
+			
+			menuBar = new JMenuBar();
+			menu = new JMenu("File");
+			menuBar.add(menu);
+			mainMenuItem = new JMenuItem("Main Menu");
+			mainMenuItem.addActionListener(new MainMenuListener(this));
+			exitItem = new JMenuItem("Exit");
+			exitItem.addActionListener(new CloseWindowListener(this));
+			menu.add(mainMenuItem);
+			menu.add(exitItem);
+			this.setJMenuBar(menuBar);
 
 			/* SCREENS:
 			 * Main Menu
@@ -74,52 +99,61 @@ public class ThinkTankGUI extends JFrame {
 			 * Game Over
 			 */
 			 mainMenu = new MainMenuScreen(this); 
-//			 stats = new StatsScreen(); 
-//			 createProfile = new CreateProfileScreen(); 
-//			 createGame = new CreateGameScreen(); 
+//			 stats = new StatsScreen(this); 
+//			 createProfile = new CreateProfileScreen(this); 
+			 createGame = new CreateGameScreen(this);
 			 waiting = new WaitingScreen(); 
-//			 joinGame = new JoinGameScreen(); 
+			 lobby = new LobbyScreen(this);
 			 gameScreen = new GameScreen(this);
-//			 gameOver = new GameOverScreen(); 
+//			 gameOver = new GameOverScreen(this); 
 
 			 mainPanel.add("mainMenu", mainMenu);
 //			 mainPanel.add("stats", stats);
 //			 mainPanel.add("createProfile", createProfile);
-//			 mainPanel.add("createGame", createGame);
+			 mainPanel.add("createGame", createGame);
 			 mainPanel.add("waiting", waiting);
 			 mainPanel.add("gameScreen", gameScreen);
-//			 mainPanel.add("joinGame", joinGame);
-			
+			 mainPanel.add("lobby", lobby);
 			
 //			 mainPanel.add(gameOver);
 
-
-			// TODO: put all  of these in action listeners
 			 cardLayout.show(mainPanel, "mainMenu");
-//			 cardLayout.show(mainPanel, "stats");
-//			 cardLayout.show(mainPanel, "createProfile");
-//			 cardLayout.show(mainPanel, "createGame");
-//			 cardLayout.show(mainPanel, "waiting");
-//			 cardLayout.show(mainPanel, "gameScreen");
-//			 cardLayout.show(mainPanel, "joinGame");
 
-
-			// Global JFrame Settings
+			 Helper.log("Finished ThinkTankGUI Constructor");
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+	
+	private boolean inGameConfirmForeit(ThinkTankGUI gui) {
+		if (currentScreenIsGameScreen()) {
+			int confirmation = JOptionPane.showConfirmDialog (null, "Are you sure you want to forfeit this game?","Warning",JOptionPane.YES_NO_OPTION);
+			if(confirmation == JOptionPane.YES_OPTION) return false;
+		} 
+		return true;
+	}
 
-	public void startNewGame() {
-		System.out.println("GUI: START NEW GAME CLICKED");
-		centralConnection.sendEvent(new Event("new game"));
-		cardLayout.show(mainPanel, "waiting");
+	private boolean currentScreenIsGameScreen() {
+	    for (Component comp : mainPanel.getComponents() ) {
+	        if (comp.isVisible() == true) {
+	            JPanel card = (JPanel)comp;
+	            if (card.getName().equalsIgnoreCase("gameScreen")) return true;
+	            return false;
+	        }
+	    }
+	    return false;
+	}
+
+	public void startNewGame(String name) {
+		Helper.log("GUI: START NEW GAME CLICKED");
+		centralConnection.sendEvent(new Event("new game", name));
+		goTo("waiting");
 	}
 	
 	public void joinGame() {
-		System.out.println("GUI: joinGame()");
+		Helper.log("GUI: joinGame()");
 		// Go to lobby
 		// Select available game
 		// get port from that game
@@ -127,24 +161,59 @@ public class ThinkTankGUI extends JFrame {
 	}
 	
 	public void joinGame(int port) {
-		System.out.println("GUI: joinGame(port)");
+		Helper.log("GUI: joinGame(" + port + ")");
 		// make connection to game server
 		// store connection in gameScreen
 		// if connection made go to waiting screen
 		if (gameScreen.connectToGameServer(Settings.Development.HOST, port)) {
 			System.out.println("GUI: gameScreen connected to game server");
-			cardLayout.show(mainPanel, "waiting");
+			goTo("waiting");
 			gameScreen.gameConnection.thread.start();
 		} else {
 			throw new RuntimeException("Could not create game in joinGame");
 		}
 	}
 
-	public void startGame() {
-		System.out.println("GUI: STARTGAME()");
-		cardLayout.show(mainPanel, "gameScreen");
+	public void goTo(String page) {
+		Helper.log("GUI: Going to page: " + page);
+		cardLayout.show(mainPanel, page);
 	}
-
+	
+	public class MainMenuListener implements ActionListener {
+		public ThinkTankGUI gui;
+		public MainMenuListener(ThinkTankGUI gui) {
+			this.gui = gui;
+		}
+		public void actionPerformed(ActionEvent arg0) {
+			// TODO: if in the game, option page to confirm, are you sure you want to forfeit?
+    		if (inGameConfirmForeit(gui)) {
+    			gui.goTo("mainMenu");
+    		}
+		}
+	}
+		
+	public class CloseWindowListener implements ActionListener {
+		public ThinkTankGUI gui;
+		public CloseWindowListener(ThinkTankGUI gui) {
+			this.gui = gui;
+		}
+		public void actionPerformed(ActionEvent e) {
+	    	try {
+	    		if (inGameConfirmForeit(gui)) {
+		    		gui.centralConnection.close();
+			    	if (gui.gameScreen.gameConnection !=null) {
+			    		gui.gameScreen.gameConnection.thread.interrupt();
+			    		gui.gameScreen.gameConnection.close();
+			    	}
+			    	gui.dispose();
+	    		}
+		    } catch (IOException ioe) {
+		    	ioe.printStackTrace();
+	            System.exit(0);
+			}
+		}
+	}
+	
 	public static void main(String[] args) {
 		ThinkTankGUI gui = new ThinkTankGUI(Settings.Development.HOST, Settings.Development.SERVER_PORT);
 	}

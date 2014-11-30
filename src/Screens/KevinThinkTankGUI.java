@@ -1,6 +1,5 @@
 package Client;
 
-import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -9,8 +8,6 @@ import java.net.UnknownHostException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
-import Helper.Helper;
 
 public class ThinkTank extends JFrame {
 	private ThinkTankClient connection;

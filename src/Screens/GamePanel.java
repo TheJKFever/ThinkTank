@@ -2,7 +2,6 @@ package Screens;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -20,15 +19,15 @@ import Entities.Brain;
 import Entities.Entity;
 import Entities.ThoughtPool;
 import Game.GameState;
+import Game.Helper;
 import Game.Player;
 import Global.Settings;
 
 public class GamePanel extends JPanel {
 
 	private static final long serialVersionUID = 123783444588707640L; // not necessary
-	
-	public GameScreen gameScreen;
 	public GameState gameState;
+	private GameScreen gameScreen;
 	HashMap<String, Image> imageCache;
 	Player player;
 	
@@ -67,7 +66,7 @@ public class GamePanel extends JPanel {
 	
 	public GamePanel(GameScreen gameScreen) {
 		super();
-		log("GAMEPANEL: IN CONSTRUCTOR");
+		Helper.log("Creating new GamePanel");
 		this.gameScreen = gameScreen;
 		this.setBackground(Color.black);
 		this.setDoubleBuffered(true);
@@ -82,7 +81,7 @@ public class GamePanel extends JPanel {
 		this.imageCache = new HashMap<String, Image>();
 		this.player = null;
 	}
-	
+
 	public void paint(Graphics g) {
 		super.paint(g);
 		this.gameState = this.gameScreen.engine.gameState;
@@ -122,8 +121,8 @@ public class GamePanel extends JPanel {
 	}
 	
 	public void render(Graphics g) {
-		log("GAMEPANEL: RENDER");	
-		
+		Helper.log("GAMEPANEL: RENDER");
+			
 		// rotate screen if player is on team 2
 		Graphics2D g2d = (Graphics2D) g;
 		if (this.player != null) {
@@ -133,14 +132,13 @@ public class GamePanel extends JPanel {
 		      	g2d.rotate(Math.PI, w2, h2);				
 			}
 		}
-		
+	
 		drawMap(g);
 		drawThoughtPools(g2d);
 		drawBarriers(g2d);
 		drawBrains(g2d);
 		drawTanks(g2d);
 		drawShots(g2d);
-		
 		
 		// rotate screen back to normal before rendering HUD
 		if (this.player != null) {
@@ -220,11 +218,29 @@ public class GamePanel extends JPanel {
 	public void drawMap(Graphics g) {
 		g.setColor(Color.black);
 		// black background
+//<<<<<<< HEAD
+//		g.fillRect(0, 0, Settings.BOARD_WIDTH, Settings.BOARD_HEIGHT);
+//		
+//		
+//		// top wall
+//		g.setColor(Color.green);
+//		g.fillRect(0, 0, Settings.BOARD_WIDTH, 10);
+//		
+//		// left wall
+//		g.fillRect(0, 0, 10, Settings.BOARD_HEIGHT);
+//		
+//		// bottom wall
+//		g.fillRect(0, Settings.BOARD_HEIGHT-10, Settings.BOARD_WIDTH, 10);
+//		
+//		// right wall
+//		g.fillRect(Settings.BOARD_WIDTH - 10, 0, 10, Settings.BOARD_HEIGHT);
+//		g.setColor(Color.black);
+//=======
 		g.fillRect(0, 0, Global.Settings.BOARD_WIDTH, Global.Settings.BOARD_HEIGHT);
 	}
 	
 	public void drawBarriers(Graphics g) {
-		log("GAMEPANEL: DRAW BARRIERS");
+		Helper.log("GAMEPANEL: DRAW BARRIERS");
 		for (Barrier barrier: gameState.barriers) {
 			g.setColor(Barrier.color);
 			g.fillRect(barrier.x, barrier.y, barrier.width, barrier.height);
@@ -232,7 +248,7 @@ public class GamePanel extends JPanel {
 	}
 
 	public void drawThoughtPools(Graphics g) {
-		log("GAMEPANEL: DRAW THOUGHT POOLS");
+		Helper.log("GAMEPANEL: DRAW THOUGHT POOLS");
 		for (ThoughtPool thoughtPool: gameState.thoughtPools) {
 			g.setColor(thoughtPool.color);
 			g.fillRect(thoughtPool.x, thoughtPool.y, thoughtPool.width, thoughtPool.height);
@@ -240,16 +256,49 @@ public class GamePanel extends JPanel {
 	}
 	
 	public void drawBrains(Graphics g) {
-		log("GAMEPANEL: DRAW BRAINS");
+		Helper.log("GAMEPANEL: DRAW BRAINS");
 		for (Brain brain: gameState.brains) {
+<<<<<<< HEAD
 		
 			// TODO: RENDER BRAIN EXPLOSION
+=======
+>>>>>>> d195650dff6652e3c2512162ad1a6f2bd3dd0e8a
 			if (brain.isVisible()) {
+				System.out.println("path is: " + brain.imagePath);
 				g.drawImage(getImg(brain.imagePath), brain.x, brain.y, this);
 			}
 			if (brain.isDying()) {
 				brain.die();
 			}
+<<<<<<< HEAD
+=======
+			
+			System.out.println(brain.team.num);
+			 // draw in two different placed based on team
+			if (brain.team.num == 1) {
+				g.setColor(Color.white);
+				g.drawRect(20, 20, 100, 20);
+				g.setColor(Color.green);
+				g.fillRect(20, 20, brain.health, 20);
+	
+				Font small = new Font("Helvetica", Font.BOLD, 14);
+//				FontMetrics metr = this.getFontMetrics(small);
+				g.setColor(Color.white);
+				g.setFont(small);
+				g.drawString("Brain" + brain.team.num, 140, 20);
+			} else {
+				g.setColor(Color.white);
+				g.drawRect(600, 20, 100, 20);
+				g.setColor(Color.green);
+				g.fillRect(600, 20, brain.health, 20);
+	
+				Font small = new Font("Helvetica", Font.BOLD, 14);
+//				FontMetrics metr = this.getFontMetrics(small);
+				g.setColor(Color.white);
+				g.setFont(small);
+				g.drawString("Brain" + brain.team.num, 740, 20);
+			}
+>>>>>>> d195650dff6652e3c2512162ad1a6f2bd3dd0e8a
 		}
 	}
 	
@@ -262,7 +311,7 @@ public class GamePanel extends JPanel {
 	}
 	
 	public void drawEntities(Graphics g, Vector<? extends Entity> entities) {
-		log("GAMEPANEL: DRAW ENTITIES");
+		Helper.log("GAMEPANEL: DRAW ENTITIES");
 		
 		for (Entity e : entities) {
 			if (e.isVisible()) {
@@ -273,10 +322,4 @@ public class GamePanel extends JPanel {
 			}
 		}
 	}
-	
-    public void log(String msg) {
-    	if (Settings.DEBUG) {
-    		System.out.println(msg);
-    	}
-    }
 }

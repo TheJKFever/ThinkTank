@@ -37,6 +37,7 @@ public class Brain extends Entity  {
 			this.setImagePath(IMAGE_BRAIN_2);
 	        this.y = 20;
 		}
+		gs.brains.addElement(this);
 	}
 	
 	public void update() {

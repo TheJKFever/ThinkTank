@@ -32,8 +32,6 @@ public class GameState implements Serializable {
 	public Tank tankForThisClient = null;
 	
 	public GameState() {
-		System.out.println("GAMESTATE: CONSTRUCTOR");
-		
 		inGame = false;
 		
 		barriers = new Vector<Barrier>();
@@ -44,13 +42,10 @@ public class GameState implements Serializable {
 		tanks = new Vector<Tank>();
 		teams = new Team[2];
 		
-		// create teams with brains
+		// create teams
 		for (int i=0; i < teams.length; i++) {
 			teams[i] = new Team(i+1, this);
-			Brain b = new Brain(teams[i], this);
-			teams[i].brain = b;
-			brains.add(b);	
-		} // TODO: make all the same style
+		}
 		
 		setUpMap();
 		
@@ -86,15 +81,20 @@ public class GameState implements Serializable {
 	}
 	
 	public boolean playable() {
-		System.out.println("GAMESTATE: PLAYABLE()?");
-		
+		Helper.log("GAMESTATE: PLAYABLE()?");
+//		if (teams != null) {
+//			Helper.log("GAMESTATE: TEAM 1 SIZE" + teams[0].players.size() + " TEAM 2 SIZE" + teams[1].players.size());
+//		} else {
+//			Helper.log("GAMESTATE: .teams is NULL");
+//		}
+
 		if (teams != null && 
 			teams[0].players.size() > 0 && 
 			teams[1].players.size() > 0) {
-			System.out.println("GAMESTATE: YES, PLAYABLE");
+			Helper.log("GAMESTATE: YES, PLAYABLE");
 				return true;
 		} else {	
-			System.out.println("GAMESTATE: NO, NOT PLAYABLE");
+			Helper.log("GAMESTATE: NO, NOT PLAYABLE");
 			return false;
 		}
 	}
@@ -128,7 +128,7 @@ public class GameState implements Serializable {
 	}
 	
 	public void update() {
-		System.out.println("GAMESTATE: UPDATE");
+		// Helper.log("GAMESTATE: UPDATE");
 		
 		// tanks
 		for (Tank t: tanks) {

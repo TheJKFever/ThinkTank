@@ -2,9 +2,12 @@ package Client;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.Vector;
 import java.util.logging.Level;
 
 import Game.Event;
+import Game.Helper;
+import Server.GameObject;
 
 public class ConnectionToCentralServer extends ConnectionToServer {
 	public ThinkTankGUI gui;
@@ -28,6 +31,11 @@ public class ConnectionToCentralServer extends ConnectionToServer {
 				else {
 					gui.joinGame(port);
 				}
+				break;
+			case "games info":
+				Vector<GameObject> games = (Vector<GameObject>)event.data;
+				Helper.log("Received update game event from central server, updated " + games.size() + " games.");
+				gui.lobby.updateGames(games);
 				break;
 			case "join game":
 				port = (int)event.data;

@@ -18,6 +18,7 @@ public class Team implements Serializable  {
 		players = new Vector<Player>();
 		this.num = num;
 		this.gs = gs;
+		brain = new Brain(this, gs);
 	}
 	
 	public Player newPlayer() {

@@ -1,13 +1,15 @@
 package Client;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import Game.Event;
-import Global.Settings;
+import Game.Helper;
 
 public abstract class ConnectionToServer extends Socket implements Runnable {
 	public ObjectInputStream in;
@@ -15,10 +17,10 @@ public abstract class ConnectionToServer extends Socket implements Runnable {
 	
 	public ConnectionToServer(String host, int port) throws UnknownHostException, IOException {
 		super(host, port);
-		if (Settings.DEBUG) System.out.println("CONNECTIONTOSERVER: CONSTRUCTOR");
+		Helper.log("CONNECTIONTOSERVER: CONSTRUCTOR");
 		out = new ObjectOutputStream(getOutputStream());
 		in = new ObjectInputStream(getInputStream());
-		if (Settings.DEBUG) System.out.println("CONNECTIONTOSERVER: GOT INPUT AND OUTPUT STREAMS");
+		Helper.log("CONNECTIONTOSERVER: GOT INPUT AND OUTPUT STREAMS");
 	}
 	
 	public abstract void receive(Object obj);
@@ -34,27 +36,38 @@ public abstract class ConnectionToServer extends Socket implements Runnable {
 	}
 
 	public void sendEvent(Event event) {
-//		System.out.println("SENDING EVENT:\n" + event);
+		// System.out.println("SENDING EVENT:\n" + event);
 		send(event);
 	}
 	
 	private void listen() {
+		try {
 		// Listen for messages from server
 		Object dataFromServer;
-		try {
-			while ((dataFromServer = in.readObject()) != null) {
-				receive(dataFromServer);
+			while (true) {
+				if (this.isConnected()) {
+						if ((dataFromServer = in.readObject()) != null) {
+							receive(dataFromServer);
+						}
+				} else {
+					this.close();
+				}
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (EOFException|SocketException e) {
+			try {
+				this.close();
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+			}
 		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	@Override
 	public void run() {
-		System.out.println("CONNECTIONTOSERVER: RUN()");
 		listen();
 	}
 }

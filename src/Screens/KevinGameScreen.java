@@ -2,26 +2,21 @@ package Client;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+import javax.swing.Renderer;
 
 import Entities.Barrier;
 import Entities.Brain;
 import Entities.Shot;
 import Entities.Tank;
+import Game.GameState;
 
-public class GameScreen extends JPanel implements Runnable {
+public class KevinGameScreen extends JPanel implements Runnable {
 	JPanel chatPanel;
 	public GameState gs;
 	Dimension d;
@@ -39,7 +34,7 @@ public class GameScreen extends JPanel implements Runnable {
 
 	private Thread animator;
 
-	public GameScreen() {
+	public KevinGameScreen() {
 		gs = new GameState();
 		addKeyListener(new TAdapter());
 		setFocusable(true);

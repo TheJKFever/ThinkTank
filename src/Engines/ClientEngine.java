@@ -3,19 +3,18 @@ package Engines;
 import java.awt.event.KeyEvent;
 import java.util.concurrent.ArrayBlockingQueue;
 
-
 //import Client.ConnectionToGameServer;
 import Client.UserInputHandler;
 import Game.Event;
 import Game.GameState;
+import Game.Helper;
 import Game.Player;
 import Game.SimpleKeyEvent;
 import Global.Settings;
 import Screens.GamePanel;
 import Screens.GameScreen;
 
-public class ClientEngine implements Runnable {
-	
+public class ClientEngine extends Engine {
 	
 	public Player player;
 	public GameState gameState;
@@ -25,23 +24,25 @@ public class ClientEngine implements Runnable {
 	GamePanel gamePanel;
 	
 	public ClientEngine(GameScreen gameScreen) {
-		System.out.println("ClientEngine: IN CONSTRUCTOR");
 		this.gameScreen = gameScreen;
 		this.gamePanel = gameScreen.gamePanel;
-		this.gameState = null;
+		this.gameState = new GameState();
 		engineThread = new Thread(this);
+		Helper.log("Created new ClientEngine");
 	}
 
-	public void startGame() {
+	public void start() {
 		engineThread.start();
 	}
 
 	public void getGameStateFromServer() {
-//		log("CLIENT ENGINE: GETTING GAME STATE FROM SERVER");
+		Helper.log("CLIENT ENGINE: GETTING GAME STATE FROM SERVER");
 		
 		GameState newGameState = gameScreen.gameConnection.getGameStateFromServer();
+//		if (newGameState!=null) {
+//			gameState = newGameState;
 		while (newGameState == null) {
-//			log("CLIENT ENGINE: GAME STATE == NULL, TRYING AGAIN in a few");
+			Helper.log("CLIENT ENGINE: GAME STATE == NULL, TRYING AGAIN in a few");
 			newGameState = gameScreen.gameConnection.getGameStateFromServer();
 			try {
 				Thread.sleep(Settings.DELAY/3);
@@ -49,36 +50,47 @@ public class ClientEngine implements Runnable {
 				System.out.println("CLIENT ENGINE: INTERRUPTED WHILE WAITING FOR GAME STATE");
 			}
 		}
-		gameState = newGameState;
-		log("CLIENT ENGINE: GOT GAME STATE");
-		log(gameState.toString());
+		
+//		while (newGameState == null) {
+//			Helper.log("CLIENT ENGINE: GAME STATE == NULL, TRYING AGAIN in a few");
+//			newGameState = gameScreen.gameConnection.getGameStateFromServer();
+//			try {
+//				Thread.sleep(Globals.DELAY/5);
+//			} catch (InterruptedException ie) {
+//				Helper.log("CLIENT ENGINE: INTERRUPTED WHILE WAITING FOR GAME STATE");
+//			}
+//		}
+//		gameState = newGameState;
+		// Helper.log("CLIENT ENGINE: GOT GAME STATE");
+		// Helper.log(gameState);
 	}
 	
 	public void run() {
-		log("CLIENT ENGINE: THREAD STARTED");
-		long beforeTime;
+		Helper.log("CLIENT ENGINE: THREAD STARTED");
+		long beforeTime, timeDiff, sleep;
 		beforeTime = System.currentTimeMillis();
 		
-		getGameStateFromServer();
+//		getGameStateFromServer();
 		
-//		log("CLIENT ENGINE: About to paint gamePanel for the first time");
+		Helper.log("CLIENT ENGINE: About to paint gamePanel for the first time");
 		gamePanel.repaint();
 		
-//		log("CLIENT ENGINE: Adding UserInputHandler");
+		Helper.log("CLIENT ENGINE: Adding UserInputHandler");
 		gamePanel.addKeyListener(new UserInputHandler(this.gameScreen));
+
 
 		while (gameState.inGame) {
 			getGameStateFromServer();
+			processInput();
 			this.player.tank = gameState.tankForThisClient;
-			processUserInput();
 			gameState.update();
 			gamePanel.repaint();
 			waitIfDoneEarly(beforeTime);
 			beforeTime = System.currentTimeMillis();
-			log("Thoughts: " + player.tank.thoughts);
-			log("Health: " + player.tank.health + "/10");
-			log("Tank.y: " + player.tank.y);
-			log("Tank.x: " + player.tank.x);
+			Helper.log("Thoughts: " + player.tank.thoughts);
+			Helper.log("Health: " + player.tank.health + "/10");
+			Helper.log("Tank.y: " + player.tank.y);
+			Helper.log("Tank.x: " + player.tank.x);
 		}
 	}
 	
@@ -95,12 +107,12 @@ public class ClientEngine implements Runnable {
 		try {
 			Thread.sleep(sleep);
 		} catch (InterruptedException e) {
-			log("interrupted");
+			Helper.log("interrupted");
 		}
 	}
 	
-	public void processUserInput() {
-//		log("CLIENT ENGINE: PROCESSING USER INPUT");
+	public void processInput() {
+		Helper.log("CLIENT ENGINE: PROCESSING USER INPUT");
 		synchronized(eventQ) {
 			for (Event event: eventQ) {
 				if (event.type == "key event") {
@@ -113,12 +125,6 @@ public class ClientEngine implements Runnable {
 				}
 			}
 			eventQ.clear();
-		}
-	}
-	
-	public void log(String msg) {
-		if (Settings.DEBUG) {
-			System.out.println(msg);
 		}
 	}
 }

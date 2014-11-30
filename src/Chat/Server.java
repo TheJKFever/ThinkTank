@@ -5,18 +5,21 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
 
+import Game.Helper;
 import Global.Settings;
 
 public class Server {
-	
-	Vector<ChatThread> chatVt = new Vector<ChatThread>();
+	public ChatThread ct;
+	public Vector<ChatThread> chatVt = new Vector<ChatThread>();
+
 	public Server(int port) {
 		try {
 			ServerSocket ss = new ServerSocket(port);
 			while(true) {
 				Socket s = ss.accept();
 				int index = chatVt.size();
-				ChatThread ct = new ChatThread(s, this, index);
+				Helper.log("Creating new ChatThread");
+				ct = new ChatThread(s, this, index);
 				ct.send("I:"+index);
 				
 				chatVt.add(ct);

@@ -6,11 +6,12 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 import Game.Event;
 import Game.GameState;
+import Game.Helper;
 import Game.SimpleKeyEvent;
 import Global.Settings;
 import Server.GameServerConnectionToClient;
 
-public class ServerEngine implements Runnable {
+public class ServerEngine extends Engine {
 	
 	public GameState gameState;
 	Vector<GameServerConnectionToClient> clients;
@@ -20,17 +21,20 @@ public class ServerEngine implements Runnable {
 	private Thread engineThread;
 
 	public ServerEngine(Vector<GameServerConnectionToClient> clientConnections) {
-		log("SERVERENGINE: CONSTRUCTOR");
 		this.clients = clientConnections;
 		this.gameState = new GameState();	
 		engineThread = new Thread(this);
-//		log("SERVER ENGINE: INITIAL GAME STATE");
-//		log(gameState.toString());
+		// Helper.log("SERVER ENGINE: INITIAL GAME STATE: ");
+		// Helper.log(gameState);
+		Helper.log("Created new ServerEngine");
 	}
 	
+	public void start() {
+		engineThread.start();
+	}
 	
 	public void run() {
-		log("ServerEngine: run()");
+		Helper.log("ServerEngine: run()");
 		long beforeTime, timeDiff, sleep;
 		beforeTime = System.currentTimeMillis();
 		
@@ -39,7 +43,7 @@ public class ServerEngine implements Runnable {
 		startGame();
 		
 		while (gameState.inGame) {
-			processInputFromClients();
+			processInput();
 			gameState.update();
 			broadcastGameState();
 			
@@ -52,7 +56,7 @@ public class ServerEngine implements Runnable {
 			try {
 				Thread.sleep(sleep);
 			} catch (InterruptedException e) {
-				log("interrupted");
+				Helper.log("interrupted");
 			}
 			beforeTime = System.currentTimeMillis();
 			// TODO: kill server if all clients leave
@@ -60,9 +64,8 @@ public class ServerEngine implements Runnable {
 	}
 	
 	public void broadcastGameState() {
-		log("GAMESERVER: BROADCAST GAME STATE");
-		log(gameState.toString());
-		
+		// Helper.log("GAMESERVER: BROADCAST GAME STATE");
+		// Helper.log(gameState.toString());
 		Event e;
 		for (GameServerConnectionToClient client: clients) {
 			gameState.tankForThisClient = client.player.tank;
@@ -72,18 +75,18 @@ public class ServerEngine implements Runnable {
 	}
 
 	private void startGame() {
-		log("GAMESERVER: START GAME");
+		Helper.log("GAMESERVER: START GAME");
 		gameState.startGameClock();
 		for (GameServerConnectionToClient client:clients) {
 			client.sendEvent(new Event("start game"));
 		}
 	}
 
-	public void processInputFromClients() {
-//		log("GAMESERVER: PROCESSINPUTFROMCLIENTS");
+	public void processInput() {
+		Helper.log("GAMESERVER: PROCESSINPUTFROMCLIENTS");
 		synchronized(eventQ) {
 			for (Event event: eventQ) {
-//				log("GAMESERVER: PROCESSING EVENT:\n" + event);
+				Helper.log("GAMESERVER: PROCESSING EVENT:\n" + event);
 				switch(event.type) {
 					case "key event":
 						SimpleKeyEvent ke = (SimpleKeyEvent)(event.data);
@@ -94,21 +97,11 @@ public class ServerEngine implements Runnable {
 						}
 					break;
 					default:
-						log("SERVER ENGINE: DID NOT RECOGNIZE EVENT:\n" + event);
+						Helper.log("SERVER ENGINE: DID NOT RECOGNIZE EVENT:\n" + event);
 					// handle others...
 				}
 			}
 			eventQ.clear();
 		}
-	}
-	
-	public void log(String msg) {
-		if (Settings.DEBUG) {
-			System.out.println(msg);
-		}
-	}
-	
-	public void start() {
-		engineThread.start();
 	}
 }

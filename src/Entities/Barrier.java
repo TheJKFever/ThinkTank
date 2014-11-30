@@ -18,6 +18,7 @@ public class Barrier extends Entity {
         this.width = width;
         this.height = height;
         this.health = Integer.MAX_VALUE;
+    	gs.barriers.addElement(this);
     }
 
 	public void update() {

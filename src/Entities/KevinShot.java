@@ -2,8 +2,8 @@ package Entities;
 
 import javax.swing.ImageIcon;
 
-import Client.GameState;
-import Client.Globals;
+import Game.GameState;
+import Global.Settings;
 
 public class KevinShot extends Entity {
 	/*
@@ -18,7 +18,7 @@ public class KevinShot extends Entity {
 
 	// ADDED STUFF
 	private Weapon weapon;
-	private int weaponType = Globals.DEFAULT_WEAPON;
+	private int weaponType = Settings.DEFAULT_WEAPON;
 
 	// ADDED STUFF
 
