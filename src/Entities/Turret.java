@@ -19,11 +19,13 @@ public class Turret extends Entity{
 	
 	public boolean firing;
 	public int teamNumber;
+	public int shootFrequency;
 	
 	public Turret(int x, int y, int teamNum, GameState gs)
 	{
 		//System.out.println("Hey I am the turret!");
 		type="Turret";
+		this.shootFrequency=0;
 		this.gs=gs;
 		setX(x);
 		setY(y);
@@ -65,7 +67,7 @@ public class Turret extends Entity{
     	
     	//theta = wrapDegrees(theta + dtheta); 
     	//dtheta = 0;
-    	theta=wrapDegrees(theta);
+    	//theta=wrapDegrees(theta);
     	fireShot();
 
     	updateImage(theta);
@@ -256,8 +258,16 @@ public class Turret extends Entity{
     	
 		if (firing==true)
 		{
-			gs.shots.add(new Shot(shotX, shotY, this.theta, this.gs));
-			firing=false;
+			if (this.shootFrequency<15)
+			{
+				this.shootFrequency++;
+			}
+			else if (this.shootFrequency==15)
+			{
+				gs.shots.add(new Shot(shotX, shotY, this.theta, this.gs, player));
+				firing=false;
+				shootFrequency=0;
+			}
 		}
     }
 	

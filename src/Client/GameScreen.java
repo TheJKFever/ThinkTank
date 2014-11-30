@@ -59,11 +59,12 @@ public class GameScreen extends JPanel implements Runnable {
 	public void gameInit() {
 		log("gameInit()...");
 
-		tank = new Tank(1, this.gs);
 		player = new Player();
 		player.tank = tank;
+		tank = new Tank(1, this.gs, player);
+
 		gs.team1.players.add(player);
-		turret = new Turret(150, 350, 2, this.gs);
+		turret = new Turret(180, 350, 2, this.gs);
 		
 		gs.barriers.add(new Barrier(100, 100, 300, 10, this.gs));
 		gs.barriers.add(new Barrier(200, 200, 200, 10, this.gs));

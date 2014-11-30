@@ -41,6 +41,23 @@ public class DBwrite extends DB {
 				preparedStatement.setString(4, String.valueOf(player.numShot));
 				preparedStatement.executeUpdate();
 			}
+			
+			for (Player player:gs.team2.players)
+			{
+				String command="UPDATE DB "+
+						"SET kills = ?, "+
+						" death = ?, "+
+						" hit = ?, "+
+						" shot = ? "+
+						"WHERE team = '2' "+
+						"AND player = "+player.playerNumber;
+				preparedStatement=connection.prepareStatement(command);
+				preparedStatement.setString(1, String.valueOf(player.enemyKilled));
+				preparedStatement.setString(2, String.valueOf(player.death));
+				preparedStatement.setString(3, String.valueOf(player.numHit));
+				preparedStatement.setString(4, String.valueOf(player.numShot));
+				preparedStatement.executeUpdate();
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
