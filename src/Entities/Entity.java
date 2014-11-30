@@ -137,6 +137,12 @@ public abstract class Entity implements Serializable {
 		if (my.top <= other.bottom && my.top >= other.top) {
 			yCollision = true;
 			topCollision = true;
+		} else if (other.top <= my.bottom && other.top >= my.top) {
+			yCollision = true;
+			topCollision = true;
+		} else if (my.bottom >= other.top && my.bottom <= other.bottom) {
+			yCollision = true;
+			bottomCollision = true;
 		} else if (my.bottom >= other.top && my.bottom <= other.bottom) {
 			yCollision = true;
 			bottomCollision = true;
