@@ -136,9 +136,10 @@ public class ThinkTankGUI extends JFrame {
 	}
 
 	private boolean currentScreenIsGameScreen() {
-	    for (Component comp : mainPanel.getComponents() ) {
+	    for (Component comp : cardLayout.getComponents() ) {
+            JPanel card = (JPanel)comp;
+            System.out.println(card.getName());
 	        if (comp.isVisible() == true) {
-	            JPanel card = (JPanel)comp;
 	            if (card.getName().equalsIgnoreCase("gameScreen")) return true;
 	            return false;
 	        }

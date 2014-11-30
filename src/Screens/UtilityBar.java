@@ -1,4 +1,3 @@
-package Client;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;

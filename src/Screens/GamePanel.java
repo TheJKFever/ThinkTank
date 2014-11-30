@@ -148,8 +148,9 @@ public class GamePanel extends JPanel {
 		      	g2d.rotate(Math.PI, w2, h2);				
 			}
 		}
-		
-		drawHUD(g2d);
+		if (gameState.inGame) {
+			drawHUD(g2d);
+		}
 	
 		Toolkit.getDefaultToolkit().sync();
 		g2d.dispose();
@@ -258,21 +259,13 @@ public class GamePanel extends JPanel {
 	public void drawBrains(Graphics g) {
 		Helper.log("GAMEPANEL: DRAW BRAINS");
 		for (Brain brain: gameState.brains) {
-<<<<<<< HEAD
-		
-			// TODO: RENDER BRAIN EXPLOSION
-=======
->>>>>>> d195650dff6652e3c2512162ad1a6f2bd3dd0e8a
 			if (brain.isVisible()) {
 				System.out.println("path is: " + brain.imagePath);
 				g.drawImage(getImg(brain.imagePath), brain.x, brain.y, this);
 			}
 			if (brain.isDying()) {
 				brain.die();
-			}
-<<<<<<< HEAD
-=======
-			
+			}			
 			System.out.println(brain.team.num);
 			 // draw in two different placed based on team
 			if (brain.team.num == 1) {
@@ -298,7 +291,6 @@ public class GamePanel extends JPanel {
 				g.setFont(small);
 				g.drawString("Brain" + brain.team.num, 740, 20);
 			}
->>>>>>> d195650dff6652e3c2512162ad1a6f2bd3dd0e8a
 		}
 	}
 	

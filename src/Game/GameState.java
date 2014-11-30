@@ -56,6 +56,7 @@ public class GameState implements Serializable {
 	
 	public void startGameClock() {
 		startTime = System.nanoTime();
+		updateGameClock();
 	}
 	
 	
