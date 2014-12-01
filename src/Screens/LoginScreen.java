@@ -17,7 +17,7 @@ import Client.ThinkTankGUI;
 import Entities.ProfileObject;
 import Game.Event;
 
-public class CreateProfileScreen extends JPanel {
+public class LoginScreen extends JPanel {
 	public ThinkTankGUI gui;
 	private JLabel usernameLbl, passwordLbl;
 	public JTextField usernameTf, passwordTf;
@@ -29,7 +29,7 @@ public class CreateProfileScreen extends JPanel {
 	private Component verticalGlue;
 	private Component verticalGlue_1;
 	
-	public CreateProfileScreen(ThinkTankGUI gui) {
+	public LoginScreen(ThinkTankGUI gui) {
 		this.gui = gui;
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
@@ -74,7 +74,7 @@ public class CreateProfileScreen extends JPanel {
 		cancelBtn = new JButton("Cancel");
 		cancelBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CreateProfileScreen.this.gui.goTo(CreateProfileScreen.this.gui.MainMenuPage);
+				LoginScreen.this.gui.goTo(LoginScreen.this.gui.MainMenuPage);
 			}
 		});
 		buttonsP.add(cancelBtn);

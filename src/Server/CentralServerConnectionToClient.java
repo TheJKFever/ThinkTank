@@ -9,9 +9,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import Entities.Objects.ProfileObject;
+import Entities.ProfileObject;
 import Exceptions.PortNotAvailableException;
 import Game.Event;
+import Server.DB.UserAlreadyExistsException;
 
 public class CentralServerConnectionToClient extends ConnectionToClient {
 	CentralServer centralServer;
@@ -52,16 +53,21 @@ public class CentralServerConnectionToClient extends ConnectionToClient {
 				break;
 			case "update games":
 				this.sendEvent(new Event("games info", centralServer.getGamesVector()));
-//			case "create profile":
-//				// TODO: Handle Create Profile
-//				ProfileObject profile = (ProfileObject)event.data;
-//				boolean response = centralServer.newProfile(profile);
-//				if (response) {
-//					// send event to client saying "SUCCESS!!!"
-//				} else {
-//					// send event to client saying "FAILURE!!!"					
-//				}
-//				break;
+				break;
+			case "create profile":
+				System.out.println("CCTC: RECEIVED A CREATE PROFILE QUERY:" + event.data);
+				ProfileObject profile = (ProfileObject)event.data;
+				try {
+					boolean response = centralServer.newProfile(profile);
+					if (response) {
+						this.sendEvent(new Event("new profile", profile, true));
+					} else {
+//						this.sendEvent(new Event("new profile", "Creating profile did not work for some reason", false));
+					}
+				} catch (UserAlreadyExistsException e) {
+					this.sendEvent(new Event("new profile", e.getMessage(), false));
+				}
+				break;
 			case "login":
 				// TODO: Handle Login
 				// Login login = (Login)event.data;

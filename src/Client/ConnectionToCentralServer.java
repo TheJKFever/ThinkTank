@@ -5,7 +5,7 @@ import java.net.UnknownHostException;
 import java.util.Vector;
 import java.util.logging.Level;
 
-import Entities.Objects.GameObject;
+import Entities.GameObject;
 import Game.Event;
 import Game.Helper;
 
@@ -41,6 +41,9 @@ public class ConnectionToCentralServer extends ConnectionToServer {
 				port = (int)event.data;
 				System.out.println("CONNECTION TO CS: ABOUT TO TELL GUI TO JOIN GAME");
 				gui.joinGame(port);
+				break;
+			case "new profile":
+				gui.createProfile.createProfileResponse(event);
 				break;
 			default:
 				ThinkTankGUI.logger.log(Level.INFO, "Parse error. did not understand message: " + event);
