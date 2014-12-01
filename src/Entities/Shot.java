@@ -1,83 +1,110 @@
 package Entities;
 
+import javax.swing.ImageIcon;
+
 import Game.GameState;
 import Global.Settings;
 
 public class Shot extends Entity {
+	/*
+	 * static final String IMAGE_SHOT_UP = "images/bulletUp.png"; static final
+	 * String IMAGE_SHOT_RIGHT = "images/bulletRight.png"; static final String
+	 * IMAGE_SHOT_DOWN = "images/bulletDown.png"; static final String
+	 * IMAGE_SHOT_LEFT = "images/bulletLeft.png";
+	 */
+	// int shotSpeed = 4;
+	// int damage = 1;
+	// boolean exploding = false;
 
-	private static final long serialVersionUID = -5027836598744895479L;
-	
-	static final String IMAGE_SHOT_UP = "images/shots/bulletUp.png";
-    static final String IMAGE_SHOT_RIGHT = "images/shots/bulletRight.png";
-    static final String IMAGE_SHOT_DOWN = "images/shots/bulletDown.png";
-    static final String IMAGE_SHOT_LEFT = "images/shots/bulletLeft.png";
-    static final int SHOT_WIDTH_VERTICAL = 13;
+	private static final long serialVersionUID = 5824474896043889830L;
+	static final int SHOT_WIDTH_VERTICAL = 13;
     static final int SHOT_HEIGHT_VERTICAL = 16;
     static final int SHOT_WIDTH_HORIZONTAL = 16;
     static final int SHOT_HEIGHT_HORIZONTAL = 13;
     
-    int shotSpeed = 4;
-    int damage = 1;
-    boolean exploding = false;
+	// ADDED STUFF
+	public Weapon weapon;
+	private int weaponType = Settings.DEFAULT_WEAPON;
 
-    // TODO: CREATE EXPLOSION ANIMATION
-    // TODO: ENSURE THAT BULLETS LAUNCH FROM THE PROPER LOCATION
-    // TODO: REGULARIZE THE EXPLODING/DYING/VISIBLE METHODS
-    
-    public Shot(int x, int y, int theta, GameState gs) {
-    	this.gs = gs;
-        this.setX(x);
-        this.y = y;   
-        
-        this.theta = theta;
-        if (theta == 0) {
-        	setImagePath(IMAGE_SHOT_UP);
-        	width = SHOT_WIDTH_VERTICAL;
-        	height = SHOT_HEIGHT_VERTICAL;
-        } else if (theta == 90) {
-        	setImagePath(IMAGE_SHOT_RIGHT);
-        	width = SHOT_WIDTH_HORIZONTAL;
-        	height = SHOT_HEIGHT_HORIZONTAL;
-        }  else if (theta == 180) {
-        	setImagePath(IMAGE_SHOT_DOWN);
-        	width = SHOT_WIDTH_VERTICAL;
-        	height = SHOT_HEIGHT_VERTICAL;
-        }  else if (theta == 270) {
-        	setImagePath(IMAGE_SHOT_LEFT);
-        	width = SHOT_WIDTH_HORIZONTAL;
-        	height = SHOT_HEIGHT_HORIZONTAL;
-        }
- 
-    }
- 
-    public void update() {
-    	super.update();
+	// ADDED STUFF
+
+	public Weapon getWeapon() {
+
+		return weapon;
+
+	}
+
+	public void upgradeWeapon(int weapontype) {
+
+		this.weaponType = weapontype;
+
+	}
+
+	
+
+	public Shot(int x, int y, int theta, GameState gs,int weaponType) {
+		this.gs = gs;
+		this.setX(x);
+		this.y = y;
+		this.weaponType = weaponType;
+		this.theta = theta;
+
+		ImageIcon ii = null;
+
+		if (this.weaponType == Settings.DEFAULT_WEAPON) {
+
+			this.weapon = new DefaultWeapon(theta);
+
+		} else if (this.weaponType == Settings.DOUBLE_WEAPON) {
+
+			this.weapon = new DoubleStrengthWeapon();
+
+		} else if (this.weaponType == Settings.TRIPLE_WEAPON) {
+
+			this.weapon = new TripleStrengthWeapon();
+
+		} else if (this.weaponType == Settings.SUPER_WEAPON) {
+
+			this.weapon = new SuperWeapon();
+
+		}
+
+		ii = new ImageIcon(this.weapon.getImagePath());
+
+		setImage(ii.getImage());
+		this.setWidth(ii.getImage().getWidth(null));
+		this.setHeight(ii.getImage().getHeight(null));
+	}
+
+	public void update() {
+		super.update();
     	updatePosition();
     	// TODO: replace this will barriers at the walls of the map
 //    	checkForCollisionWithWalls();
     	checkForCollisionWithEntities(gs.barriers);
         checkForCollisionWithEntities(gs.brains);
         checkForCollisionWithEntities(gs.tanks);
-    }
     
-    public void executeCollisionWith(Entity entity) {
+	}
+	
+	public void executeCollisionWith(Entity entity) {
     	entity.hitBy(this);
     	die();
     }
-    
-    public void updatePosition() {
+
+	public void updatePosition() {
         if (theta == 0) {
-        	y -= shotSpeed;
+        	y -= weapon.shotSpeed;
         } else if (theta == 180) {
-        	y += shotSpeed;
+        	y += weapon.shotSpeed;
         }  else if (theta == 90) {
-        	x += shotSpeed;
+        	x += weapon.shotSpeed;
         }  else if (theta == 270) {
-        	x -= shotSpeed;
+        	x -= weapon.shotSpeed;
         }
     }
-    
-    public void die() {
+	
+	public void die() {
     	// TODO: SHOT EXPLOSION ON DEATH
     	this.exploding = true;
     	this.dying = true;

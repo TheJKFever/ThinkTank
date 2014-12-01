@@ -1,5 +1,6 @@
 package Entities;
 
+import java.awt.Image;
 import java.io.Serializable;
 import java.util.Vector;
 
@@ -10,120 +11,130 @@ import Global.Settings;
 public abstract class Entity implements Serializable {
 
 	private static final long serialVersionUID = -4882402415044435970L;
-	
+
 	GameState gs;
 	public boolean visible;
-    public String imagePath;
-    public boolean dying;
-    public boolean exploding;
-    public int x, y, dx, dy, dp, prevX, prevY, theta, dtheta, height, width, health;    
-    
-    public boolean yCollision = false;
-    public boolean xCollision = false;
-    //public boolean xCollisionPrev = false;
-    //public boolean yCollisionPrev = false;
-	
-    public boolean topCollision = false;
+	public String imagePath;
+	public boolean dying;
+	public boolean exploding;
+	public int x, y, dx, dy, dp, prevX, prevY, theta, dtheta, height, width, health;    
+
+	public boolean yCollision = false;
+	public boolean xCollision = false;
+	//public boolean xCollisionPrev = false;
+	//public boolean yCollisionPrev = false;
+
+	public boolean topCollision = false;
 	public boolean bottomCollision = false;
 	public boolean leftCollision = false;
 	public boolean rightCollision = false;
-	
-    
-    public Entity() {
-        visible = true;
-        x = 0;
-        y = 0;
-        dx = 0;
-        dy = 0;
-        dp = 0;
-        prevX = 0;
-        prevY = 0;
-        theta = 0;
-        dtheta = 0;
-        health = 0;
-        exploding = false;
-    }
 
-    public void die() {
-        visible = false;
-    }
+	public Image image;
 
-    public boolean isVisible() {
-        return visible;
-    }
+	public void setImage(Image image) {
+		this.image = image;
+	}
 
-    protected void setVisible(boolean visible) {
-        this.visible = visible;
-    }
+	public Image getImage() {
+		return image;
+	}
 
-    public void setImagePath(String path) {
-        this.imagePath = path;
-    }
 
-    public String getImagePath() {
-        return imagePath;
-    }
+	public Entity() {
+		visible = true;
+		x = 0;
+		y = 0;
+		dx = 0;
+		dy = 0;
+		dp = 0;
+		prevX = 0;
+		prevY = 0;
+		theta = 0;
+		dtheta = 0;
+		health = 0;
+		exploding = false;
+	}
 
-    public void setX(int x) {
-        this.x = x;
-    }
+	public void die() {
+		visible = false;
+	}
 
-    public int getX() {
-        return x;
-    }
+	public boolean isVisible() {
+		return visible;
+	}
 
-    public int getY() {
-        return y;
-    }
-    
-    public void setY(int y) {
-        this.y = y;
-    }
-    
-    public int getWidth() {
-        return width;
-    }
+	protected void setVisible(boolean visible) {
+		this.visible = visible;
+	}
 
-    public void setWidth(int width) {
-        this.width = width;
-    }
+	public void setImagePath(String path) {
+		this.imagePath = path;
+	}
 
-    public int getHeight() {
-        return height;
-    }
+	public String getImagePath() {
+		return imagePath;
+	}
 
-    public void setHeight(int height) {
-        this.height = height;
-    }
-    
-    public void setDying(boolean dying) {
-        this.dying = dying;
-    }
+	public void setX(int x) {
+		this.x = x;
+	}
 
-    public boolean isDying() {
-        return this.dying;
-    }
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public void setDying(boolean dying) {
+		this.dying = dying;
+	}
+
+	public boolean isDying() {
+		return this.dying;
+	}
 
 	public void hitBy(Shot shot) {
-		this.health -= shot.damage;
-//		log(this.getClass().getName() + " HEALTH = " + health);
+		this.health -= shot.weapon.damage;
+		//		log(this.getClass().getName() + " HEALTH = " + health);
 		if (this.health == 0) {
 			this.die();
 		}
 	}
-	
+
 	public Rect getRect() {
 		return new Rect(this.getX(), this.getY(), this.getWidth(), this.getHeight());
 	}
-	
+
 	public void update() {
 		prevX = x;
 		prevY = y;
 	}
-	
+
 	public boolean checkForCollisionWith(Rect other) {
 		log(this.getClass().getName() + ": collidesWith()");
-		
+
 		// reset values
 		yCollision = false;
 		xCollision = false;
@@ -131,9 +142,9 @@ public abstract class Entity implements Serializable {
 		rightCollision = false;
 		topCollision = false;
 		bottomCollision = false;
-		
+
 		Rect my = this.getRect();
-		
+
 		if (my.top <= other.bottom && my.top >= other.top) {
 			yCollision = true;
 			topCollision = true;
@@ -155,72 +166,72 @@ public abstract class Entity implements Serializable {
 			xCollision = true;
 			leftCollision = true;
 		}
-	
+
 		return (xCollision && yCollision);
 	}
-	
-    public void resetPositionOnCollision(Rect rect) {
-    	log(this.getClass().getName() + ": resetPositionOnCollision()");
-    	log("xCollision: " + xCollision + " yCollision: " + yCollision);
-    	
-    	boolean movedUp = false;
-    	boolean movedDown = false;
-    	boolean movedLeft = false;
-    	boolean movedRight = false;
-    	
-    	if (y - prevY > 0) {
-    		movedDown = true;
-    	} else if (y - prevY < 0) {
-    		movedUp = true;
-    	}
-    	
-    	if (x - prevX > 0) {
-    		movedRight = true;
-    	} else if (x - prevX < 0) {
-    		movedLeft = true;
-    	}
-    	
+
+	public void resetPositionOnCollision(Rect rect) {
+		log(this.getClass().getName() + ": resetPositionOnCollision()");
+		log("xCollision: " + xCollision + " yCollision: " + yCollision);
+
+		boolean movedUp = false;
+		boolean movedDown = false;
+		boolean movedLeft = false;
+		boolean movedRight = false;
+
+		if (y - prevY > 0) {
+			movedDown = true;
+		} else if (y - prevY < 0) {
+			movedUp = true;
+		}
+
+		if (x - prevX > 0) {
+			movedRight = true;
+		} else if (x - prevX < 0) {
+			movedLeft = true;
+		}
+
 		if (movedUp) {
 			y = rect.bottom + 1;
 		} else if (movedDown) {
 			y = rect.top - height - 1;
 		}
-    	
+
 		if (movedRight) {
 			x = rect.left - width - 1;
 		} else if (movedLeft){
 			x = rect.right + 1;
 		}	
-    }
-    
+	}
+
 	public void checkForCollisionWithEntities(Vector<? extends Entity> entities) {
-    	for (Entity entity: entities) {
-    		if ((this.hashCode() != entity.hashCode())) {
+		for (Entity entity: entities) {
+			if ((this.hashCode() != entity.hashCode())) {
 				if (checkForCollisionWith(entity.getRect())) {
 					executeCollisionWith(entity);	
 				}
-    		}
+			}
 		}
-    }
+	}
 
 	public abstract void executeCollisionWith(Entity e);
-	
-    public int wrapDegrees(int d) {
-    	while (d < 0) {
-    		d += 360;
-    	}
-    	while (d >= 360) {
-    		d -= 360;
-    	}
-    	return d;
-    }
-    
+
+	public int wrapDegrees(int d) {
+		while (d < 0) {
+			d += 360;
+		}
+		while (d >= 360) {
+			d -= 360;
+		}
+		return d;
+	}
+
 	public void log(String msg) {
 		if (Settings.DEBUG) {
 			System.out.println(msg);
 		}
 	}
-	
+
 	@Override
 	public String toString() {
 		return this.getClass().getName() + " {\n\tx: " + x + ", y: " + y + ", theta: " + theta + "\n\tdp: " + dp + ", dx: " + dx + ", dy: " + dy + ", dtheta: " + dtheta + ",\n\theight: " + height + ", width: " + width + ",\n\thealth: " + health + ", visible: " + visible + "\n}\n";

@@ -18,10 +18,10 @@ public class GameScreen extends JPanel {
 	
 	private static final long serialVersionUID = -1188091035895129077L;
 
-	ChatClient chatPanel;
+	public ChatClient chatPanel;
 
-	public JPanel utilityBar, sidePanel;
-
+	public JPanel  sidePanel;
+	public UtilityBar bar;
 	public ThinkTankGUI gui;
 	public ChatClient chat; //	TODO: <-- fix this
 	public ClientEngine engine;
@@ -32,7 +32,7 @@ public class GameScreen extends JPanel {
 		super();
 		Helper.log("Creating new GameScreen");
 		this.gui = gui;
-//		setLayout(new BorderLayout());
+		bar = new UtilityBar();
 		gamePanel = new GamePanel(this);
 		gamePanel.setPreferredSize(new Dimension(Settings.BOARD_WIDTH, Settings.BOARD_HEIGHT));
 		chatPanel = new ChatClient(gameConnection);
@@ -40,8 +40,14 @@ public class GameScreen extends JPanel {
 		sidePanel = new JPanel();
 		sidePanel.setPreferredSize(new Dimension(150, Settings.BOARD_HEIGHT));
 		sidePanel.add(chatPanel);
+		
+		bar.setPlayer(gamePanel.player);
+		
 		add(gamePanel, BorderLayout.CENTER);
 		add(sidePanel, BorderLayout.EAST);
+		
+		add(bar, BorderLayout.SOUTH);
+		
 		Helper.log("Created new GameScreen");
 	}
 	

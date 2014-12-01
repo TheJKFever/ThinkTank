@@ -44,6 +44,40 @@ public class Brain extends Entity  {
     	super.update();
 	}
 	
+public void setHealth(int type){
+		
+		if(type == 1){
+			if(health+20<100)
+				health += 20;
+			else
+				health = 100;
+			
+		}else if(type == 2){
+			
+			if(health+40<100)
+				health += 40;
+			else
+				health = 100;			
+		}else if(type == 3){
+			
+			if(health+60<100)
+				health += 60;
+			else
+				health = 100;
+			
+		}else{
+			
+			int add = (int)Math.random()*100;
+			
+			if(health+add<100)
+				health += add;
+			else
+				health = 100;
+			
+		}
+		
+	}
+	
 	public void die() {
     	// TODO: BRAIN DEATH
     	visible = false;
