@@ -11,6 +11,8 @@ public abstract class Weapon implements Serializable {
 	public static final int WIDTH_HORIZONTAL = 0;
 	public static final int HEIGHT_HORIZONTAL = 0;
 	
+	public int theta;
+	
 	public int shotSpeed;
 	public int damage;
 	public boolean exploding;
