@@ -67,8 +67,8 @@ public class Turret extends Entity implements Serializable {
     	{
     		if (this.team.num != tank.team.num)
     		{
-    			if (tank.getX()>(this.getX()-10)
-    					&& tank.getX()<(this.getX()+10)
+    			if (tank.getX()>(this.getX()-20)
+    					&& tank.getX()<(this.getX()+20)
 	    				&& tank.getY()<(this.getY()) 
 	    				&& tank.getY()>(this.getY()-RADIUS))//Enermy coming from upwards
 	    		{
@@ -78,8 +78,8 @@ public class Turret extends Entity implements Serializable {
 	        		firing=true;
 	        		break;
 	    		}
-	    		else if (tank.getY()>(this.getY()-10)
-	    				&& tank.getY()<(this.getY()+10)
+	    		else if (tank.getY()>(this.getY()-20)
+	    				&& tank.getY()<(this.getY()+20)
 	    				&& tank.getX()>(this.getX())
 	    				&& tank.getX()<(this.getX()+RADIUS))//Enermy coming from right
 	    		{
@@ -89,8 +89,8 @@ public class Turret extends Entity implements Serializable {
 	        		firing=true;
 	        		break;
 	    		}
-	    		else if ((tank.getX()>(this.getX()-10)
-	    				&& tank.getX()<(this.getX()+10)
+	    		else if ((tank.getX()>(this.getX()-20)
+	    				&& tank.getX()<(this.getX()+20)
 	    	 			&&tank.getY()>(this.getY()) 
 	    	 			&& tank.getY()<(this.getY()+RADIUS)))//Enermy coming from downwards
 	    	 	{
@@ -100,8 +100,8 @@ public class Turret extends Entity implements Serializable {
 	        		firing=true;
 	        		break;
 	    	 	}
-	    		else if (tank.getY()>(this.getY()-10)
-	    				&& tank.getY()<(this.getY()+10)
+	    		else if (tank.getY()>(this.getY()-20)
+	    				&& tank.getY()<(this.getY()+20)
 	    				&& tank.getX()<(this.getX())
 	    				&& tank.getX()>(this.getX()-RADIUS))//Enermy coming from left
 	    		{
