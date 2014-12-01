@@ -18,6 +18,7 @@ public class Player implements Serializable  {
 	public int numShots;
 	public int numHits;
 	public String username;
+	public boolean destroyedBrain;
 	
 	public Player(Team team, GameState gs) {
 		this.team = team;

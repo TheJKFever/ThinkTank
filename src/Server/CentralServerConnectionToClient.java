@@ -77,7 +77,13 @@ public class CentralServerConnectionToClient extends ConnectionToClient {
 				// TODO: Handle login
 				break;
 			case "get stats":
-				// TODO: get stats from database for username
+				try {
+					DB.StatsObject stats = this.centralServer.getStatsFor((String)event.data);
+					sendEvent(new Event("stats", stats, true));
+				} catch (Exception e) {
+					e.printStackTrace();
+					sendEvent(new Event("stats", e.getMessage(), false));
+				}
 				break;
 			default:
 				logger.log(Level.INFO, "Parse error. did not understand message: " + event);

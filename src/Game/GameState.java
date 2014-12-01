@@ -30,6 +30,7 @@ public class GameState implements Serializable {
 	public long timeElapsed;
 	public String displayTime;
 	public Tank tankForThisClient = null;
+	public int winningTeam;
 	
 	public GameState() {
 		inGame = false;
@@ -74,13 +75,19 @@ public class GameState implements Serializable {
 	
 	public void endGame() {
 		// TODO: implement endGame()
-		// mark game as not inGame
-		// calculate winner based on brain health
+		this.inGame = false;
+		calculateStats();
 		// display GAME OVER
 		// display winner
 		// display stats
 		// display replay button
 	}
+	
+	public void calculateStats() {
+		// calculate winner based on brain health
+		// set winningTeam to higher brainhealth, etc.
+	}
+
 	
 	public boolean playable() {
 		Helper.log("GAMESTATE: PLAYABLE()?");

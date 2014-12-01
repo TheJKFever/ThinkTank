@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import Engines.ServerEngine;
 import Game.Event;
+import Game.GameState;
 import Game.Helper;
 import Game.Player;
 
@@ -21,13 +22,15 @@ public class GameServer extends ServerSocket implements Runnable {
 	public Vector<GameServerConnectionToClient> clients;
 	public String name;
 	public Thread thread;
+	private CentralServer centralServer;
 			
-	public GameServer(String name, int port) throws IOException{
+	public GameServer(CentralServer cs, String name, int port) throws IOException{
 		super(port);
+		this.centralServer = cs;
 		this.name = name;
 		Helper.log("CREATED GAME SERVER SOCKET");
 		clients = new Vector<GameServerConnectionToClient>();
-		engine = new ServerEngine(clients);
+		engine = new ServerEngine(this, clients);
 		Helper.log("CREATED SERVER ENGINE");
 		name = "" + ID++;
 		this.thread = new Thread(this);
@@ -80,8 +83,7 @@ public class GameServer extends ServerSocket implements Runnable {
 		for (GameServerConnectionToClient client:clients) {
 			client.send(event);
 		}
-	}
-	
+	}	
 	
 	public void release(GameServerConnectionToClient thread) {
 		System.out.println("releasing connection to client from central server");
@@ -91,5 +93,9 @@ public class GameServer extends ServerSocket implements Runnable {
 		System.out.println("removed thread from vector: " + removed);
 		// TODO: released client, now needs to validate that game is still playable
 		// if so do nothing, if not, then signal to all players that the game has ended.
+	}
+
+	public void saveStats(GameState gameState) {
+		centralServer.saveStats(gameState);
 	}
 }

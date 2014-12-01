@@ -48,7 +48,8 @@ public class GameServerConnectionToClient extends ConnectionToClient {
 				gameServer.broadcast(event);
 				break;
 			case "set username":
-				this.player.username = (String)event.data;
+				this.player.setUsername((String)event.data);
+				break;
 			default:
 				Helper.log("COULD NOT RECOGNIZE EVENT: " + event);
 		}			

@@ -50,6 +50,9 @@ public class ConnectionToCentralServer extends ConnectionToServer {
 				System.out.println("recevied login: " + event);
 				gui.login.loginResponse(event);
 				break;
+			case "stats":
+				gui.stats.statsResponse(event);
+				break;
 			default:
 				ThinkTankGUI.logger.log(Level.INFO, "Parse error. did not understand message: " + event);
 		}
