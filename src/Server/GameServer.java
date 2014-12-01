@@ -56,18 +56,19 @@ public class GameServer extends ServerSocket implements Runnable {
 		engine.start(); // starts engineThread, and sets gs.inGame
 		 
 		// keep listening so even more players can join, even after min join
-		while(true) {
+		while (true) {
 			try {
-				Socket client = this.accept();
-				addPlayer(client, (teamNumber % 2) + 1);
+				Socket socket = this.accept();
+				GameServerConnectionToClient client = addPlayer(socket, (teamNumber % 2) + 1);
 				teamNumber++;
+				client.sendEvent(new Event("start game"));
 			} catch(IOException ioe) {
 				ioe.printStackTrace();
 			}
 		}
 	}
 
-	public void addPlayer(Socket socket, int team) {
+	public GameServerConnectionToClient addPlayer(Socket socket, int team) {
 		System.out.println("GAMESERVER: ADDING A CLIENT");
 		GameServerConnectionToClient client = new GameServerConnectionToClient(this, socket);
 		clients.addElement(client);
@@ -76,6 +77,7 @@ public class GameServer extends ServerSocket implements Runnable {
 
 		client.assignPlayer(p); // tells client which player is his
 		client.start();
+		return client;
 	}
 	
 	// go to ConnectionToClient
