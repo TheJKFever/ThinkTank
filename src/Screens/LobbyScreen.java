@@ -9,7 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import Client.ThinkTankGUI;
-import Entities.Objects.GameObject;
+import Entities.GameObject;
 import Game.Event;
 import Game.Helper;
 import Listeners.GoToPageListener;

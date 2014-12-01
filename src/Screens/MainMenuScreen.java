@@ -46,15 +46,15 @@ public class MainMenuScreen extends JPanel {
 		
 		add(Box.createVerticalGlue());
 		
-		startNewBtn.addActionListener(new GoToPageListener(gui, gui.CreateGamePage));
+		startNewBtn.addActionListener(new GoToPageListener(gui, ThinkTankGUI.CreateGamePage));
 		joinGameBtn.addActionListener(new JoinGameListener(gui));
+		createProfileBtn.addActionListener(new GoToPageListener(gui, ThinkTankGUI.CreateProfilePage));
 
-		
 		this.add(startNewBtn);
 		add(Box.createVerticalStrut(20));
 		this.add(joinGameBtn);
 		add(Box.createVerticalStrut(20));
-		if (!gui.loggedIn) {
+		if (gui.loggedIn) {
 			this.add(statsBtn);
 			add(Box.createVerticalStrut(20));
 			this.add(logoutBtn);

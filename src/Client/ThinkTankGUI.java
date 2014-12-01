@@ -16,6 +16,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import Entities.ProfileObject;
 import Game.Event;
 import Game.Helper;
 import Global.Settings;
@@ -33,7 +34,7 @@ public class ThinkTankGUI extends JFrame {
 	private JPanel mainPanel;
 	public MainMenuScreen mainMenu;
 	//	private StatsScreen stats;
-	private CreateProfileScreen createProfile;
+	public CreateProfileScreen createProfile;
 	public CreateGameScreen createGame;
 	public WaitingScreen waiting;
 	public LobbyScreen lobby;
@@ -43,6 +44,7 @@ public class ThinkTankGUI extends JFrame {
 	private JMenu menu;
 	private JMenuItem mainMenuItem, exitItem;
 	public boolean loggedIn = false;
+	public ProfileObject user = new ProfileObject("guest", null);
 	
 	public static final String MainMenuPage = "mainMenu", 
 			CreateGamePage = "createGame", 
@@ -129,7 +131,7 @@ public class ThinkTankGUI extends JFrame {
 			 mainPanel.add(WaitingPage, waiting);
 			 mainPanel.add(GameScreenPage, gameScreen);
 			 mainPanel.add(LobbyPage, lobby);
-//			 mainPanel.add("createProfile", createProfile);
+			 mainPanel.add(CreateProfilePage, createProfile);
 			
 //			 mainPanel.add(gameOver);
 
