@@ -64,8 +64,8 @@ public class ChatClient extends JPanel {
 		inputPanel.setLayout(new BorderLayout(0, 0));
 		tf = new JTextField(12);
 		inputPanel.add(tf, BorderLayout.NORTH);
-		sendAllBtn = new JButton("Send All");
-		sendTeamBtn = new JButton("Send Team");
+		sendAllBtn = new JButton("All");
+		sendTeamBtn = new JButton("Team");
 		buttonPanel.add(sendAllBtn);
 		buttonPanel.add(sendTeamBtn);
 		inputPanel.add(buttonPanel);
@@ -77,6 +77,8 @@ public class ChatClient extends JPanel {
 	public void setConnection(ConnectionToGameServer gameConnection) {
 		sendAllBtn.addActionListener(new SendBtnListener(gameConnection));
 		sendAllBtn.setEnabled(true);
+		sendTeamBtn.addActionListener(new SendTeamBtnListener(gameConnection));
+		sendTeamBtn.setEnabled(true);
 	}
 	
 	public class SendBtnListener implements ActionListener {
@@ -90,6 +92,18 @@ public class ChatClient extends JPanel {
 			String message = "["+ChatClient.this.gameScreen.gui.user.username +"] "+tf.getText();
 			tf.setText("");
 			gameConnection.sendEvent(new Event("chat", message));
+		}
+	}
+	public class SendTeamBtnListener implements ActionListener {
+		private ConnectionToGameServer gameConnection;
+		public SendTeamBtnListener(ConnectionToGameServer gameConnection) {
+			this.gameConnection = gameConnection;
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			String message = "["+ChatClient.this.gameScreen.gui.user.username +"] "+tf.getText();
+			tf.setText("");
+			gameConnection.sendEvent(new Event("team chat", message, gameScreen.engine.player));
 		}
 	}
 }

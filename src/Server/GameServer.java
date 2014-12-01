@@ -87,7 +87,17 @@ public class GameServer extends ServerSocket implements Runnable {
 				client.send(event);
 			}
 		}
-	}	
+	}
+	
+	public void teamBroadcast(Player player, String data) {
+		synchronized(clients) {
+			for (GameServerConnectionToClient client:clients) {
+				if (client.player.team.num == player.team.num) {
+					client.send(new Event("chat", data));
+				}
+			}
+		}
+	}
 	
 	public void release(GameServerConnectionToClient thread) {
 		synchronized(clients) {

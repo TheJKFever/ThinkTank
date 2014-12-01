@@ -47,6 +47,9 @@ public class GameServerConnectionToClient extends ConnectionToClient {
 			case "chat":
 				gameServer.broadcast(event);
 				break;
+			case "team chat":
+				Player player = (Player)event.player;
+				gameServer.teamBroadcast(player, (String)event.data);
 			case "set username":
 				this.player.setUsername((String)event.data);
 				break;
