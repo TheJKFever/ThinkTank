@@ -11,12 +11,13 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import Entities.Objects.GameObject;
-import Entities.Objects.ProfileObject;
+import Entities.GameObject;
+import Entities.ProfileObject;
 import Exceptions.PortNotAvailableException;
 import Game.Event;
 import Game.Helper;
 import Global.Settings;
+import Server.DB.UserAlreadyExistsException;
 
 public class CentralServer extends ServerSocket {
 	private static Logger logger = Logger.getLogger("CentralServer.log");
@@ -131,7 +132,8 @@ public class CentralServer extends ServerSocket {
 		}
 	}
 
-	public boolean newProfile(ProfileObject profile) {
+	public boolean newProfile(ProfileObject profile) throws UserAlreadyExistsException {
+		System.out.println("CentralServer: RECEIVED A CREATE PROFILE QUERY: " + profile);
 		return db.insertProfile(profile);
 	}
 

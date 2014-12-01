@@ -2,7 +2,7 @@ package Game;
 
 import java.io.Serializable;
 
-import Client.ChatClient;
+import Entities.ProfileObject;
 import Entities.Tank;
 
 public class Player implements Serializable  {
@@ -32,6 +32,5 @@ public class Player implements Serializable  {
 	}
 	
 	public Player() {
-		
 	}
 }

@@ -16,20 +16,22 @@ import Global.Settings;
 public class UtilityBar extends JPanel {
 
 	public Player player;
-
-	public void setPlayer(Player player) {
-
-		this.player = player;
-
-	}
+	GameScreen gameScreen;
+	
+//	public void setPlayer(GameScreen gameScreen, Player player) 
+//		this.gameScreen = gameScreen;
+//	}
 
 	public Player getPlayer() {
 
-		return this.player;
+		return this.gameScreen.engine.player;
 
 	}
 
-	public UtilityBar() {
+	public UtilityBar(GameScreen gameScreen) {
+		
+		this.gameScreen = gameScreen;
+		
 
 		ImageIcon image1 = new ImageIcon("images/button1.png");
 
@@ -51,8 +53,9 @@ public class UtilityBar extends JPanel {
 
 			public void actionPerformed(ActionEvent e) {
 
-				player.tank.updateWeapon(Settings.DOUBLE_WEAPON);
+				gameScreen.engine.player.tank.updateWeapon(Settings.DOUBLE_WEAPON);
 				
+				System.out.println("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
 
 
 			}
@@ -68,7 +71,7 @@ public class UtilityBar extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 
 
-				player.tank.updateWeapon(Settings.TRIPLE_WEAPON);
+				gameScreen.engine.player.tank.updateWeapon(Settings.TRIPLE_WEAPON);
 				
 
 			}
@@ -81,7 +84,7 @@ public class UtilityBar extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 
 
-				player.tank.updateWeapon(Settings.SUPER_WEAPON);
+				gameScreen.engine.player.tank.updateWeapon(Settings.SUPER_WEAPON);
 				
 
 			}
@@ -94,7 +97,7 @@ public class UtilityBar extends JPanel {
 
 			public void actionPerformed(ActionEvent e) {
 
-				player.team.brain.setHealth(1);
+				gameScreen.engine.player.team.brain.setHealth(1);
 				
 
 
@@ -108,7 +111,7 @@ public class UtilityBar extends JPanel {
 
 			public void actionPerformed(ActionEvent e) {
 
-				player.team.brain.setHealth(2);
+				gameScreen.engine.player.team.brain.setHealth(2);
 				
 
 
@@ -122,7 +125,7 @@ public class UtilityBar extends JPanel {
 
 			public void actionPerformed(ActionEvent e) {
 
-				player.team.brain.setHealth(3);
+				gameScreen.engine.player.team.brain.setHealth(3);
 				
 
 
@@ -136,7 +139,7 @@ public class UtilityBar extends JPanel {
 
 			public void actionPerformed(ActionEvent e) {
 
-				player.team.brain.setHealth(4);
+				gameScreen.engine.player.team.brain.setHealth(4);
 				
 
 
