@@ -21,8 +21,8 @@ public class Team implements Serializable  {
 		brain = new Brain(this, gs);
 	}
 	
-	public Player newPlayer(String username) {
-		Player player = new Player(this, gs, username);
+	public Player newPlayer() {
+		Player player = new Player(this, gs);
 		players.addElement(player);
 		return player;
 	}

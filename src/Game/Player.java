@@ -19,7 +19,7 @@ public class Player implements Serializable  {
 	public int numHits;
 	public String username;
 	
-	public Player(Team team, GameState gs, String username) {
+	public Player(Team team, GameState gs) {
 		this.team = team;
 		this.gs = gs;
 		gs.players.add(this);
@@ -28,9 +28,9 @@ public class Player implements Serializable  {
 		this.numDeaths = 0;
 		this.numShots = 0;
 		this.numHits = 0;
-		this.username = username;
 	}
 	
-	public Player() {
+	public void setUsername(String username) {
+		this.username = username;
 	}
 }
