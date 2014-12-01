@@ -4,9 +4,9 @@ import java.awt.Image;
 import java.io.Serializable;
 import java.util.Vector;
 
-import Game.Rect;
 import Game.GameState;
-import Global.Settings;
+import Game.Helper;
+import Game.Rect;
 
 public abstract class Entity implements Serializable {
 
@@ -133,7 +133,7 @@ public abstract class Entity implements Serializable {
 	}
 
 	public boolean checkForCollisionWith(Rect other) {
-		log(this.getClass().getName() + ": collidesWith()");
+		Helper.log(this.getClass().getName() + ": collidesWith()");
 
 		// reset values
 		yCollision = false;
@@ -171,8 +171,8 @@ public abstract class Entity implements Serializable {
 	}
 
 	public void resetPositionOnCollision(Rect rect) {
-		log(this.getClass().getName() + ": resetPositionOnCollision()");
-		log("xCollision: " + xCollision + " yCollision: " + yCollision);
+		Helper.log(this.getClass().getName() + ": resetPositionOnCollision()");
+		Helper.log("xCollision: " + xCollision + " yCollision: " + yCollision);
 
 		boolean movedUp = false;
 		boolean movedDown = false;
@@ -224,12 +224,6 @@ public abstract class Entity implements Serializable {
 			d -= 360;
 		}
 		return d;
-	}
-
-	public void log(String msg) {
-		if (Settings.DEBUG) {
-			System.out.println(msg);
-		}
 	}
 
 	@Override

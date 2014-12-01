@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 
 import Exceptions.PortNotAvailableException;
 import Game.Event;
+import Game.Helper;
 import Global.Settings;
 
 public class CentralServer extends ServerSocket {
@@ -49,19 +50,19 @@ public class CentralServer extends ServerSocket {
 	}
 	
 	public int newGame(String name) throws PortNotAvailableException {
-		if (Settings.DEBUG) System.out.println("IN CENRTAL SERVER NEWGAME()");
+		Helper.log("IN CENRTAL SERVER NEWGAME()");
 		if (games.size() >= MAX_GAMES) {
-			if (Settings.DEBUG) System.out.println("MAX CAPACITY REACHED");
+			Helper.log("MAX CAPACITY REACHED");
 			logger.log(Level.SEVERE, "Cannot start new game. server has reached max game capacity: " + MAX_GAMES);
 			return -1;
 		}
 		for (int port: PORTS) {
 			try {
-				if (Settings.DEBUG) System.out.println("TRYING PORT: " + port);
+				Helper.log("TRYING PORT: " + port);
 				newGame(name, port);
 				return port;
 			} catch (PortNotAvailableException e) {
-				if (Settings.DEBUG) System.out.println("THIS PORT NOT AVAIALABLE: " + port);
+				Helper.log("THIS PORT NOT AVAIALABLE: " + port);
 				e.printStackTrace();
 			}
 		}
@@ -79,13 +80,13 @@ public class CentralServer extends ServerSocket {
 		}
 		GameServer gameServer;
 		try {
-			if (Settings.DEBUG) System.out.println("ABOUT TO CREATE GAME SERVER");
+			Helper.log("ABOUT TO CREATE GAME SERVER");
 			gameServer = new GameServer(name, port);
-			if (Settings.DEBUG) System.out.println("CREATED GAME SERVER");
+			Helper.log("CREATED GAME SERVER");
 			gameServer.thread.start();
-			if (Settings.DEBUG) System.out.println("STARTED GAME SERVER THREAD");
+			Helper.log("STARTED GAME SERVER THREAD");
 			games.put(port, gameServer);
-			if (Settings.DEBUG) System.out.println("ADDED TO GAMESERVER TO GAMES MAP");
+			Helper.log("ADDED TO GAMESERVER TO GAMES MAP");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

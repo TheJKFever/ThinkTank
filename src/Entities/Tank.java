@@ -2,8 +2,8 @@ package Entities;
 
 import java.awt.event.KeyEvent;
 
-import Global.Settings;
 import Game.GameState;
+import Game.Helper;
 import Game.Player;
 import Game.SimpleKeyEvent;
 import Game.Team;
@@ -84,7 +84,7 @@ public class Tank extends Entity {
 	}
 
 	public void keyPressed(SimpleKeyEvent e) {
-		log("TANK: KEY PRESSED");
+		Helper.log("TANK: KEY PRESSED");
 		int key = e.getKeyCode();
 
 		if (key == KeyEvent.VK_UP) {
@@ -99,7 +99,7 @@ public class Tank extends Entity {
 	}
 
 	public void keyReleased(SimpleKeyEvent e) {
-		log("TANK: KEY RELEASED");
+		Helper.log("TANK: KEY RELEASED");
 		int key = e.getKeyCode();
 
 		// Sets velocity back to 0 when user lets go of up/down arrow
@@ -126,8 +126,8 @@ public class Tank extends Entity {
 
 	public void update() {
 		super.update();
-		// log("TANK: UPDATE() BEFORE");
-		// log(this.toString());
+		// Helper.log("TANK: UPDATE() BEFORE");
+		// Helper.log(this.toString());
 
 		updateOrientation();
 		updatePosition();
@@ -143,8 +143,8 @@ public class Tank extends Entity {
 			fireShot();
 		}
 
-		log("TANK: UPDATE() AFTER");
-		log(this.toString());
+		Helper.log("TANK: UPDATE() AFTER");
+		Helper.log(this.toString());
 	}
 
 	public void mineForThoughts() {
@@ -171,7 +171,7 @@ public class Tank extends Entity {
 	public void updatePosition() {
 		// log("TANK: UPDATING POSITION");
 		// log("BEFORE");
-		log(this.toString());
+		Helper.log(this.toString());
 
 		if (theta == 0) {
 			y -= dp;
