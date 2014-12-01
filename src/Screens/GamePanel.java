@@ -70,6 +70,9 @@ public class GamePanel extends JPanel {
 
 	static int RIGHT_HUD_X = Settings.BOARD_WIDTH - LEFT_HUD_X - BRAIN_HB_WIDTH;
 
+	public Hitbar hit;
+	
+	
 	public GamePanel(GameScreen gameScreen) {
 		super();
 		Helper.log("Creating new GamePanel");
@@ -92,6 +95,9 @@ public class GamePanel extends JPanel {
 		super.paint(g);
 		this.gameState = this.gameScreen.engine.gameState;
 		this.player = gameScreen.engine.player;
+		
+		hit = new Hitbar(10,player.tank);
+		
 		Helper.log(gameState);
 		if (gameState != null && gameState.inGame) {
 			render(g);
@@ -119,7 +125,8 @@ public class GamePanel extends JPanel {
 		drawTanks(g2d);
 		drawShots(g2d);
 		drawBomb(g2d);
-
+		drawHitbar(g2d);
+		
 		// rotate screen back to normal before rendering HUD
 		if (this.player != null) {
 			if (this.player.team.num == 2) {
@@ -135,6 +142,17 @@ public class GamePanel extends JPanel {
 		g2d.dispose();
 		g.dispose();
 	}
+
+	public void drawHitbar(Graphics g){
+		
+		hit.number = player.tank.health;
+		
+		hit.draw(g);
+		
+		
+		
+	}
+
 
 	public void drawBomb(Graphics g) {
 		if (bomb != null)
@@ -263,36 +281,35 @@ public class GamePanel extends JPanel {
 					if (added.weapon instanceof DefaultWeapon) {
 
 						if (added.weapon.theta == 0) {
-							
-							if(this.player.team.num == 1){
 
-								bomb = new DefaultEffect(e.x - 20 , e.y - 18);
-							
-							}else{
-								
-								bomb = new DefaultEffect(e.x - 20 , e.y - 18);
-								
+							if (this.player.team.num == 1) {
+
+								bomb = new DefaultEffect(e.x - 20, e.y - 18);
+
+							} else {
+
+								bomb = new DefaultEffect(e.x - 20, e.y - 18);
+
 							}
 						} else if (added.weapon.theta == 90) {
 
-							bomb = new DefaultEffect(e.x -20 , e.y - 38);
+							bomb = new DefaultEffect(e.x - 20, e.y - 38);
 
 						} else if (added.weapon.theta == 180) {
 
-							bomb = new DefaultEffect(e.x -32 , e.y );
+							bomb = new DefaultEffect(e.x - 32, e.y);
 
 						} else if (added.weapon.theta == 270) {
-							
-							if(this.player.team.num == 1){
 
-								bomb = new DefaultEffect(e.x -5, e.y-32 );
-							
-							}else{
-								
-								bomb = new DefaultEffect(e.x -5 , e.y - 40);
-								
+							if (this.player.team.num == 1) {
+
+								bomb = new DefaultEffect(e.x - 5, e.y - 32);
+
+							} else {
+
+								bomb = new DefaultEffect(e.x - 5, e.y - 40);
+
 							}
-
 
 						}
 
@@ -300,141 +317,119 @@ public class GamePanel extends JPanel {
 
 						if (added.weapon.theta == 0) {
 
-							if(this.player.team.num == 1){
+							if (this.player.team.num == 1) {
 
-								bomb = new DoubleBomb(e.x - 20 , e.y - 18);
-							
-							}else{
-								
-								bomb = new DoubleBomb(e.x - 20 , e.y - 18);
-								
+								bomb = new DoubleBomb(e.x - 20, e.y - 18);
+
+							} else {
+
+								bomb = new DoubleBomb(e.x - 20, e.y - 18);
+
 							}
-							
 
 						} else if (added.weapon.theta == 90) {
-							
-							bomb = new DoubleBomb(e.x -20 , e.y - 38);
 
-
+							bomb = new DoubleBomb(e.x - 20, e.y - 38);
 
 						} else if (added.weapon.theta == 180) {
 
-							bomb = new DoubleBomb(e.x -32 , e.y );
-
-							
+							bomb = new DoubleBomb(e.x - 32, e.y);
 
 						} else if (added.weapon.theta == 270) {
-							
-							if(this.player.team.num == 1){
 
-								bomb = new DoubleBomb(e.x -5, e.y-32 );
-							
-							}else{
-								
-								bomb = new DoubleBomb(e.x -5 , e.y - 40);
-								
+							if (this.player.team.num == 1) {
+
+								bomb = new DoubleBomb(e.x - 5, e.y - 32);
+
+							} else {
+
+								bomb = new DoubleBomb(e.x - 5, e.y - 40);
+
 							}
 
-
 						}
-
 
 					} else if (added.weapon instanceof Weapons.TripleStrengthWeapon) {
-						
+
 						if (added.weapon.theta == 0) {
-							
-							if(this.player.team.num == 1){
 
-								bomb = new TankBomb(e.x - 20 , e.y - 18);
-							
-							}else{
-								
-								bomb = new TankBomb(e.x - 20 , e.y - 18);
-								
+							if (this.player.team.num == 1) {
+
+								bomb = new TankBomb(e.x - 20, e.y - 18);
+
+							} else {
+
+								bomb = new TankBomb(e.x - 20, e.y - 18);
+
 							}
-
 
 						} else if (added.weapon.theta == 90) {
-							
-							bomb = new TankBomb(e.x -20 , e.y - 38);
 
-
+							bomb = new TankBomb(e.x - 20, e.y - 38);
 
 						} else if (added.weapon.theta == 180) {
-							
-							bomb = new TankBomb(e.x -32 , e.y );
 
-
+							bomb = new TankBomb(e.x - 32, e.y);
 
 						} else if (added.weapon.theta == 270) {
-							
-							if(this.player.team.num == 1){
 
-								bomb = new TankBomb(e.x -5, e.y-32 );
-							
-							}else{
-								
-								bomb = new TankBomb(e.x -5 , e.y - 40);
-								
+							if (this.player.team.num == 1) {
+
+								bomb = new TankBomb(e.x - 5, e.y - 32);
+
+							} else {
+
+								bomb = new TankBomb(e.x - 5, e.y - 40);
+
 							}
 
-
 						}
-
-
 
 					} else if (added.weapon instanceof Weapons.SuperWeapon) {
-						
+
 						if (added.weapon.theta == 0) {
-							
-							if(this.player.team.num == 1){
 
-								bomb = new SuperBomb(e.x -100, e.y -50);
-							
-							}else{
-								
-								bomb = new SuperBomb(e.x -100 , e.y -50);
-								
+							if (this.player.team.num == 1) {
+
+								bomb = new SuperBomb(e.x - 100, e.y - 50);
+
+							} else {
+
+								bomb = new SuperBomb(e.x - 100, e.y - 50);
+
 							}
-
 
 						} else if (added.weapon.theta == 90) {
-							
-							if(this.player.team.num == 2){
 
-								bomb = new SuperBomb(e.x , e.y -100);
-							
-							}else{
-								
-								bomb = new SuperBomb(e.x -100 , e.y - 200);
-								
+							if (this.player.team.num == 2) {
+
+								bomb = new SuperBomb(e.x, e.y - 100);
+
+							} else {
+
+								bomb = new SuperBomb(e.x - 100, e.y - 200);
+
 							}
 
-							bomb = new SuperBomb(e.x  , e.y - 200);
-
-
+							bomb = new SuperBomb(e.x, e.y - 200);
 
 						} else if (added.weapon.theta == 180) {
-							
-							bomb = new SuperBomb(e.x -100, e.y -50);
 
-
+							bomb = new SuperBomb(e.x - 100, e.y - 50);
 
 						} else if (added.weapon.theta == 270) {
-							
-							if(this.player.team.num == 2){
 
-								bomb = new SuperBomb(e.x -100, e.y -100);
-							
-							}else{
-								
-								bomb = new SuperBomb(e.x  - 100, e.y + 100);
-								
+							if (this.player.team.num == 2) {
+
+								bomb = new SuperBomb(e.x - 100, e.y - 100);
+
+							} else {
+
+								bomb = new SuperBomb(e.x - 100, e.y + 100);
+
 							}
 
-
 						}
-
 
 					}
 
