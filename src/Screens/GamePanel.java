@@ -21,6 +21,10 @@ import Entities.ThoughtPool;
 import Game.GameState;
 import Game.Helper;
 import Game.Player;
+import GameEffect.Bomb;
+import GameEffect.TankBomb;
+import GameEffect.*;
+
 import Global.Settings;
 
 public class GamePanel extends JPanel {
@@ -30,6 +34,8 @@ public class GamePanel extends JPanel {
 	private GameScreen gameScreen;
 	HashMap<String, Image> imageCache;
 	Player player;
+	
+	public Bomb bomb = null;
 	
 	// HUD LAYOUT CONFIGURATION
 	
@@ -111,6 +117,7 @@ public class GamePanel extends JPanel {
 		drawBrains(g2d);
 		drawTanks(g2d);
 		drawShots(g2d);
+		drawBomb(g);
 		
 		// rotate screen back to normal before rendering HUD
 		if (this.player != null) {
@@ -128,6 +135,12 @@ public class GamePanel extends JPanel {
 		g.dispose();
 	}
 
+	
+	public void drawBomb(Graphics g){
+		if(bomb!=null)
+			bomb.draw(g, this);
+		
+	}
 	
 	public void drawHUD(Graphics g) {
 		g.setColor(Color.white);
@@ -238,6 +251,10 @@ public class GamePanel extends JPanel {
 				g.drawImage(getImg(e.imagePath), e.x, e.y, this);
 			}
 			if (e.isDying()) {
+				
+				System.out.println("I am here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+				
+				bomb = new DefaultEffect(e.x-50,e.y-50);
 				e.die();
 			}
 		}

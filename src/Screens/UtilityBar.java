@@ -55,8 +55,6 @@ public class UtilityBar extends JPanel {
 
 				gameScreen.engine.player.tank.updateWeapon(Settings.DOUBLE_WEAPON);
 				
-				System.out.println("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
-
 
 			}
 
