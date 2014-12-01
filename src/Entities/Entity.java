@@ -147,7 +147,7 @@ public abstract class Entity implements Serializable {
 		} else if (my.bottom >= other.top && my.bottom <= other.bottom) {
 			yCollision = true;
 			bottomCollision = true;
-		} else if (my.bottom >= other.top && my.bottom <= other.bottom) {
+		} else if (other.bottom >= my.top && other.bottom <= my.bottom) {
 			yCollision = true;
 			bottomCollision = true;
 		}
@@ -155,7 +155,13 @@ public abstract class Entity implements Serializable {
 		if (my.right >= other.left && my.right <= other.right) {
 			xCollision = true;
 			rightCollision = true;
+		} else if (other.right >= my.left && other.right <= my.right) {
+			xCollision = true;
+			rightCollision = true;
 		} else if (my.left <= other.right && my.left >= other.left) {
+			xCollision = true;
+			leftCollision = true;
+		} else if (other.left <= my.right && other.left >= my.left) {
 			xCollision = true;
 			leftCollision = true;
 		}
