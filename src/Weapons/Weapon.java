@@ -6,10 +6,10 @@ public abstract class Weapon implements Serializable {
 
 	private static final long serialVersionUID = 1473438964608702421L;
 	
-	public static final int WIDTH_VERTICAL = 0;
-	public static final int HEIGHT_VERTICAL = 0;
-	public static final int WIDTH_HORIZONTAL = 0;
-	public static final int HEIGHT_HORIZONTAL = 0;
+	public int WIDTH_VERTICAL = 0;
+	public int HEIGHT_VERTICAL = 0;
+	public int WIDTH_HORIZONTAL = 0;
+	public int HEIGHT_HORIZONTAL = 0;
 	
 	public int theta;
 	

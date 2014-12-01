@@ -30,6 +30,8 @@ public abstract class Entity implements Serializable {
 	public Team team;
 	public Player player;
 	
+	public int dyingTime = 0;
+	
 	public Entity() {
 		visible = true;
 		x = 0;
@@ -47,6 +49,7 @@ public abstract class Entity implements Serializable {
 
 	public void die() {
 		visible = false;
+		this.dying = true;
 	}
 
 	public boolean isVisible() {
@@ -125,6 +128,9 @@ public abstract class Entity implements Serializable {
 	public void update() {
 		prevX = x;
 		prevY = y;
+		if (this.dying) {
+			this.dyingTime--;
+		}
 	}
 
 	public boolean checkForCollisionWith(Rect other) {

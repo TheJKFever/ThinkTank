@@ -11,12 +11,12 @@ public class Turret extends Entity implements Serializable {
 
 	static final String imageDir="images/turrets/";
 	
-	static final String IMAGE_TURRET_UP = imageDir+"turret_up.png";
-	static final String IMAGE_TURRET_LEFT = imageDir+"turret_left.png";
-	static final String IMAGE_TURRET_DOWN = imageDir+"turret_down.png";
-	static final String IMAGE_TURRET_RIGHT = imageDir+"turret_right.png";
+	static final String IMAGE_TURRET_UP = imageDir + "turretUp";
+	static final String IMAGE_TURRET_LEFT = imageDir + "turretLeft";
+	static final String IMAGE_TURRET_DOWN = imageDir + "turretDown";
+	static final String IMAGE_TURRET_RIGHT = imageDir + "turretRight";
 
-	private static final int MAX_TURRET_HEALTH = 15;
+	private static final int MAX_TURRET_HEALTH = 50;
 	private static final int RADIUS = 200;
 	
 	public boolean firing;
@@ -31,28 +31,37 @@ public class Turret extends Entity implements Serializable {
 		this.theta=0;
 		this.health=MAX_TURRET_HEALTH;
 		this.firing=false;
-		updateImagePath();
-		this.setWidth(60);
-		this.setHeight(60);
+		this.setWidth(37);
+		this.setHeight(45);
 		this.player=p;
 		this.team=p.team;
+		updateImagePath();
 		gs.turrets.add(this);
 	}
 	
     public void updateImagePath() {
     	if (theta == 0) {
-    		this.imagePath = IMAGE_TURRET_UP;
+    		this.imagePath = IMAGE_TURRET_UP + this.team.num + ".png";
+    		this.setWidth(37);
+    		this.setHeight(45);
     	} else if (theta == 90) {
-    		this.imagePath = IMAGE_TURRET_RIGHT;
+    		this.imagePath = IMAGE_TURRET_RIGHT + this.team.num + ".png";
+    		this.setWidth(45);
+    		this.setHeight(37);
     	} else if (theta == 180) {
-    		this.imagePath = IMAGE_TURRET_DOWN;
+    		this.imagePath = IMAGE_TURRET_DOWN + this.team.num + ".png";
+    		this.setWidth(37);
+    		this.setHeight(45);
     	} else if (theta == 270) {
-    		this.imagePath = IMAGE_TURRET_LEFT;
+    		this.imagePath = IMAGE_TURRET_LEFT + this.team.num + ".png";
+    		this.setWidth(45);
+    		this.setHeight(37);
     	}
     }
 	
     public void update()
     {
+    	super.update();
     	fireShot();
     	updateImagePath();
     }
@@ -123,7 +132,7 @@ public class Turret extends Entity implements Serializable {
 			}
 			else if (this.shootFrequency==15)
 			{
-				gs.shots.add(new Shot(shotX, shotY, this.theta, this.gs, player, Settings.DEFAULT_WEAPON));
+				gs.shots.add(new Shot(this, this.theta, this.gs, player, Settings.DEFAULT_WEAPON));
 				firing=false;
 				shootFrequency=0;
 			}

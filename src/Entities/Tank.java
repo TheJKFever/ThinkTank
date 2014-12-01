@@ -291,8 +291,8 @@ public class Tank extends Entity {
 	}
 
 	public void die() {
+		super.die();
 		this.player.numDeaths++;
-		// TODO: TANK DEATH
 		visible = false;
 		exploding = true;
 	}
@@ -303,7 +303,7 @@ public class Tank extends Entity {
 
 	public void fireShot() {
 		this.player.numShots++;
-		gs.shots.add(new Shot(x, y, theta, gs, this.player, this.weaponType));
+		gs.shots.add(new Shot(this, theta, gs, this.player, this.weaponType));
 		firing = false;
 	}
 
