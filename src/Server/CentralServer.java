@@ -11,6 +11,9 @@ import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import Entities.Objects;
+import Entities.Objects.GameObject;
+import Entities.Objects.ProfileObject;
 import Exceptions.PortNotAvailableException;
 import Game.Event;
 import Game.Helper;
@@ -139,6 +142,14 @@ public class CentralServer extends ServerSocket {
 		for (CentralServerConnectionToClient client:clients) {
 			client.send(event);
 		}
+	}
+
+	public boolean newProfile(ProfileObject profile) {
+		// TODO implement thi
+		String username = profile.username;
+		String password = profile.password;
+		
+		return false;
 	}
 
 	public static void main(String[] args) {

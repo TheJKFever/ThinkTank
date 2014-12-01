@@ -9,11 +9,11 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import Client.ThinkTankGUI;
+import Entities.Objects.GameObject;
 import Game.Event;
 import Game.Helper;
 import Listeners.GoToPageListener;
 import Listeners.JoinGameListener;
-import Server.GameObject;
 
 public class LobbyScreen extends JPanel {
 	private static final int FIRST_ROW = 90;

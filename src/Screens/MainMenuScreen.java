@@ -73,7 +73,7 @@ public class MainMenuScreen extends JPanel {
 			this.gui = gui;
 		}
 		public void actionPerformed(ActionEvent arg0) {
-			gui.goTo("lobby");
+			gui.goTo(gui.lobby);
 		}
 	}
 }
