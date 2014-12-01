@@ -68,7 +68,6 @@ public class GameState implements Serializable {
 	
 	public void updateGameClock() {
 		timeRemaining = TimeUnit.MINUTES.toNanos(10) - (System.nanoTime() - startTime);
-		
 		long minutes = TimeUnit.NANOSECONDS.toMinutes(timeRemaining);
 		long seconds = TimeUnit.NANOSECONDS.toSeconds(timeRemaining - TimeUnit.MINUTES.toNanos(minutes));
 		displayTime = String.format("%02d:%02d", minutes, seconds);
@@ -222,5 +221,14 @@ public class GameState implements Serializable {
 //		}
 		sb.append("------------------------------------------\n");
 		return sb.toString();
+	}
+
+	public String getDisplayTime() {
+		if ((Long)startTime != null) {
+			updateGameClock();
+			return displayTime;
+		} else {
+			return String.format("%02d:%02d", 10, 0);
+		}
 	}
 }

@@ -1,11 +1,12 @@
 package Client;
 
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -18,7 +19,7 @@ import Screens.GameScreen;
 
 public class ChatClient extends JPanel {
 	
-	JPanel chatPanel,topPanel, centerPanel, bottomPanel, inputPanel, loginPanel;
+	JPanel topPanel, centerPanel, inputPanel, buttonPanel;
 	JPanel hostNamePanel, playerNamePanel;
 	
 	JTextField hostNameTf;
@@ -29,53 +30,53 @@ public class ChatClient extends JPanel {
 	JTextField tf;
 	JLabel chatLabel;
 	JTextArea ta;
-	JButton sendBtn;
+	JButton sendAllBtn, sendTeamBtn;
 	private GameScreen gameScreen;
 		
 	public ChatClient(GameScreen gameScreen) {
 		this.gameScreen = gameScreen;
-		configureGUI();
-		sendBtn.setEnabled(false);
-	}
-	
-	public void configureGUI() {
-		setLayout(new CardLayout());
 		/****** Chat Panel*******/
-		chatPanel = new JPanel();
-		chatPanel.setLayout(new BorderLayout());
+		setLayout(new BorderLayout(0, 0));
 		
 		// top part
 		topPanel = new JPanel();
+		add(topPanel, BorderLayout.NORTH);
 		chatLabel = new JLabel("Chat");
 		topPanel.add(chatLabel);
-		chatPanel.add(topPanel, BorderLayout.NORTH);
 		
 		// center part
 		ta = new JTextArea();
-		ta.setBorder(new EmptyBorder(10,2,2,10));
+		ta.setBorder(new EmptyBorder(5,3,3,5));
 		ta.setWrapStyleWord(true);
 		ta.setLineWrap(true);
+		ta.setMaximumSize(new Dimension(300, 500));
 		scroll = new JScrollPane(ta);
 		
 		centerPanel = new JPanel();
+		add(centerPanel, BorderLayout.CENTER);
+		centerPanel.setLayout(new BorderLayout(0, 0));
 		centerPanel.add(scroll);
-		chatPanel.add(centerPanel);
-	
-		chatPanel.add(scroll);
 		
 		// bottom part
-		inputPanel = new JPanel(new BorderLayout());
+		buttonPanel = new JPanel();
+		inputPanel = new JPanel();
+		add(inputPanel, BorderLayout.SOUTH);
+		inputPanel.setLayout(new BorderLayout(0, 0));
 		tf = new JTextField(12);
-		inputPanel.add(tf);
-		sendBtn = new JButton("Send");
-		inputPanel.add(sendBtn, BorderLayout.EAST);
-		chatPanel.add(inputPanel, BorderLayout.SOUTH);
-		add(chatPanel,"chat");
-	}
+		inputPanel.add(tf, BorderLayout.NORTH);
+		sendAllBtn = new JButton("Send To All");
+		sendTeamBtn = new JButton("Send To Team");
+		buttonPanel.add(sendAllBtn);
+		buttonPanel.add(sendTeamBtn);
+		inputPanel.add(buttonPanel);
+		sendAllBtn.setEnabled(false);
+		sendTeamBtn.setEnabled(false);
 	
+	}
+
 	public void setConnection(ConnectionToGameServer gameConnection) {
-		sendBtn.addActionListener(new SendBtnListener(gameConnection));
-		sendBtn.setEnabled(true);
+		sendAllBtn.addActionListener(new SendBtnListener(gameConnection));
+		sendAllBtn.setEnabled(true);
 	}
 	
 	public class SendBtnListener implements ActionListener {
@@ -90,5 +91,5 @@ public class ChatClient extends JPanel {
 			tf.setText("");
 			gameConnection.sendEvent(new Event("chat", message));
 		}
-	}		
+	}
 }
