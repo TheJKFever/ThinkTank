@@ -35,7 +35,7 @@ public class GameScreen extends JPanel {
 		bar = new UtilityBar();
 		gamePanel = new GamePanel(this);
 		gamePanel.setPreferredSize(new Dimension(Settings.BOARD_WIDTH, Settings.BOARD_HEIGHT));
-		chatPanel = new ChatClient(gameConnection);
+		chatPanel = new ChatClient();
 		chatPanel.setPreferredSize(new Dimension(140, Settings.BOARD_HEIGHT));
 		sidePanel = new JPanel();
 		sidePanel.setPreferredSize(new Dimension(150, Settings.BOARD_HEIGHT));
@@ -57,6 +57,7 @@ public class GameScreen extends JPanel {
 		Helper.log("GAMESCREEN: created client engine");
 		try {
 			gameConnection = new ConnectionToGameServer(this, host, port);
+			chatPanel.setConnection(gameConnection);
 			Helper.log("GAMESCREEN: got connection to game server");
 			return true;
 		} catch (UnknownHostException uhe) {

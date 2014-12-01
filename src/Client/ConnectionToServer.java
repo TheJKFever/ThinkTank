@@ -25,6 +25,7 @@ public abstract class ConnectionToServer extends Socket implements Runnable {
 	
 	public abstract void receive(Object obj);
 	
+	// go to GameServerConnectionToClient
 	private void send(Object obj) {
 		try {
 			out.reset();
