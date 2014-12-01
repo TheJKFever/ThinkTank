@@ -70,24 +70,21 @@ public class ServerEngine extends Engine {
 	}
 	
 	public void broadcastGameState() {
-		// Helper.log("GAMESERVER: BROADCAST GAME STATE");
-		// Helper.log(gameState.toString());
-		
 		Event e;
-		for (GameServerConnectionToClient client: clients) {
-			gameState.tankForThisClient = client.player.tank;
-			e = new Event("game update", gameState);
-			client.sendEvent(e);
+		synchronized(clients) {
+			for (GameServerConnectionToClient client: clients) {
+				gameState.tankForThisClient = client.player.tank;
+				e = new Event("game update", gameState);
+				client.sendEvent(e);
+			}
 		}
 	}
 
 	private void startGame() {
 		Helper.log("GAMESERVER: START GAME");
 		gameState.startGameClock();
-		synchronized(clients) {
-			for (GameServerConnectionToClient client:clients) {
-				client.sendEvent(new Event("start game"));
-			}
+		for (GameServerConnectionToClient client:clients) {
+			client.sendEvent(new Event("start game"));
 		}
 	}
 

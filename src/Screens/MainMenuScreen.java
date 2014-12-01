@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import Client.ThinkTankGUI;
+import Entities.ProfileObject;
 import Listeners.GoToPageListener;
 
 public class MainMenuScreen extends JPanel {
@@ -82,6 +83,12 @@ public class MainMenuScreen extends JPanel {
 			this.add(statsBtn);
 			add(Box.createVerticalStrut(20));
 			this.add(logoutBtn);
+			logoutBtn.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					MainMenuScreen.this.gui.loggedIn = false;
+					MainMenuScreen.this.gui.user = new ProfileObject("guest", null);
+				}
+			});
 			add(Box.createVerticalGlue());
 		} else {
 			this.add(createProfileBtn);

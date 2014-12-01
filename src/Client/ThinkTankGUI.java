@@ -165,7 +165,7 @@ public class ThinkTankGUI extends JFrame {
 	private boolean inGameConfirmForeit(ThinkTankGUI gui) {
 		if (currentScreenIsGameScreen()) {
 			int confirmation = JOptionPane.showConfirmDialog (null, "Are you sure you want to forfeit this game?","Warning",JOptionPane.YES_NO_OPTION);
-			if(confirmation == JOptionPane.YES_OPTION) return false;
+			if(confirmation != JOptionPane.YES_OPTION) return false;
 		} 
 		return true;
 	}

@@ -78,6 +78,7 @@ public class ClientEngine extends Engine {
 		}
 		
 		// TODO: show end game and stats screen
+		gameScreen.gui.stats.getStatsFor(player.username);
 		gameScreen.gui.goTo(ThinkTankGUI.MainMenuPage);
 	}
 	

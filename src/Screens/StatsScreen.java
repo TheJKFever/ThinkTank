@@ -40,7 +40,7 @@ public class StatsScreen extends JPanel {
 			tableModel.addRow(new Object[]{"Total Wins", stats.wins});
 			tableModel.addRow(new Object[]{"Total Shots", stats.numShots});
 			tableModel.addRow(new Object[]{"Total Hits", stats.numHits});
-			tableModel.addRow(new Object[]{"Accuracy", (stats.numHits)/((double)stats.numShots + 0.0000001) + "%"});
+			tableModel.addRow(new Object[]{"Accuracy", ((stats.numHits)/((double)stats.numShots + 0.0000001)*100) + "%"});
 			tableModel.addRow(new Object[]{"Total Kills", stats.numKills});
 			tableModel.addRow(new Object[]{"Total Deaths", stats.numDeaths});
 			tableModel.addRow(new Object[]{"Total Brains Destroyed", stats.brainsDestroyed});
