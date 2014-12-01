@@ -86,43 +86,15 @@ public class GamePanel extends JPanel {
 		super.paint(g);
 		this.gameState = this.gameScreen.engine.gameState;
 		this.player = gameScreen.engine.player;
-		render(g);
-	}
-	
-	
-	// transform x coordinate based on player's team (i.e. reverse map for team 2)
-	public int tfx(int x) {
-		if (player.team.num == 2) {
-			x = Settings.BOARD_WIDTH - x;
-			return x;
-		} else {
-			return x;
+		Helper.log(gameState);
+		if (gameState != null && gameState.inGame) {
+			render(g);
 		}
-	}
-	
-	// transform y coordinate based on player's team (i.e. reverse map for team 2)
-	public int tfy(int y) {
-		if (player.team.num == 2) {
-			y = Settings.BOARD_HEIGHT - y;
-			return y;
-		} else {
-			return y;
-		}
-	}
-	
-	public Image getImg(String path) {
-		if (imageCache.containsKey(path)) {
-			return imageCache.get(path);
-		} else {
-			Image img = new ImageIcon(path).getImage();
-			imageCache.put(path, img);
-			return img;
-		} 
 	}
 	
 	public void render(Graphics g) {
 		Helper.log("GAMEPANEL: RENDER");
-			
+		
 		// rotate screen if player is on team 2
 		Graphics2D g2d = (Graphics2D) g;
 		if (this.player != null) {
@@ -148,9 +120,8 @@ public class GamePanel extends JPanel {
 		      	g2d.rotate(Math.PI, w2, h2);				
 			}
 		}
-		if (gameState.inGame) {
-			drawHUD(g2d);
-		}
+		
+		drawHUD(g2d);
 	
 		Toolkit.getDefaultToolkit().sync();
 		g2d.dispose();
@@ -219,24 +190,6 @@ public class GamePanel extends JPanel {
 	public void drawMap(Graphics g) {
 		g.setColor(Color.black);
 		// black background
-//<<<<<<< HEAD
-//		g.fillRect(0, 0, Settings.BOARD_WIDTH, Settings.BOARD_HEIGHT);
-//		
-//		
-//		// top wall
-//		g.setColor(Color.green);
-//		g.fillRect(0, 0, Settings.BOARD_WIDTH, 10);
-//		
-//		// left wall
-//		g.fillRect(0, 0, 10, Settings.BOARD_HEIGHT);
-//		
-//		// bottom wall
-//		g.fillRect(0, Settings.BOARD_HEIGHT-10, Settings.BOARD_WIDTH, 10);
-//		
-//		// right wall
-//		g.fillRect(Settings.BOARD_WIDTH - 10, 0, 10, Settings.BOARD_HEIGHT);
-//		g.setColor(Color.black);
-//=======
 		g.fillRect(0, 0, Global.Settings.BOARD_WIDTH, Global.Settings.BOARD_HEIGHT);
 	}
 	
@@ -266,31 +219,6 @@ public class GamePanel extends JPanel {
 			if (brain.isDying()) {
 				brain.die();
 			}			
-			System.out.println(brain.team.num);
-			 // draw in two different placed based on team
-			if (brain.team.num == 1) {
-				g.setColor(Color.white);
-				g.drawRect(20, 20, 100, 20);
-				g.setColor(Color.green);
-				g.fillRect(20, 20, brain.health, 20);
-	
-				Font small = new Font("Helvetica", Font.BOLD, 14);
-//				FontMetrics metr = this.getFontMetrics(small);
-				g.setColor(Color.white);
-				g.setFont(small);
-				g.drawString("Brain" + brain.team.num, 140, 20);
-			} else {
-				g.setColor(Color.white);
-				g.drawRect(600, 20, 100, 20);
-				g.setColor(Color.green);
-				g.fillRect(600, 20, brain.health, 20);
-	
-				Font small = new Font("Helvetica", Font.BOLD, 14);
-//				FontMetrics metr = this.getFontMetrics(small);
-				g.setColor(Color.white);
-				g.setFont(small);
-				g.drawString("Brain" + brain.team.num, 740, 20);
-			}
 		}
 	}
 	
@@ -313,5 +241,15 @@ public class GamePanel extends JPanel {
 				e.die();
 			}
 		}
+	}
+	
+	private Image getImg(String path) {
+		if (imageCache.containsKey(path)) {
+			return imageCache.get(path);
+		} else {
+			Image img = new ImageIcon(path).getImage();
+			imageCache.put(path, img);
+			return img;
+		} 
 	}
 }

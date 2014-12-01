@@ -45,7 +45,6 @@ public class GameServerConnectionToClient extends ConnectionToClient {
 				break;
 			default:
 				Helper.log("COULD NOT RECOGNIZE EVENT: " + event);
-//				logger.log(Level.INFO, "Parse error. did not understand message: " + data);
 		}			
 	}
 

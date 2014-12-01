@@ -117,7 +117,6 @@ public abstract class Entity implements Serializable {
 
 	public void hitBy(Shot shot) {
 		this.health -= shot.weapon.damage;
-		//		log(this.getClass().getName() + " HEALTH = " + health);
 		if (this.health == 0) {
 			this.die();
 		}
@@ -133,8 +132,6 @@ public abstract class Entity implements Serializable {
 	}
 
 	public boolean checkForCollisionWith(Rect other) {
-		log(this.getClass().getName() + ": collidesWith()");
-
 		// reset values
 		yCollision = false;
 		xCollision = false;
@@ -171,8 +168,8 @@ public abstract class Entity implements Serializable {
 	}
 
 	public void resetPositionOnCollision(Rect rect) {
-		log(this.getClass().getName() + ": resetPositionOnCollision()");
-		log("xCollision: " + xCollision + " yCollision: " + yCollision);
+//		Helper.(this.getClass().getName() + ": resetPositionOnCollision()");
+//		Helper.("xCollision: " + xCollision + " yCollision: " + yCollision);
 
 		boolean movedUp = false;
 		boolean movedDown = false;
@@ -225,13 +222,7 @@ public abstract class Entity implements Serializable {
 		}
 		return d;
 	}
-
-	public void log(String msg) {
-		if (Settings.DEBUG) {
-			System.out.println(msg);
-		}
-	}
-
+	
 	@Override
 	public String toString() {
 		return this.getClass().getName() + " {\n\tx: " + x + ", y: " + y + ", theta: " + theta + "\n\tdp: " + dp + ", dx: " + dx + ", dy: " + dy + ", dtheta: " + dtheta + ",\n\theight: " + height + ", width: " + width + ",\n\thealth: " + health + ", visible: " + visible + "\n}\n";

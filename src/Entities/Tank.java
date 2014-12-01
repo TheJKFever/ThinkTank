@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 
 import Global.Settings;
 import Game.GameState;
+import Game.Helper;
 import Game.Player;
 import Game.SimpleKeyEvent;
 import Game.Team;
@@ -84,7 +85,7 @@ public class Tank extends Entity {
 	}
 
 	public void keyPressed(SimpleKeyEvent e) {
-		log("TANK: KEY PRESSED");
+		Helper.log("TANK: KEY PRESSED");
 		int key = e.getKeyCode();
 
 		if (key == KeyEvent.VK_UP) {
@@ -99,7 +100,7 @@ public class Tank extends Entity {
 	}
 
 	public void keyReleased(SimpleKeyEvent e) {
-		log("TANK: KEY RELEASED");
+		Helper.log("TANK: KEY RELEASED");
 		int key = e.getKeyCode();
 
 		// Sets velocity back to 0 when user lets go of up/down arrow
@@ -126,8 +127,8 @@ public class Tank extends Entity {
 
 	public void update() {
 		super.update();
-		// log("TANK: UPDATE() BEFORE");
-		// log(this.toString());
+		// Helper.log("TANK: UPDATE() BEFORE");
+		// Helper.log(this.toString());
 
 		updateOrientation();
 		updatePosition();
@@ -142,9 +143,7 @@ public class Tank extends Entity {
 		} else if (this.firing) {
 			fireShot();
 		}
-
-		log("TANK: UPDATE() AFTER");
-		log(this.toString());
+		
 	}
 
 	public void mineForThoughts() {
@@ -156,23 +155,12 @@ public class Tank extends Entity {
 	}
 
 	public void updateOrientation() {
-		// log("TANK: Updating Orientation");
-		// log("Before:");
-		// log("theta = " + theta);
-		// log("dtheta = " + dtheta);
 		theta = wrapDegrees(theta + dtheta);
 		dtheta = 0; // reset to 0 after updating position
 		updateImagePath();
-		// log("After:");
-		// log("theta = " + theta);
-		// log("dtheta = " + dtheta);
 	}
 
 	public void updatePosition() {
-		// log("TANK: UPDATING POSITION");
-		// log("BEFORE");
-		log(this.toString());
-
 		if (theta == 0) {
 			y -= dp;
 		} else if (theta == 180) {
@@ -182,9 +170,6 @@ public class Tank extends Entity {
 		} else if (theta == 270) {
 			x -= dp;
 		}
-
-		// log("AFTER");
-		// log(this.toString());
 	}
 
 	public void executeCollisionWith(Entity entity) {
