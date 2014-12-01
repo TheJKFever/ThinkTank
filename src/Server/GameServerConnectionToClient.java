@@ -3,6 +3,7 @@ package Server;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -11,7 +12,6 @@ import java.util.logging.Logger;
 import Game.Event;
 import Game.Helper;
 import Game.Player;
-import Global.Settings;
 
 public class GameServerConnectionToClient extends ConnectionToClient {
 	private static Logger logger = Logger.getLogger("GameServer.log");
@@ -63,7 +63,7 @@ public class GameServerConnectionToClient extends ConnectionToClient {
 			while ((dataFromClient = in.readObject()) != null) {
 				receive(dataFromClient);
 			}
-		} catch (EOFException eof) {
+		} catch (EOFException|SocketException eof) {
 			gameServer.release(this);
 		} catch (IOException e) {
 			e.printStackTrace();

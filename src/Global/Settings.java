@@ -10,7 +10,7 @@ public interface Settings {
     
     public static final int DELAY = 20;
 	
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
     
 	public static final int DEFAULT_WEAPON = 1;
 	public static final int DOUBLE_WEAPON = 2;

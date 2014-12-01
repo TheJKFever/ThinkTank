@@ -23,7 +23,7 @@ public class GameScreen extends JPanel {
 
 	public ChatClient chatPanel;
 
-	public JPanel  sidePanel;
+	public JPanel sidePanel;
 	public UtilityBar bar;
 	public ThinkTankGUI gui;
 	public ChatClient chat; //	TODO: <-- fix this
@@ -39,7 +39,7 @@ public class GameScreen extends JPanel {
 		gamePanel = new GamePanel(this);
 		gamePanel.setPreferredSize(new Dimension(Settings.BOARD_WIDTH, Settings.BOARD_HEIGHT));
 		chatPanel = new ChatClient(this);
-		chatPanel.setPreferredSize(new Dimension(140, Settings.BOARD_HEIGHT));
+		chatPanel.setPreferredSize(new Dimension(140, Settings.BOARD_HEIGHT - 5));
 		sidePanel = new JPanel();
 		sidePanel.setPreferredSize(new Dimension(150, Settings.BOARD_HEIGHT));
 		sidePanel.add(chatPanel);
