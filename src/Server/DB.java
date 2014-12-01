@@ -59,7 +59,6 @@ public class DB {
 			queryLock.unlock();
 			return false;
 		}
-		queryLock.unlock();
 		return true;
 	}
 

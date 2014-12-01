@@ -198,7 +198,6 @@ public class GameState implements Serializable {
 		if (displayTime.contains(":59") || displayTime.contains(":20") || displayTime.contains(":40")) {
 			thoughtPools.clear();
 			generateRandomThoughtPool();
-			generateRandomThoughtPool();
 		}
 	}
 

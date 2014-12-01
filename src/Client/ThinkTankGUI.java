@@ -215,9 +215,9 @@ public class ThinkTankGUI extends JFrame {
 		if (page.equals(ThinkTankGUI.CreateGamePage)) {
 			createGame.gameNameTf.requestFocus();
 		} else if (page.equals(ThinkTankGUI.GameScreenPage)) {
-			gameScreen.invalidate();
-			gameScreen.revalidate();
-			gameScreen.repaint();
+			gameScreen.chatPanel.invalidate();
+			gameScreen.chatPanel.validate();
+			gameScreen.chatPanel.repaint();
 		} else if (page.equals(ThinkTankGUI.LoginPage)) {
 			login.usernameTf.requestFocus();
 		}

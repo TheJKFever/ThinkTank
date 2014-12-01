@@ -46,10 +46,7 @@ public class ServerEngine extends Engine {
 		
 		broadcastGameState();
 		startGame();
-		
-		// TODO: REMOVE THIS
-		new Turret(500, 500, this.gameState.players.get(0), this.gameState);
-		
+				
 		while (gameState.inGame) {
 			processInput();
 			gameState.update();
