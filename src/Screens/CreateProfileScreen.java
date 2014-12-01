@@ -74,7 +74,7 @@ public class CreateProfileScreen extends JPanel {
 		cancelBtn = new JButton("Cancel");
 		cancelBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CreateProfileScreen.this.gui.goTo(CreateProfileScreen.this.gui.MainMenuPage);
+				CreateProfileScreen.this.gui.goTo(ThinkTankGUI.MainMenuPage);
 			}
 		});
 		buttonsP.add(cancelBtn);

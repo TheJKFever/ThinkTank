@@ -1,5 +1,6 @@
 package Server;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -144,13 +145,4 @@ public class DB {
 			super(msg);
 		}
 	}
-	
-	public class StatsObject {
-		public String username;
-		public int total_games, wins, numShots, numDeaths, numKills, numHits, brainsDestroyed; 
-		public StatsObject(String username) {
-			this.username = username;
-		}
-	}
-
 }

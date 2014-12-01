@@ -87,8 +87,9 @@ public class GameState implements Serializable {
 	}
 	
 	public void calculateStats() {
-		// calculate winner based on brain health
-		// set winningTeam to higher brainhealth, etc.
+		if (teams[0].brain.health < teams[1].brain.health) winningTeam = teams[1].num;
+		else winningTeam = teams[0].num;
+		// TODO: anything else?
 	}
 
 	

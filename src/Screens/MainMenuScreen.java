@@ -1,10 +1,8 @@
 package Screens;
 
-import java.awt.AlphaComposite;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -76,6 +74,11 @@ public class MainMenuScreen extends JPanel {
 		this.add(joinGameBtn);
 		add(Box.createVerticalStrut(20));
 		if (gui.loggedIn) {
+			statsBtn.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e) {
+					MainMenuScreen.this.gui.goTo(ThinkTankGUI.StatsPage);
+				}				
+			});
 			this.add(statsBtn);
 			add(Box.createVerticalStrut(20));
 			this.add(logoutBtn);

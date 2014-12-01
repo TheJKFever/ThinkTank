@@ -64,8 +64,8 @@ public class ChatClient extends JPanel {
 		inputPanel.setLayout(new BorderLayout(0, 0));
 		tf = new JTextField(12);
 		inputPanel.add(tf, BorderLayout.NORTH);
-		sendAllBtn = new JButton("Send To All");
-		sendTeamBtn = new JButton("Send To Team");
+		sendAllBtn = new JButton("Send All");
+		sendTeamBtn = new JButton("Send Team");
 		buttonPanel.add(sendAllBtn);
 		buttonPanel.add(sendTeamBtn);
 		inputPanel.add(buttonPanel);

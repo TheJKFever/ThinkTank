@@ -145,7 +145,7 @@ public class CentralServer extends ServerSocket {
 		db.saveStats(gameState);
 	}
 	
-	public DB.StatsObject getStatsFor(String username) {
+	public StatsObject getStatsFor(String username) {
 		return db.getStatsFor(username);
 	}
 

@@ -74,7 +74,7 @@ public class LoginScreen extends JPanel {
 		cancelBtn = new JButton("Cancel");
 		cancelBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				LoginScreen.this.gui.goTo(LoginScreen.this.gui.MainMenuPage);
+				LoginScreen.this.gui.goTo(ThinkTankGUI.MainMenuPage);
 			}
 		});
 		buttonsP.add(cancelBtn);
@@ -95,6 +95,7 @@ public class LoginScreen extends JPanel {
 			gui.loggedIn = true;
 			gui.mainMenu.refresh();
 			gui.goTo(ThinkTankGUI.MainMenuPage);
+			gui.stats.getStatsFor(gui.user.username);
 		} else {
 			JOptionPane.showMessageDialog(null, response.data, "Error", JOptionPane.ERROR_MESSAGE);
 		}
