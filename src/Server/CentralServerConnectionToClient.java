@@ -52,16 +52,16 @@ public class CentralServerConnectionToClient extends ConnectionToClient {
 				break;
 			case "update games":
 				this.sendEvent(new Event("games info", centralServer.getGamesVector()));
-			case "create profile":
-				// TODO: Handle Create Profile
-				ProfileObject profile = (ProfileObject)event.data;
-				boolean response = centralServer.newProfile(profile);
-				if (response) {
-					// send event to client saying "SUCCESS!!!"
-				} else {
-					// send event to client saying "FAILURE!!!"					
-				}
-				break;
+//			case "create profile":
+//				// TODO: Handle Create Profile
+//				ProfileObject profile = (ProfileObject)event.data;
+//				boolean response = centralServer.newProfile(profile);
+//				if (response) {
+//					// send event to client saying "SUCCESS!!!"
+//				} else {
+//					// send event to client saying "FAILURE!!!"					
+//				}
+//				break;
 			case "login":
 				// TODO: Handle Login
 				// Login login = (Login)event.data;

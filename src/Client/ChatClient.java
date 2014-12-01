@@ -24,7 +24,6 @@ public class ChatClient extends JPanel {
 	JButton confirmBtn;
 	JLabel hostNameLbl, playerNameLbl;
 	JTextField playerNameTf;
-	
 	JScrollPane scroll;
 	JTextField tf;
 	JLabel chatLabel;
@@ -105,7 +104,7 @@ public class ChatClient extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			String message = "["+ChatClient.this.name+"]"+"\t"+tf.getText();
 			tf.setText("");
-			ta.append("\n"+message);
+//			ta.append("\n"+message);
 			// go to connectionToServer
 			gameConnection.sendEvent(new Event("chat", message));
 		}
