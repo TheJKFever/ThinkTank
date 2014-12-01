@@ -133,10 +133,13 @@ public class CentralServer extends ServerSocket {
 	}
 
 	public boolean newProfile(ProfileObject profile) throws UserAlreadyExistsException {
-		System.out.println("CentralServer: RECEIVED A CREATE PROFILE QUERY: " + profile);
 		return db.insertProfile(profile);
 	}
 
+	public boolean login(ProfileObject profile) throws Exception {
+		return db.attemptLogin(profile);
+	}
+	
 	public static void main(String[] args) {
 		try {
 			CentralServer server = new CentralServer(Settings.Development.SERVER_PORT);
@@ -145,5 +148,6 @@ public class CentralServer extends ServerSocket {
 			e.printStackTrace();
 		}
 	}
+
 }
 

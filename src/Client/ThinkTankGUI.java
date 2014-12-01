@@ -24,6 +24,7 @@ import Screens.CreateGameScreen;
 import Screens.CreateProfileScreen;
 import Screens.GameScreen;
 import Screens.LobbyScreen;
+import Screens.LoginScreen;
 import Screens.MainMenuScreen;
 import Screens.WaitingScreen;
 
@@ -41,6 +42,7 @@ public class ThinkTankGUI extends JFrame {
 	public GameScreen gameScreen;
 	//	private GameOverScreen gameOver;
 	private JMenuBar menuBar;
+	public LoginScreen login;
 	private JMenu menu;
 	private JMenuItem mainMenuItem, exitItem;
 	public boolean loggedIn = false;
@@ -53,7 +55,8 @@ public class ThinkTankGUI extends JFrame {
 			GameScreenPage = "gameScreen",
 			StatsPage = "stats",
 			CreateProfilePage = "createProfile",
-			GameOverPage = "gameOverPage";
+			GameOverPage = "gameOver",
+			LoginPage = "login";
 	
 	public ThinkTankGUI(String host, int port) {
 		try {
@@ -89,6 +92,7 @@ public class ThinkTankGUI extends JFrame {
 			mainPanel.setLayout(cardLayout);
 			add(mainPanel);
 			
+			
 			menuBar = new JMenuBar();
 			menu = new JMenu("File");
 			menuBar.add(menu);
@@ -123,6 +127,7 @@ public class ThinkTankGUI extends JFrame {
 			 gameScreen = new GameScreen(this);
 			 gameScreen.setName(GameScreenPage);
 			 createProfile = new CreateProfileScreen(this); 
+			 login = new LoginScreen(this);
 //			 gameOver = new GameOverScreen(this); 
 //			 stats = new StatsScreen(this); 
 
@@ -132,6 +137,7 @@ public class ThinkTankGUI extends JFrame {
 			 mainPanel.add(GameScreenPage, gameScreen);
 			 mainPanel.add(LobbyPage, lobby);
 			 mainPanel.add(CreateProfilePage, createProfile);
+			 mainPanel.add(LoginPage, login);
 			
 //			 mainPanel.add(gameOver);
 

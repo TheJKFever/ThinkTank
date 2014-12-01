@@ -21,7 +21,7 @@ public class LoginScreen extends JPanel {
 	public ThinkTankGUI gui;
 	private JLabel usernameLbl, passwordLbl;
 	public JTextField usernameTf, passwordTf;
-	private JButton createProfileBtn, cancelBtn;
+	private JButton loginBtn, cancelBtn;
 	private Component horizontalGlue;
 	private Component horizontalGlue_1;
 	private JPanel usernameP, passwordP, buttonsP;
@@ -67,10 +67,10 @@ public class LoginScreen extends JPanel {
 		add(buttonsP);
 		buttonsP.setMaximumSize(new Dimension(32767, 5));
 		
-		createProfileBtn = new JButton("Create Game");
-		buttonsP.add(createProfileBtn);
+		loginBtn = new JButton("Login");
+		buttonsP.add(loginBtn);
 		
-		createProfileBtn.addActionListener(new CreateProfileListener());
+		loginBtn.addActionListener(new LoginListener());
 		cancelBtn = new JButton("Cancel");
 		cancelBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -87,21 +87,22 @@ public class LoginScreen extends JPanel {
 		this.nextPage = page;
 	}
 	
-	public void createProfileResponse(Event response) {
+	public void loginResponse(Event response) {
+		System.out.println("received a login response");
 		if (response.result) {
 			// create profile success
-			usernameTf.setText("");
-			passwordTf.setText("");
 			gui.user = (ProfileObject) response.data;
-			gui.goTo(nextPage);
+			gui.loggedIn = true;
+			gui.mainMenu.refresh();
+			gui.goTo(ThinkTankGUI.MainMenuPage);
 		} else {
 			JOptionPane.showMessageDialog(null, response.data, "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
-	public class CreateProfileListener implements ActionListener {
+	public class LoginListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
-			gui.centralConnection.sendEvent(new Event("create profile", new ProfileObject(usernameTf.getText(), passwordTf.getText())));
+			gui.centralConnection.sendEvent(new Event("login", new ProfileObject(usernameTf.getText(), passwordTf.getText())));
 		}
 	}
 }

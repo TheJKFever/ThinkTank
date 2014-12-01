@@ -31,7 +31,6 @@ public class DB {
 	}
 
 	public boolean insertProfile(ProfileObject profile) throws UserAlreadyExistsException {
-		System.out.println("DB: RECEIVED A CREATE PROFILE QUEREY");
 		String query="";
 		try {
 			// TODO: Select query of name, if more than 0 records return false
@@ -55,6 +54,30 @@ public class DB {
 			return false;
 		}
 		return true;
+	}
+
+	public boolean attemptLogin(ProfileObject profile) throws Exception {
+		String query="";
+		try {
+			query="SELECT COUNT(*) FROM players WHERE name=\"" + profile.username + "\"";
+			Statement st = connection.createStatement();
+			ResultSet results = st.executeQuery(query);
+			results.next();
+			if (results.getInt(1)!=0) {
+				query="SELECT COUNT(*) FROM players WHERE name=\"" + profile.username + "\" AND password =\"" + profile.password + "\"";
+				st = connection.createStatement();
+				results = st.executeQuery(query);
+				results.next();
+				if (results.getInt(1)!=0) return true;
+				else throw new Exception("Incorrect password");
+			} else {
+				throw new Exception("Incorrect username");
+			}
+		} catch (SQLException e) {
+			System.out.println(e);
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 	public class UserAlreadyExistsException extends Exception {
