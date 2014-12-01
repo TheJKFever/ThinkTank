@@ -133,7 +133,6 @@ public class CentralServer extends ServerSocket {
 
 	public boolean newProfile(ProfileObject profile) {
 		return db.insertProfile(profile);
-		return false;
 	}
 
 	public static void main(String[] args) {

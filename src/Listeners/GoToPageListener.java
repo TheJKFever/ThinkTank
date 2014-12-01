@@ -9,9 +9,9 @@ import Client.ThinkTankGUI;
 
 public class GoToPageListener implements ActionListener {
 	private ThinkTankGUI gui;
-	private JPanel page;
+	private String page;
 	
-	public GoToPageListener(ThinkTankGUI gui, JPanel page) {
+	public GoToPageListener(ThinkTankGUI gui, String page) {
 		this.gui = gui;
 		this.page = page;
 	}

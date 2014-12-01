@@ -25,7 +25,7 @@ public interface Settings {
 
     	public class DB {
         	public static final String ADDRESS = "jdbc:mysql://localhost/";
-        	public static final String NAME = "lab11";
+        	public static final String NAME = "thinktank";
         	public static final String DRIVER = "com.mysql.jdbc.Driver";
         	public static final String USER = "root";
         	public static final String PASSWORD = "root";
@@ -37,7 +37,7 @@ public interface Settings {
     	public static final int SERVER_PORT = 2400;
     	public class DB {
         	public static final String ADDRESS = "jdbc:mysql://localhost/";
-        	public static final String NAME = "lab11";
+        	public static final String NAME = "thinktank";
         	public static final String DRIVER = "com.mysql.jdbc.Driver";
         	public static final String USER = "root";
         	public static final String PASSWORD = "root";
