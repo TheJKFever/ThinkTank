@@ -69,8 +69,8 @@ public class Turret extends Entity implements Serializable {
     		{
     			if (tank.getX()>(this.getX()-10)
     					&& tank.getX()<(this.getX()+10)
-	    				&& tank.getY()<(this.getY()+10) 
-	    				&& tank.getY()>(this.getY()-10))//Enermy coming from upwards
+	    				&& tank.getY()<(this.getY()) 
+	    				&& tank.getY()>(this.getY()-RADIUS))//Enermy coming from upwards
 	    		{
 	    			theta=0;
 	        		shotX = this.x + this.getWidth()/2;

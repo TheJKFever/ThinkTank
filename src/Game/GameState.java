@@ -146,6 +146,11 @@ public class GameState implements Serializable {
 				shot.update();
 			}
 		}
+		
+		for (Turret t:turrets)
+		{
+			t.update();
+		}
 
 		updateGameClock();
 	}

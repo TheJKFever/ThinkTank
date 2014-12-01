@@ -3,6 +3,7 @@ package Screens;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -11,6 +12,7 @@ import javax.swing.JToolBar;
 
 import Entities.Tank;
 import Game.Player;
+import Game.SimpleKeyEvent;
 import Global.Settings;
 
 public class UtilityBar extends JPanel {
@@ -50,103 +52,73 @@ public class UtilityBar extends JPanel {
 		JButton button1 = new JButton(image1);
 
 		button1.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
-
-				gameScreen.engine.player.tank.updateWeapon(Settings.DOUBLE_WEAPON);
-				
-				System.out.println("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
-
-
+				SimpleKeyEvent ke = new SimpleKeyEvent(KeyEvent.VK_1, KeyEvent.KEY_RELEASED);
+				gameScreen.sendKeyPressToClientAndServer(ke);
+				gameScreen.gamePanel.requestFocusInWindow();
 			}
-
 		});
-
-		
 
 		JButton button2 = new JButton(image2);
 		
 		button2.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
-
-
-				gameScreen.engine.player.tank.updateWeapon(Settings.TRIPLE_WEAPON);
-				
-
+				SimpleKeyEvent ke = new SimpleKeyEvent(KeyEvent.VK_2, KeyEvent.KEY_RELEASED);
+				gameScreen.sendKeyPressToClientAndServer(ke);
+				gameScreen.gamePanel.requestFocusInWindow();
 			}
-
 		});
+		
 		JButton button3 = new JButton(image3);
 		
 		button3.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
-
-
-				gameScreen.engine.player.tank.updateWeapon(Settings.SUPER_WEAPON);
-				
-
+				SimpleKeyEvent ke = new SimpleKeyEvent(KeyEvent.VK_3, KeyEvent.KEY_RELEASED);
+				gameScreen.sendKeyPressToClientAndServer(ke);
+				gameScreen.gamePanel.requestFocusInWindow();
 			}
-
 		});
 		
 		JButton button4 = new JButton(image4);
 
 		button4.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
-
-				gameScreen.engine.player.team.brain.setHealth(1);
-				
-
-
+				SimpleKeyEvent ke = new SimpleKeyEvent(KeyEvent.VK_4, KeyEvent.KEY_RELEASED);
+				gameScreen.sendKeyPressToClientAndServer(ke);
+				gameScreen.gamePanel.requestFocusInWindow();
 			}
-
 		});
 		
 		JButton button5 = new JButton(image5);
 
 		button5.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
-
-				gameScreen.engine.player.team.brain.setHealth(2);
-				
-
-
+				SimpleKeyEvent ke = new SimpleKeyEvent(KeyEvent.VK_5, KeyEvent.KEY_RELEASED);
+				gameScreen.sendKeyPressToClientAndServer(ke);
+				gameScreen.gamePanel.requestFocusInWindow();
 			}
-
 		});
 		
 		JButton button6 = new JButton(image6);
 
 		button6.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
-
-				gameScreen.engine.player.team.brain.setHealth(3);
-				
-
-
+				SimpleKeyEvent ke = new SimpleKeyEvent(KeyEvent.VK_6, KeyEvent.KEY_RELEASED);
+				gameScreen.sendKeyPressToClientAndServer(ke);
+				gameScreen.gamePanel.requestFocusInWindow();
 			}
-
 		});
 		
 		JButton button7 = new JButton(image7);
 
 		button7.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
-
-				gameScreen.engine.player.team.brain.setHealth(4);
-				
-
-
+				SimpleKeyEvent ke = new SimpleKeyEvent(KeyEvent.VK_7, KeyEvent.KEY_RELEASED);
+				gameScreen.sendKeyPressToClientAndServer(ke);
+				gameScreen.gamePanel.requestFocusInWindow();
 			}
-
 		});
-
+		
 		JToolBar bar = new JToolBar();
 		bar.add(button1);
 		bar.add(button2);

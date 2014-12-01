@@ -2,6 +2,7 @@ package Screens;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
@@ -11,7 +12,9 @@ import Client.ChatClient;
 import Client.ConnectionToGameServer;
 import Client.ThinkTankGUI;
 import Engines.ClientEngine;
+import Game.Event;
 import Game.Helper;
+import Game.SimpleKeyEvent;
 import Global.Settings;
 
 public class GameScreen extends JPanel {
@@ -65,5 +68,18 @@ public class GameScreen extends JPanel {
 			ioe.printStackTrace();
 			return false;
 		}
+	}
+	
+	public void sendKeyPressToClientAndServer(SimpleKeyEvent ke) {
+		Event event = new Event("key event", ke);
+		synchronized(this.engine.eventQ) {
+			try {
+				this.engine.eventQ.put(event);
+			} catch (InterruptedException ie) {
+				System.out.println("USER INPUT HANDLER: INTERRUPTED");
+				ie.printStackTrace();
+			}
+		}
+		this.gameConnection.sendEvent(event);
 	}
 }

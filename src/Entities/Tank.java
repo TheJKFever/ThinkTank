@@ -7,6 +7,7 @@ import Game.Helper;
 import Game.Player;
 import Game.SimpleKeyEvent;
 import Game.Team;
+import Game.Upgrade;
 import Global.Settings;
 
 public class Tank extends Entity {
@@ -48,7 +49,8 @@ public class Tank extends Entity {
 		this.player = p;
 		this.team = player.team;
 		this.gs = gs;
-		this.gs.tanks.addElement(this);
+		//this.gs.tanks.addElement(this);
+		this.gs.tanks.add(this);
 		this.health = MAX_TANK_HEALTH;
 		this.setWidth(TANK_HEIGHT);
 		this.setHeight(TANK_WIDTH);
@@ -121,19 +123,50 @@ public class Tank extends Entity {
 		if (key == KeyEvent.VK_UP) {
 			dp = 0;
 		}
+		
 		if (key == KeyEvent.VK_DOWN) {
 			dp = 0;
 		}
+		
 		if (key == KeyEvent.VK_LEFT) {
 			dtheta -= 90;
 		}
+		
 		if (key == KeyEvent.VK_RIGHT) {
 			dtheta += 90;
 		}
+		
 		if (key == KeyEvent.VK_M) {
 			mining = false;
 		}
 
+		if (key == KeyEvent.VK_1) {
+			// Double strength weapon
+			Upgrade u = new Upgrade("weapon", 100, 1);
+			this.buyUpgrade(u);
+		}
+		
+		if (key == KeyEvent.VK_2) {
+			Upgrade u = new Upgrade("weapon", 200, 2);
+			this.buyUpgrade(u);
+		}
+		
+		if (key == KeyEvent.VK_3) {
+			Upgrade u = new Upgrade("weapon", 300, 3);
+			this.buyUpgrade(u);
+		}
+		
+		if (key == KeyEvent.VK_4) {
+			Upgrade u = new Upgrade("weapon", 500, 4);
+			this.buyUpgrade(u);
+		}
+		
+		if (key == KeyEvent.VK_5) {
+			// turret
+			Upgrade u = new Upgrade("turret", 1000, 5);
+			this.buyUpgrade(u);
+		}
+		
 		if (key == KeyEvent.VK_SPACE) {
 			this.firing = true;
 		}
@@ -207,4 +240,24 @@ public class Tank extends Entity {
 		gs.shots.add(new Shot(x, y, theta, gs, this.player, this.weaponType));
 		firing = false;
 	}
+	
+	public void buyUpgrade(Upgrade upgrade) {
+		Helper.log("ATTEMPTING TO PURCHASE UPGRADE...");
+		
+		if (this.thoughts >= upgrade.price) {
+			Helper.log("PURCHASING UPGRADE...");
+			this.thoughts -= upgrade.price;
+			if (upgrade.type == "weapon") {
+				this.updateWeapon(upgrade.weaponType);
+			} else if (upgrade.type == "turret") {
+				new Turret(x, y, this.player, gs);
+			}
+			else {
+				// TODO: buy other things 
+			}
+		} else {
+			Helper.log("COULD NOT AFFORD UPGRADE...");
+		}
+	}
+		
 }

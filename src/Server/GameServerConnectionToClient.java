@@ -37,7 +37,7 @@ public class GameServerConnectionToClient extends ConnectionToClient {
 	public void receive(Object obj) {
 		Helper.log("GSCONNECTIONTOCLIENT: RECEIVING");
 		Event event = (Event) obj;
-		System.out.println("RECEIVED EVENT:\n" + event);
+		Helper.log("RECEIVED EVENT:\n" + event);
 		event.player = player;
 		switch(event.type) {
 			case "key event":
