@@ -11,13 +11,13 @@ public class Turret extends Entity implements Serializable {
 
 	static final String imageDir="images/turrets/";
 	
-	static final String IMAGE_TURRET_UP=imageDir+"turret_up.png";
-	static final String IMAGE_TURRET_LEFT=imageDir+"turret_left.png";
-	static final String IMAGE_TURRET_DOWN=imageDir+"turret_down.png";
-	static final String IMAGE_TURRET_RIGHT=imageDir+"turret_right.png";
+	static final String IMAGE_TURRET_UP = imageDir+"turret_up.png";
+	static final String IMAGE_TURRET_LEFT = imageDir+"turret_left.png";
+	static final String IMAGE_TURRET_DOWN = imageDir+"turret_down.png";
+	static final String IMAGE_TURRET_RIGHT = imageDir+"turret_right.png";
 
-	
 	private static final int MAX_TURRET_HEALTH = 15;
+	private static final int RADIUS = 200;
 	
 	public boolean firing;
 	public int shootFrequency;
@@ -55,7 +55,6 @@ public class Turret extends Entity implements Serializable {
     {
     	fireShot();
     	updateImagePath();
-
     }
     
     public void fireShot()
@@ -66,12 +65,12 @@ public class Turret extends Entity implements Serializable {
     	
     	for (Tank tank:gs.tanks)
     	{
-    		if (this.team.num !=tank.team.num)
+    		if (this.team.num != tank.team.num)
     		{
     			if (tank.getX()>(this.getX()-10)
     					&& tank.getX()<(this.getX()+10)
-	    				&& tank.getY()<(this.getY()) 
-	    				&& tank.getY()>(this.getY()-100))//Enermy coming from upwards
+	    				&& tank.getY()<(this.getY()+10) 
+	    				&& tank.getY()>(this.getY()-10))//Enermy coming from upwards
 	    		{
 	    			theta=0;
 	        		shotX = this.x + this.getWidth()/2;
@@ -82,7 +81,7 @@ public class Turret extends Entity implements Serializable {
 	    		else if (tank.getY()>(this.getY()-10)
 	    				&& tank.getY()<(this.getY()+10)
 	    				&& tank.getX()>(this.getX())
-	    				&& tank.getX()<(this.getX()+100))//Enermy coming from right
+	    				&& tank.getX()<(this.getX()+RADIUS))//Enermy coming from right
 	    		{
 	    			theta=90;
 	        		shotX = this.x + this.getWidth();
@@ -93,7 +92,7 @@ public class Turret extends Entity implements Serializable {
 	    		else if ((tank.getX()>(this.getX()-10)
 	    				&& tank.getX()<(this.getX()+10)
 	    	 			&&tank.getY()>(this.getY()) 
-	    	 			&& tank.getY()<(this.getY()+100)))//Enermy coming from downwards
+	    	 			&& tank.getY()<(this.getY()+RADIUS)))//Enermy coming from downwards
 	    	 	{
 	    	 		theta=180;
 	        		shotX = this.x + this.getWidth()/2;
@@ -104,7 +103,7 @@ public class Turret extends Entity implements Serializable {
 	    		else if (tank.getY()>(this.getY()-10)
 	    				&& tank.getY()<(this.getY()+10)
 	    				&& tank.getX()<(this.getX())
-	    				&& tank.getX()>(this.getX()-100))//Enermy coming from left
+	    				&& tank.getX()>(this.getX()-RADIUS))//Enermy coming from left
 	    		{
 	    			theta=270;
 	        		shotX = this.x;

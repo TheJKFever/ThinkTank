@@ -63,6 +63,7 @@ public class Shot extends Entity {
 		super.update();
     	updatePosition();
     	checkForCollisionWithEntities(gs.barriers);
+    	checkForCollisionWithEntities(gs.turrets);
         checkForCollisionWithEntities(gs.brains);
         checkForCollisionWithEntities(gs.tanks);
 	}

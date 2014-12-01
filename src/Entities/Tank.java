@@ -28,7 +28,7 @@ public class Tank extends Entity {
 	static final int TANK_WIDTH = 16;
 
 	static final int TANK_SPAWN_X = 0;
-	static final int TANK_SPAWN_Y = 50;
+	static final int TANK_SPAWN_Y = 100;
 
 	public static int TankCount = 0;
 
@@ -65,7 +65,7 @@ public class Tank extends Entity {
 	public void spawn() {
 		// TODO: Spawn tanks properly
 		this.x = 100;
-		 this.x = TANK_SPAWN_X + (50 * this.tankID/2);
+//		this.x = TANK_SPAWN_X + (50 * this.tankID/2);
 		if (team.num == 1) {
 			this.y = TANK_SPAWN_Y;
 		} else {
@@ -149,6 +149,7 @@ public class Tank extends Entity {
 
 		// TODO: Subtract health when run into things?
 		checkForCollisionWithEntities(gs.barriers);
+		checkForCollisionWithEntities(gs.turrets);
 		checkForCollisionWithEntities(gs.brains);
 		checkForCollisionWithEntities(gs.tanks);
 

@@ -109,6 +109,7 @@ public class GamePanel extends JPanel {
 		drawThoughtPools(g2d);
 		drawBarriers(g2d);
 		drawBrains(g2d);
+		drawTurrets(g2d);
 		drawTanks(g2d);
 		drawShots(g2d);
 		
@@ -213,7 +214,6 @@ public class GamePanel extends JPanel {
 		Helper.log("GAMEPANEL: DRAW BRAINS");
 		for (Brain brain: gameState.brains) {
 			if (brain.isVisible()) {
-				System.out.println("path is: " + brain.imagePath);
 				g.drawImage(getImg(brain.imagePath), brain.x, brain.y, this);
 			}
 			if (brain.isDying()) {
@@ -228,6 +228,10 @@ public class GamePanel extends JPanel {
 	
 	public void drawTanks(Graphics g) {
 		drawEntities(g, gameState.tanks);
+	}
+	
+	public void drawTurrets(Graphics g) {
+		drawEntities(g, gameState.turrets);
 	}
 	
 	public void drawEntities(Graphics g, Vector<? extends Entity> entities) {

@@ -36,6 +36,7 @@ public class GameState implements Serializable {
 		
 		barriers = new Vector<Barrier>();
 		thoughtPools = new Vector<ThoughtPool>();
+		turrets = new Vector<Turret>();
 		brains = new Vector<Brain>();
 		shots = new Vector<Shot>();
 		players = new Vector<Player>();
@@ -57,7 +58,6 @@ public class GameState implements Serializable {
 	public void startGameClock() {
 		startTime = System.nanoTime();
 		updateGameClock();
-		new Turret(100, 500, this.players.get(0), this);
 	}
 	
 	
@@ -137,9 +137,6 @@ public class GameState implements Serializable {
 			t.update();
 		}
 		
-//		for (Shot s: shots) {
-//			s.update();
-//		}
 		// shots
 		for (int i = (shots.size() - 1); i >= 0; i--) {
 			Shot shot = shots.get(i);
@@ -149,18 +146,7 @@ public class GameState implements Serializable {
 				shot.update();
 			}
 		}
-		// brains
-//		for (Brain b: brains) {
-//			b.update();
-//		}
-		// barriers 
-//		for (Barrier b: barriers) {
-//			b.update();
-//		}
-		// Thought Pools
-//		for (ThoughtPool tp: thoughtPools) {
-//			tp.update();
-//		}
+
 		updateGameClock();
 	}
 
