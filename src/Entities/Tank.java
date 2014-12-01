@@ -23,7 +23,7 @@ public class Tank extends Entity {
 	static final String IMAGE_TANK_RIGHT_RED = "images/tanks/red/right1.png";
 	static final String IMAGE_TANK_DOWN_RED = "images/tanks/red/down1.png";
 	static final String IMAGE_TANK_LEFT_RED = "images/tanks/red/left1.png";
-	
+
 	static final int MAX_TANK_HEALTH = 10;
 	static final int TANK_HEIGHT = 16;
 	static final int TANK_WIDTH = 16;
@@ -49,7 +49,7 @@ public class Tank extends Entity {
 		this.player = p;
 		this.team = player.team;
 		this.gs = gs;
-		//this.gs.tanks.addElement(this);
+		// this.gs.tanks.addElement(this);
 		this.gs.tanks.add(this);
 		this.health = MAX_TANK_HEALTH;
 		this.setWidth(TANK_HEIGHT);
@@ -65,7 +65,7 @@ public class Tank extends Entity {
 	}
 
 	public void spawn() {
-		this.y = Settings.BOARD_HEIGHT/2 - 8;
+		this.y = Settings.BOARD_HEIGHT / 2 - 8;
 		if (team.num == 1) {
 			this.x = 150;
 		} else {
@@ -74,7 +74,7 @@ public class Tank extends Entity {
 	}
 
 	public void updateImagePath() {
-		
+
 		if (team.num == 1) {
 			if (theta == 0) {
 				this.imagePath = IMAGE_TANK_UP_BLUE;
@@ -121,53 +121,121 @@ public class Tank extends Entity {
 		if (key == KeyEvent.VK_UP) {
 			dp = 0;
 		}
-		
+
 		if (key == KeyEvent.VK_DOWN) {
 			dp = 0;
 		}
-		
+
 		if (key == KeyEvent.VK_LEFT) {
 			dtheta -= 90;
 		}
-		
+
 		if (key == KeyEvent.VK_RIGHT) {
 			dtheta += 90;
 		}
-		
+
 		if (key == KeyEvent.VK_M) {
 			mining = false;
 		}
 
 		if (key == KeyEvent.VK_1) {
 			// Double strength weapon
-			Upgrade u = new Upgrade("weapon", 100, 1);
+			Upgrade u = new Upgrade("weapon", 100, 2);
 			this.buyUpgrade(u);
 		}
-		
+
 		if (key == KeyEvent.VK_2) {
-			Upgrade u = new Upgrade("weapon", 200, 2);
+			Upgrade u = new Upgrade("weapon", 200, 3);
 			this.buyUpgrade(u);
 		}
-		
+
 		if (key == KeyEvent.VK_3) {
-			Upgrade u = new Upgrade("weapon", 300, 3);
+			Upgrade u = new Upgrade("weapon", 300, 4);
 			this.buyUpgrade(u);
 		}
-		
+
 		if (key == KeyEvent.VK_4) {
-			Upgrade u = new Upgrade("weapon", 500, 4);
-			this.buyUpgrade(u);
+			
+			this.buyRepairKit(1);
 		}
-		
+
 		if (key == KeyEvent.VK_5) {
+
+			this.player.team.brain.setHealth(2);
+			this.buyRepairKit(2);
+
+		}
+
+		if (key == KeyEvent.VK_6) {
+
+			this.player.team.brain.setHealth(3);
+			this.buyRepairKit(3);
+
+		}
+
+		if (key == KeyEvent.VK_7) {
+
+			this.player.team.brain.setHealth(4);
+			this.buyRepairKit(4);
+
+		}
+
+		if (key == KeyEvent.VK_8) {
 			// turret
 			Upgrade u = new Upgrade("turret", 1000, 5);
 			this.buyUpgrade(u);
 		}
-		
+
 		if (key == KeyEvent.VK_SPACE) {
 			this.firing = true;
 		}
+	}
+
+	public void buyRepairKit(int type) {
+
+		if (type == 1) {
+
+			if (this.thoughts >= 200) {
+
+				this.thoughts -= 200;
+				
+				this.player.team.brain.setHealth(1);
+
+
+			}
+		} else if (type == 2) {
+
+			if (this.thoughts >= 400) {
+
+				this.thoughts -= 400;
+				
+				this.player.team.brain.setHealth(2);
+
+
+			}
+
+		} else if (type == 3) {
+
+			if (this.thoughts >= 600) {
+
+				this.thoughts -= 600;
+				this.player.team.brain.setHealth(3);
+
+
+			}
+
+		} else if (type == 4) {
+
+			if (this.thoughts >= 450) {
+
+				this.thoughts -= 450;
+				this.player.team.brain.setHealth(4);
+
+
+			}
+
+		}
+
 	}
 
 	public void update() {
@@ -238,10 +306,10 @@ public class Tank extends Entity {
 		gs.shots.add(new Shot(x, y, theta, gs, this.player, this.weaponType));
 		firing = false;
 	}
-	
+
 	public void buyUpgrade(Upgrade upgrade) {
 		Helper.log("ATTEMPTING TO PURCHASE UPGRADE...");
-		
+
 		if (this.thoughts >= upgrade.price) {
 			Helper.log("PURCHASING UPGRADE...");
 			this.thoughts -= upgrade.price;
@@ -249,13 +317,12 @@ public class Tank extends Entity {
 				this.updateWeapon(upgrade.weaponType);
 			} else if (upgrade.type == "turret") {
 				new Turret(x, y, this.player, gs);
-			}
-			else {
-				// TODO: buy other things 
+			} else {
+				// TODO: buy other things
 			}
 		} else {
 			Helper.log("COULD NOT AFFORD UPGRADE...");
 		}
 	}
-		
+
 }
