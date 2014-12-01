@@ -67,9 +67,9 @@ public class Tank extends Entity {
 	public void spawn() {
 		this.y = Settings.BOARD_HEIGHT/2 - 8;
 		if (team.num == 1) {
-			this.x = 150;
+			this.x = 124;
 		} else {
-			this.x = Settings.BOARD_WIDTH - 150;
+			this.x = Settings.BOARD_WIDTH - 124;
 		}
 	}
 
