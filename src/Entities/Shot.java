@@ -16,7 +16,7 @@ public class Shot extends Entity {
 	public Weapon weapon;
 	private int weaponType = Settings.DEFAULT_WEAPON;
 
-	public Shot(int tankX, int tankY, int theta, GameState gs, Player shooter, int weaponType) {
+	public Shot(Entity shooterEntity, int theta, GameState gs, Player shooter, int weaponType) {
 		this.gs = gs;
 		this.weaponType = weaponType;
 		this.theta = theta;
@@ -37,18 +37,23 @@ public class Shot extends Entity {
 		this.setHeight(this.weapon.height);
 		
 		if (theta == 0) {
-			this.x = tankX + 16/2 - this.weapon.WIDTH_VERTICAL/2;
-			this.y = tankY - this.weapon.HEIGHT_VERTICAL;
+			this.x = shooterEntity.x + shooterEntity.width/2 - this.weapon.WIDTH_VERTICAL/2;
+			this.y = shooterEntity.y - this.weapon.HEIGHT_VERTICAL;
 		} else if (theta == 90) {
-			this.x= tankX + 16;
-			this.y = tankY + 16 / 2 - this.weapon.HEIGHT_HORIZONTAL / 2;
+			this.x = shooterEntity.x + shooterEntity.width;
+			this.y = shooterEntity.y + shooterEntity.height/2 - this.weapon.HEIGHT_HORIZONTAL / 2;
 		} else if (theta == 180) {
-			this.x = tankX + width / 2 -  this.weapon.WIDTH_VERTICAL / 2;
-			this.y = tankY + 16;
+			this.x = shooterEntity.x + shooterEntity.width/2 -  this.weapon.WIDTH_VERTICAL / 2;
+			this.y = shooterEntity.y + shooterEntity.height;
 		} else if (theta == 270) {
-			this.x = tankX -  this.weapon.WIDTH_HORIZONTAL;
-			this.y = tankY + 16/2 - this.weapon.HEIGHT_VERTICAL/2;
+			this.x = shooterEntity.x -  this.weapon.WIDTH_HORIZONTAL;
+			this.y = shooterEntity.y + shooterEntity.height/2 - this.weapon.HEIGHT_VERTICAL/2;
 		}
+		
+		System.out.println("***SHOT FIRED***");
+		System.out.println(shooterEntity);
+		System.out.println(this);
+		System.out.println("***SHOT COMPLETE***");
 	}
 
 	public Weapon getWeapon() {
@@ -88,7 +93,7 @@ public class Shot extends Entity {
     }
 	
 	public void die() {
-    	// TODO: SHOT EXPLOSION ON DEATH
+		super.die();
     	this.exploding = true;
     	this.dying = true;
     	this.visible = false;
