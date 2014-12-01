@@ -135,7 +135,7 @@ public class GamePanel extends JPanel {
 		g.setFont(DISPLAY_TIME_FONT);
 		g.drawString(gameState.displayTime, DISPLAY_TIME_X, DISPLAY_TIME_Y);
 		
-
+ 
 		g.setFont(TANK_HEALTH_FONT);
 		g.drawString("Health: " + player.tank.health + "/10", TANK_HEALTH_X, TANK_HEALTH_Y);
 		

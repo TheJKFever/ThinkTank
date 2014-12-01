@@ -64,10 +64,12 @@ public class CentralServerConnectionToClient extends ConnectionToClient {
 				}
 				break;
 			case "login":
-				profile = (ProfileObject)event.data;
+				profile = (ProfileObject) event.data;
 				try {
-					this.sendEvent(new Event("login", profile, centralServer.login(profile)));
+					boolean response = centralServer.login(profile);
+					this.sendEvent(new Event("login", profile, response));
 				} catch (Exception e) {
+					e.printStackTrace();
 					this.sendEvent(new Event("login", e.getMessage(), false));
 				}
 				break;
@@ -75,7 +77,13 @@ public class CentralServerConnectionToClient extends ConnectionToClient {
 				// TODO: Handle login
 				break;
 			case "get stats":
-				// TODO: get stats from database for username
+				try {
+					DB.StatsObject stats = this.centralServer.getStatsFor((String)event.data);
+					sendEvent(new Event("stats", stats, true));
+				} catch (Exception e) {
+					e.printStackTrace();
+					sendEvent(new Event("stats", e.getMessage(), false));
+				}
 				break;
 			default:
 				logger.log(Level.INFO, "Parse error. did not understand message: " + event);

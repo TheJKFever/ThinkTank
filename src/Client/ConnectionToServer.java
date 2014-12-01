@@ -28,8 +28,8 @@ public abstract class ConnectionToServer extends Socket implements Runnable {
 	// go to GameServerConnectionToClient
 	private void send(Object obj) {
 		try {
-			out.reset();
 			out.writeObject(obj);
+			out.reset();
 			out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();

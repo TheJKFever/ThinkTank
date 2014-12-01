@@ -28,8 +28,8 @@ public abstract class ConnectionToClient extends Thread {
 	// go to ConnectionToGameServer
 	public void send(Object obj) {
 		try {
-			out.reset();
 			out.writeObject(obj);
+			out.reset();
 			out.flush();
 		} catch (SocketException se) {
 			try {				

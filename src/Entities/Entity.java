@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Vector;
 
 import Game.GameState;
-import Game.Helper;
 import Game.Player;
 import Game.Rect;
 import Game.Team;
@@ -111,6 +110,9 @@ public abstract class Entity implements Serializable {
 		shot.player.numHits++;
 		
 		if (this.health == 0) {
+			if (this instanceof Brain) {
+				shot.player.destroyedBrain = true;
+			}
 			this.die();
 			shot.player.numKills++;
 		}

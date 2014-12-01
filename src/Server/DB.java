@@ -9,6 +9,8 @@ import java.sql.Statement;
 import java.util.concurrent.locks.ReentrantLock;
 
 import Entities.ProfileObject;
+import Game.GameState;
+import Game.Player;
 import Global.Settings;
 
 public class DB {
@@ -31,6 +33,7 @@ public class DB {
 	}
 
 	public boolean insertProfile(ProfileObject profile) throws UserAlreadyExistsException {
+		queryLock.lock();
 		String query="";
 		try {
 			// TODO: Select query of name, if more than 0 records return false
@@ -39,6 +42,7 @@ public class DB {
 			ResultSet results = st.executeQuery(query);
 			results.next();
 			if (results.getInt(1)!=0) {
+				queryLock.unlock();
 				throw new UserAlreadyExistsException("Username already exists");
 			}
 			
@@ -48,11 +52,14 @@ public class DB {
 			stmt.setString(1, profile.username);
 			stmt.setString(2, profile.password);
 			stmt.execute();
+			queryLock.unlock();
 		} catch (SQLException e) {
 			System.out.println(e);
 			e.printStackTrace();
+			queryLock.unlock();
 			return false;
 		}
+		queryLock.unlock();
 		return true;
 	}
 
@@ -74,15 +81,77 @@ public class DB {
 				throw new Exception("Incorrect username");
 			}
 		} catch (SQLException e) {
-			System.out.println(e);
-			e.printStackTrace();
-			return false;
+			throw new Exception("Unknown SQL Exception");
 		}
 	}
+
+	public void saveStats(GameState gameState) {
+		queryLock.lock();
+		try {
+			for (Player player: gameState.players) {
+				if (player.username.equals("guest")) continue;
+				String command = "UPDATE players " +
+					"SET total_games = total_games + 1," +
+					"num_kills = num_kills + ?," +
+					"num_deaths = num_deaths + ?," +
+					"num_shots = num_shots + ?," +
+					"num_hits = num_hits + ?," +
+					"wins = wins + ?, " +
+					"brains_destroyed = brains_destroyed + ? " +
+					"WHERE name = ?";
+				
+				PreparedStatement stmt = connection.prepareStatement(command);
+				stmt.setInt(1, player.numKills);
+				stmt.setInt(2, player.numDeaths);
+				stmt.setInt(3, player.numShots);
+				stmt.setInt(4, player.numHits);
+				int won = (gameState.winningTeam == player.team.num)? 1 : 0;
+				stmt.setInt(5, won);
+				int destroyedBrain = (player.destroyedBrain)? 1 : 0;
+				stmt.setInt(6, destroyedBrain);
+				stmt.setString(7, player.username);
+				stmt.executeUpdate();				
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		queryLock.unlock();
+	}
 	
+	public StatsObject getStatsFor(String username) {
+		StatsObject stats = new StatsObject(username);
+		String query="";
+		try {
+			query="SELECT * FROM players WHERE name=\"" + username + "\"";
+			Statement st = connection.createStatement();
+			ResultSet results = st.executeQuery(query);
+			results.next();
+			stats.total_games = results.getInt("total_games");
+			stats.wins = results.getInt("total_games");
+			stats.numShots = results.getInt("num_shots");
+			stats.numDeaths = results.getInt("num_deaths");
+			stats.numKills = results.getInt("num_kills");
+			stats.numHits = results.getInt("num_hits");
+			stats.brainsDestroyed = results.getInt("brains_destroyed");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return stats;
+	}
+
 	public class UserAlreadyExistsException extends Exception {
 		public UserAlreadyExistsException(String msg) {
 			super(msg);
 		}
 	}
+	
+	public class StatsObject {
+		public String username;
+		public int total_games, wins, numShots, numDeaths, numKills, numHits, brainsDestroyed; 
+		public StatsObject(String username) {
+			this.username = username;
+		}
+	}
+
 }

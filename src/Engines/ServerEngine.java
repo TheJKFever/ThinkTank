@@ -10,6 +10,7 @@ import Game.GameState;
 import Game.Helper;
 import Game.SimpleKeyEvent;
 import Global.Settings;
+import Server.GameServer;
 import Server.GameServerConnectionToClient;
 
 public class ServerEngine extends Engine {
@@ -20,8 +21,10 @@ public class ServerEngine extends Engine {
 	// TODO: Ensure eventQ is proper data structure and large enough
 	public ArrayBlockingQueue<Event> eventQ = new ArrayBlockingQueue<Event>(1000);
 	private Thread engineThread;
+	private GameServer gameServer;
 
-	public ServerEngine(Vector<GameServerConnectionToClient> clientConnections) {
+	public ServerEngine(GameServer gameServer, Vector<GameServerConnectionToClient> clientConnections) {
+		this.gameServer = gameServer;
 		this.clients = clientConnections;
 		this.gameState = new GameState();	
 		engineThread = new Thread(this);
@@ -66,6 +69,8 @@ public class ServerEngine extends Engine {
 			beforeTime = System.currentTimeMillis();
 			// TODO: kill server if all clients leave
 		}
+		gameState.calculateStats();
+		gameServer.saveStats(gameState);
 	}
 	
 	public void broadcastGameState() {

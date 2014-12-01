@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import Game.Event;
+import Screens.GameScreen;
 
 public class ChatClient extends JPanel {
 	
@@ -29,14 +30,16 @@ public class ChatClient extends JPanel {
 	JLabel chatLabel;
 	JTextArea ta;
 	JButton sendBtn;
-	
-	String name;
+	private GameScreen gameScreen;
+		
+	public ChatClient(GameScreen gameScreen) {
+		this.gameScreen = gameScreen;
+		configureGUI();
+		sendBtn.setEnabled(false);
+	}
 	
 	public void configureGUI() {
-
 		setLayout(new CardLayout());
-		
-		
 		/****** Chat Panel*******/
 		chatPanel = new JPanel();
 		chatPanel.setLayout(new BorderLayout());
@@ -70,25 +73,6 @@ public class ChatClient extends JPanel {
 		add(chatPanel,"chat");
 	}
 	
-	public void receivedMessage(String message) {
-		if (message.substring(0,1).equalsIgnoreCase("i")) { // TODO: <-- what's this 
-			String[] split = message.split(":");
-			this.name +=split[1];
-			this.repaint();
-		}
-		else {
-			ta.append("\n"+message);
-		}
-	}
-	
-	public ChatClient() {
-//		this.name = gameConnection.gameScreen.engine.player.username;
-		// TODO: uncomment above, once username is implemented
-		this.name = "IMPLEMENT USERNAME";
-		configureGUI();
-		sendBtn.setEnabled(false);
-	}
-	
 	public void setConnection(ConnectionToGameServer gameConnection) {
 		sendBtn.addActionListener(new SendBtnListener(gameConnection));
 		sendBtn.setEnabled(true);
@@ -102,10 +86,8 @@ public class ChatClient extends JPanel {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			String message = "["+ChatClient.this.name+"]"+"\t"+tf.getText();
+			String message = "["+ChatClient.this.gameScreen.gui.user.username +"]"+"\t"+tf.getText();
 			tf.setText("");
-//			ta.append("\n"+message);
-			// go to connectionToServer
 			gameConnection.sendEvent(new Event("chat", message));
 		}
 	}		
