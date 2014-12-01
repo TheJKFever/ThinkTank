@@ -25,6 +25,7 @@ public abstract class ConnectionToClient extends Thread {
 		Helper.log("Created new ServerThread");
 	}
 
+	// go to ConnectionToGameServer
 	public void send(Object obj) {
 		try {
 			out.reset();

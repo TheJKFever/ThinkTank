@@ -20,6 +20,7 @@ import Game.Event;
 import Game.Helper;
 import Global.Settings;
 import Screens.CreateGameScreen;
+import Screens.CreateProfileScreen;
 import Screens.GameScreen;
 import Screens.LobbyScreen;
 import Screens.MainMenuScreen;
@@ -32,7 +33,7 @@ public class ThinkTankGUI extends JFrame {
 	private JPanel mainPanel;
 	public MainMenuScreen mainMenu;
 	//	private StatsScreen stats;
-	//	private CreateProfileScreen createProfile;
+	private CreateProfileScreen createProfile;
 	public CreateGameScreen createGame;
 	public WaitingScreen waiting;
 	public LobbyScreen lobby;
@@ -42,6 +43,15 @@ public class ThinkTankGUI extends JFrame {
 	private JMenu menu;
 	private JMenuItem mainMenuItem, exitItem;
 	public boolean loggedIn = false;
+	
+	public static final String MainMenuPage = "mainMenu", 
+			CreateGamePage = "createGame", 
+			WaitingPage = "waiting",
+			LobbyPage = "lobby",
+			GameScreenPage = "gameScreen",
+			StatsPage = "stats",
+			CreateProfilePage = "createProfile",
+			GameOverPage = "gameOverPage";
 	
 	public ThinkTankGUI(String host, int port) {
 		try {
@@ -98,27 +108,28 @@ public class ThinkTankGUI extends JFrame {
 			 * Battle
 			 * Game Over
 			 */
+			
+			
 			 mainMenu = new MainMenuScreen(this);
-			 mainMenu.setName("mainMenu");
-//			 stats = new StatsScreen(this); 
-//			 createProfile = new CreateProfileScreen(this); 
+			 mainMenu.setName(MainMenuPage);
 			 createGame = new CreateGameScreen(this);
-			 createGame.setName("createGame");
+			 createGame.setName(CreateGamePage);
 			 waiting = new WaitingScreen(); 
-			 waiting.setName("waiting");
+			 waiting.setName(WaitingPage);
 			 lobby = new LobbyScreen(this);
-			 lobby.setName("lobby");
+			 lobby.setName(LobbyPage);
 			 gameScreen = new GameScreen(this);
-			 gameScreen.setName("gameScreen");
+			 gameScreen.setName(GameScreenPage);
+			 createProfile = new CreateProfileScreen(this); 
 //			 gameOver = new GameOverScreen(this); 
+//			 stats = new StatsScreen(this); 
 
-			 mainPanel.add(mainMenu.getName(), mainMenu);
-//			 mainPanel.add("stats", stats);
+			 mainPanel.add(MainMenuPage, mainMenu);
+			 mainPanel.add(CreateGamePage, createGame);
+			 mainPanel.add(WaitingPage, waiting);
+			 mainPanel.add(GameScreenPage, gameScreen);
+			 mainPanel.add(LobbyPage, lobby);
 //			 mainPanel.add("createProfile", createProfile);
-			 mainPanel.add(createGame.getName(), createGame);
-			 mainPanel.add(waiting.getName(), waiting);
-			 mainPanel.add(gameScreen.getName(), gameScreen);
-			 mainPanel.add(lobby.getName(), lobby);
 			
 //			 mainPanel.add(gameOver);
 
@@ -155,7 +166,7 @@ public class ThinkTankGUI extends JFrame {
 	public void startNewGame(String name) {
 		Helper.log("GUI: START NEW GAME CLICKED");
 		centralConnection.sendEvent(new Event("new game", name));
-		goTo(waiting);
+		goTo(WaitingPage);
 	}
 	
 	public void joinGame() {
@@ -173,16 +184,16 @@ public class ThinkTankGUI extends JFrame {
 		// if connection made go to waiting screen
 		if (gameScreen.connectToGameServer(Settings.Development.HOST, port)) {
 			System.out.println("GUI: gameScreen connected to game server");
-			goTo(waiting);
+			goTo(WaitingPage);
 			gameScreen.gameConnection.thread.start();
 		} else {
 			throw new RuntimeException("Could not create game in joinGame");
 		}
 	}
 
-	public void goTo(JPanel page) {
-		Helper.log("GUI: Going to page: " + page.getName());
-		cardLayout.show(mainPanel, page.getName());
+	public void goTo(String page) {
+		Helper.log("GUI: Going to page: " + page);
+		cardLayout.show(mainPanel, page);
 		if (page.equals(createGame.getName())) {
 			createGame.gameNameTf.requestFocus();
 		}
@@ -196,7 +207,7 @@ public class ThinkTankGUI extends JFrame {
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO: if in the game, option page to confirm, are you sure you want to forfeit?
     		if (inGameConfirmForeit(gui)) {
-    			gui.goTo(mainMenu);
+    			gui.goTo(MainMenuPage);
     		}
 		}
 	}

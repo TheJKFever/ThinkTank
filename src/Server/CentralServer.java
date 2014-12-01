@@ -3,15 +3,14 @@ package Server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import Entities.Objects;
 import Entities.Objects.GameObject;
 import Entities.Objects.ProfileObject;
 import Exceptions.PortNotAvailableException;
@@ -26,7 +25,7 @@ public class CentralServer extends ServerSocket {
 	private final int[] PORTS = {2300, 2301, 2302, 2303, 2304};
 	public Map<Integer, GameServer> games;
 	private Vector<CentralServerConnectionToClient> clients;
-	private Connection db; // TODO: connect to DB for stats
+	private DB db;
 	private Semaphore capacity;
 	
 	/* Create a server on port <port> that will listen for incoming requests */
@@ -36,19 +35,7 @@ public class CentralServer extends ServerSocket {
 		clients = new Vector<CentralServerConnectionToClient>();
 		capacity = new Semaphore(MAX_CAPACITY);
 		games = new HashMap<Integer, GameServer>();
-		
-		// Database Connection
-		try { 
-			Class.forName(Settings.Development.DB.DRIVER);
-			// TODO: setup database on production server
-//			db = DriverManager.getConnection(
-//				Globals.Development.DB.ADDRESS + Globals.Development.DB.NAME, 
-//				Globals.Development.DB.USER, 
-//				Globals.Development.DB.PASSWORD
-//			);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		db = new DB(new ReentrantLock());
 		listenForConnections();
 	}
 	
@@ -145,11 +132,7 @@ public class CentralServer extends ServerSocket {
 	}
 
 	public boolean newProfile(ProfileObject profile) {
-		// TODO implement thi
-		String username = profile.username;
-		String password = profile.password;
-		
-		return false;
+		return db.insertProfile(profile);
 	}
 
 	public static void main(String[] args) {

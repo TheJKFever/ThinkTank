@@ -24,7 +24,6 @@ public class ChatClient extends JPanel {
 	JButton confirmBtn;
 	JLabel hostNameLbl, playerNameLbl;
 	JTextField playerNameTf;
-	
 	JScrollPane scroll;
 	JTextField tf;
 	JLabel chatLabel;
@@ -37,40 +36,6 @@ public class ChatClient extends JPanel {
 
 		setLayout(new CardLayout());
 		
-		
-//		/***** Login Panel *******/
-//		loginPanel = new JPanel();
-//		loginPanel.setLayout(new BoxLayout(loginPanel, BoxLayout.Y_AXIS));
-//		confirmBtn = new JButton("Confirm");
-//		hostNameTf = new JTextField(10);
-//		hostNameLbl = new JLabel("Host name");
-//		
-//		
-//		hostNamePanel = new JPanel();
-//		hostNameLbl = new JLabel("Host Name: ");
-//		hostNameTf= new JTextField(10);
-//		hostNamePanel.add(hostNameLbl);
-//		hostNamePanel.add(hostNameTf);
-//		
-//		playerNamePanel = new JPanel();
-//		playerNameLbl = new JLabel("Player name: ");
-//		playerNamePanel.add(playerNameLbl);
-//		playerNameTf = new JTextField(10);
-//		playerNamePanel.add(playerNameTf);
-//		
-//		loginPanel.add(hostNamePanel);
-//		loginPanel.add(playerNamePanel);
-//
-//		loginPanel.add(confirmBtn);
-//		generalPanel.add(loginPanel, "login");
-//		confirmBtn.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//				((CardLayout)generalPanel.getLayout()).show(generalPanel, "chat");
-//				name = playerNameTf.getText();
-//				setTitle(name);
-//				String ip = hostNameTf.getText();
-//			}
-//		});		
 		
 		/****** Chat Panel*******/
 		chatPanel = new JPanel();
@@ -116,12 +81,17 @@ public class ChatClient extends JPanel {
 		}
 	}
 	
-	public ChatClient(ConnectionToGameServer gameConnection) {
+	public ChatClient() {
 //		this.name = gameConnection.gameScreen.engine.player.username;
 		// TODO: uncomment above, once username is implemented
 		this.name = "IMPLEMENT USERNAME";
 		configureGUI();
+		sendBtn.setEnabled(false);
+	}
+	
+	public void setConnection(ConnectionToGameServer gameConnection) {
 		sendBtn.addActionListener(new SendBtnListener(gameConnection));
+		sendBtn.setEnabled(true);
 	}
 	
 	public class SendBtnListener implements ActionListener {
@@ -134,7 +104,8 @@ public class ChatClient extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			String message = "["+ChatClient.this.name+"]"+"\t"+tf.getText();
 			tf.setText("");
-			ta.append("\n"+message);
+//			ta.append("\n"+message);
+			// go to connectionToServer
 			gameConnection.sendEvent(new Event("chat", message));
 		}
 	}		

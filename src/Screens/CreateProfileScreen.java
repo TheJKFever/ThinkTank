@@ -26,11 +26,10 @@ public class CreateProfileScreen extends JPanel {
 	private JPanel usernameP, passwordP, buttonsP;
 	private Component verticalGlue;
 	private Component verticalGlue_1;
-	private JPanel nextPanel;
+	private String nextPage;
 	
-	public CreateProfileScreen(ThinkTankGUI gui, JPanel nextPanel) {
+	public CreateProfileScreen(ThinkTankGUI gui) {
 		this.gui = gui;
-		this.nextPanel = nextPanel;
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		verticalGlue = Box.createVerticalGlue();
@@ -68,7 +67,7 @@ public class CreateProfileScreen extends JPanel {
 		cancelBtn = new JButton("Cancel");
 		cancelBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CreateProfileScreen.this.gui.goTo(CreateProfileScreen.this.gui.mainMenu);
+				CreateProfileScreen.this.gui.goTo(CreateProfileScreen.this.gui.MainMenuPage);
 			}
 		});
 		buttonsP.add(cancelBtn);
@@ -83,7 +82,7 @@ public class CreateProfileScreen extends JPanel {
 	public void createProfileResponse(Event response) {
 		if (response.result) {
 			// create profile success
-			gui.goTo(nextPanel);
+			gui.goTo(nextPage);
 		} else {
 			// create profile fail
 		}
