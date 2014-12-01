@@ -1,12 +1,17 @@
 package Screens;
 
+import java.awt.AlphaComposite;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -17,8 +22,11 @@ public class MainMenuScreen extends JPanel {
 	public JButton startNewBtn, joinGameBtn, createProfileBtn, statsBtn, loginBtn, logoutBtn;
 	private ThinkTankGUI gui;
 	
+	public Image bgImg = new ImageIcon("images/splash.png").getImage();
 	public MainMenuScreen(ThinkTankGUI gui) {
 		this.gui = gui;
+		
+		this.setOpaque(false);
 		
 		startNewBtn = new JButton("Start New Game");
 		joinGameBtn = new JButton("Join Game");
@@ -49,6 +57,14 @@ public class MainMenuScreen extends JPanel {
 		createProfileBtn.addActionListener(new GoToPageListener(gui, ThinkTankGUI.CreateProfilePage));
 		loginBtn.addActionListener(new GoToPageListener(gui, ThinkTankGUI.LoginPage));
 		refresh();
+	}
+	
+	@Override
+	public void paint(Graphics g) {
+		g.drawImage(this.bgImg, 0, 0, null);
+		super.paint(g);
+//		Graphics2D g2d = (Graphics2D)g;
+//		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.8f));
 	}
 	
 	public void refresh() {
