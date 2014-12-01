@@ -155,7 +155,7 @@ public class ThinkTankGUI extends JFrame {
 	public void startNewGame(String name) {
 		Helper.log("GUI: START NEW GAME CLICKED");
 		centralConnection.sendEvent(new Event("new game", name));
-		goTo("waiting");
+		goTo(waiting);
 	}
 	
 	public void joinGame() {
@@ -173,16 +173,16 @@ public class ThinkTankGUI extends JFrame {
 		// if connection made go to waiting screen
 		if (gameScreen.connectToGameServer(Settings.Development.HOST, port)) {
 			System.out.println("GUI: gameScreen connected to game server");
-			goTo("waiting");
+			goTo(waiting);
 			gameScreen.gameConnection.thread.start();
 		} else {
 			throw new RuntimeException("Could not create game in joinGame");
 		}
 	}
 
-	public void goTo(String page) {
-		Helper.log("GUI: Going to page: " + page);
-		cardLayout.show(mainPanel, page);
+	public void goTo(JPanel page) {
+		Helper.log("GUI: Going to page: " + page.getName());
+		cardLayout.show(mainPanel, page.getName());
 		if (page.equals(createGame.getName())) {
 			createGame.gameNameTf.requestFocus();
 		}
@@ -196,7 +196,7 @@ public class ThinkTankGUI extends JFrame {
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO: if in the game, option page to confirm, are you sure you want to forfeit?
     		if (inGameConfirmForeit(gui)) {
-    			gui.goTo("mainMenu");
+    			gui.goTo(mainMenu);
     		}
 		}
 	}

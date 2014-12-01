@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import Entities.Objects.ProfileObject;
 import Exceptions.PortNotAvailableException;
 import Game.Event;
 
@@ -53,6 +54,8 @@ public class CentralServerConnectionToClient extends ConnectionToClient {
 				this.sendEvent(new Event("games info", centralServer.getGamesVector()));
 			case "create profile":
 				// TODO: Handle Create Profile
+				ProfileObject profile = (ProfileObject)event.data;
+				centralServer.newProfile(profile);
 				break;
 			case "login":
 				// TODO: Handle Login

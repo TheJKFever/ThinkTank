@@ -79,8 +79,4 @@ public class GameServer extends ServerSocket implements Runnable {
 		// TODO: released client, now needs to validate that game is still playable
 		// if so do nothing, if not, then signal to all players that the game has ended.
 	}
-	
-	public static GameObject toObject(int port, GameServer game) {
-		return new GameObject(game.name, port, game.clients);
-	}
 }

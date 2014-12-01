@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Vector;
 
 import Game.GameState;
+import Game.Helper;
 import Game.Rect;
 
 public abstract class Entity implements Serializable {
@@ -19,8 +20,6 @@ public abstract class Entity implements Serializable {
 
 	public boolean yCollision = false;
 	public boolean xCollision = false;
-	//public boolean xCollisionPrev = false;
-	//public boolean yCollisionPrev = false;
 
 	public boolean topCollision = false;
 	public boolean bottomCollision = false;
@@ -155,8 +154,8 @@ public abstract class Entity implements Serializable {
 	}
 
 	public void resetPositionOnCollision(Rect rect) {
-//		Helper.(this.getClass().getName() + ": resetPositionOnCollision()");
-//		Helper.("xCollision: " + xCollision + " yCollision: " + yCollision);
+//		Helper.log(this.getClass().getName() + ": resetPositionOnCollision()");
+//		Helper.log("xCollision: " + xCollision + " yCollision: " + yCollision);
 
 		boolean movedUp = false;
 		boolean movedDown = false;
@@ -209,7 +208,7 @@ public abstract class Entity implements Serializable {
 		}
 		return d;
 	}
-	
+
 	@Override
 	public String toString() {
 		return this.getClass().getName() + " {\n\tx: " + x + ", y: " + y + ", theta: " + theta + "\n\tdp: " + dp + ", dx: " + dx + ", dy: " + dy + ", dtheta: " + dtheta + ",\n\theight: " + height + ", width: " + width + ",\n\thealth: " + health + ", visible: " + visible + "\n}\n";

@@ -13,7 +13,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import Client.ThinkTankGUI;
-import java.awt.Rectangle;
 
 public class CreateGameScreen extends JPanel {
 	ThinkTankGUI gui;
@@ -56,6 +55,11 @@ public class CreateGameScreen extends JPanel {
 		
 		createGameBtn.addActionListener(new StartGameListener(gui, gameNameTf));
 		cancelBtn = new JButton("Cancel");
+		cancelBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CreateGameScreen.this.gui.goTo(CreateGameScreen.this.gui.mainMenu);
+			}
+		});
 		panel.add(cancelBtn);
 		
 		horizontalGlue_1 = Box.createHorizontalGlue();

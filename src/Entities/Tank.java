@@ -2,7 +2,6 @@ package Entities;
 
 import java.awt.event.KeyEvent;
 
-import Global.Settings;
 import Game.GameState;
 import Game.Helper;
 import Game.Player;
@@ -143,7 +142,6 @@ public class Tank extends Entity {
 		} else if (this.firing) {
 			fireShot();
 		}
-		
 	}
 
 	public void mineForThoughts() {
@@ -161,6 +159,7 @@ public class Tank extends Entity {
 	}
 
 	public void updatePosition() {
+
 		if (theta == 0) {
 			y -= dp;
 		} else if (theta == 180) {

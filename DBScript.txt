@@ -1,0 +1,16 @@
+create database thinktank;
+
+use thinktank;
+
+create table players (
+id BIGINT AUTO_INCREMENT, 
+name varchar(255) UNIQUE,
+password varchar(255),
+total_games int,
+wins int,
+accuracy decimal(3,2),
+brains_destroyed int,
+tanks_destroyed int,
+PRIMARY KEY(ID)
+);
+

@@ -5,9 +5,9 @@ import java.net.UnknownHostException;
 import java.util.Vector;
 import java.util.logging.Level;
 
+import Entities.Objects.GameObject;
 import Game.Event;
 import Game.Helper;
-import Server.GameObject;
 
 public class ConnectionToCentralServer extends ConnectionToServer {
 	public ThinkTankGUI gui;
