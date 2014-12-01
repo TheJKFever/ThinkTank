@@ -55,7 +55,12 @@ public class CentralServerConnectionToClient extends ConnectionToClient {
 			case "create profile":
 				// TODO: Handle Create Profile
 				ProfileObject profile = (ProfileObject)event.data;
-				centralServer.newProfile(profile);
+				boolean response = centralServer.newProfile(profile);
+				if (response) {
+					// send event to client saying "SUCCESS!!!"
+				} else {
+					// send event to client saying "FAILURE!!!"					
+				}
 				break;
 			case "login":
 				// TODO: Handle Login
