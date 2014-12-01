@@ -345,24 +345,24 @@ public class GamePanel extends JPanel {
 							
 							if(this.player.team.num == 1){
 
-								bomb = new TripleBomb(e.x - 20 , e.y - 18);
+								bomb = new TankBomb(e.x - 20 , e.y - 18);
 							
 							}else{
 								
-								bomb = new TripleBomb(e.x - 20 , e.y - 18);
+								bomb = new TankBomb(e.x - 20 , e.y - 18);
 								
 							}
 
 
 						} else if (added.weapon.theta == 90) {
 							
-							bomb = new TripleBomb(e.x -20 , e.y - 38);
+							bomb = new TankBomb(e.x -20 , e.y - 38);
 
 
 
 						} else if (added.weapon.theta == 180) {
 							
-							bomb = new TripleBomb(e.x -32 , e.y );
+							bomb = new TankBomb(e.x -32 , e.y );
 
 
 
@@ -370,11 +370,11 @@ public class GamePanel extends JPanel {
 							
 							if(this.player.team.num == 1){
 
-								bomb = new TripleBomb(e.x -5, e.y-32 );
+								bomb = new TankBomb(e.x -5, e.y-32 );
 							
 							}else{
 								
-								bomb = new TripleBomb(e.x -5 , e.y - 40);
+								bomb = new TankBomb(e.x -5 , e.y - 40);
 								
 							}
 
