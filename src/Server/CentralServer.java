@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,7 +37,7 @@ public class CentralServer extends ServerSocket {
 		clients = new Vector<CentralServerConnectionToClient>();
 		capacity = new Semaphore(MAX_CAPACITY);
 		games = new HashMap<Integer, GameServer>();
-//		db = new DB(new ReentrantLock());
+		db = new DB(new ReentrantLock());
 		listenForConnections();
 	}
 	

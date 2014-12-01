@@ -212,8 +212,13 @@ public class ThinkTankGUI extends JFrame {
 	public void goTo(String page) {
 		Helper.log("GUI: Going to page: " + page);
 		cardLayout.show(mainPanel, page);
-		if (page.equals(createGame.getName())) {
+		if (page.equals(ThinkTankGUI.CreateGamePage)) {
 			createGame.gameNameTf.requestFocus();
+		} else if (page.equals(ThinkTankGUI.GameScreenPage)) {
+			gameScreen.revalidate();
+			gameScreen.repaint();
+		} else if (page.equals(ThinkTankGUI.LoginPage)) {
+			login.usernameTf.requestFocus();
 		}
 	}
 	

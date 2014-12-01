@@ -52,7 +52,7 @@ public class ChatClient extends JPanel {
 		
 		// center part
 		ta = new JTextArea();
-		ta.setBorder(new EmptyBorder(20,20,20,20));
+		ta.setBorder(new EmptyBorder(10,2,2,10));
 		ta.setWrapStyleWord(true);
 		ta.setLineWrap(true);
 		scroll = new JScrollPane(ta);
@@ -86,7 +86,7 @@ public class ChatClient extends JPanel {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			String message = "["+ChatClient.this.gameScreen.gui.user.username +"]"+"\t"+tf.getText();
+			String message = "["+ChatClient.this.gameScreen.gui.user.username +"] "+tf.getText();
 			tf.setText("");
 			gameConnection.sendEvent(new Event("chat", message));
 		}
