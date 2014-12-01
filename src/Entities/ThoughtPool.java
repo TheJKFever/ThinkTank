@@ -18,8 +18,8 @@ public class ThoughtPool extends Entity {
         this.width = width;
         this.height = height;
         this.health = Integer.MAX_VALUE;
-        this.miningRate = (int)(Math.random() * 10);
-        this.color = new Color(miningRate * 25, miningRate * 25, miningRate * 25);
+        this.miningRate = (int)(Math.random() * 5);
+        this.color = new Color(miningRate * 50, miningRate * 50, miningRate * 50);
     }
 
 	public void update() {

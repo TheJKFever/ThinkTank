@@ -31,6 +31,10 @@ public class GameState implements Serializable {
 	public String displayTime;
 	public Tank tankForThisClient = null;
 	
+	public int cornerLength = 50;
+	public int squareLength = 140;
+	public int spacer = 45;
+	
 	public GameState() {
 		inGame = false;
 		
@@ -113,20 +117,50 @@ public class GameState implements Serializable {
 		// right wall
 		barriers.add(new Barrier(Settings.BOARD_WIDTH - 10, 0, 10, Settings.BOARD_HEIGHT, this));
 				
-		// TODO: create interesting map, not just random barriers			
-		barriers.add(new Barrier(100, 100, 300, 10, this));
-		barriers.add(new Barrier(200, 200, 200, 10, this));
-		barriers.add(new Barrier(300, 300, 400, 10, this));
-		barriers.add(new Barrier(400, 400, 100, 10, this));
-		barriers.add(new Barrier(150, 150, 10, 200, this));
-		barriers.add(new Barrier(250, 250, 10, 100, this));
+		// LEFT BRAIN WALL
+		barriers.add(new Barrier(100+spacer, spacer+squareLength+spacer, 10, squareLength, this));
 		
-		thoughtPools.add(new ThoughtPool(200, 200, 50, 50, this));
-		thoughtPools.add(new ThoughtPool(250, 250, 50, 50, this));
-		thoughtPools.add(new ThoughtPool(300, 300, 20, 40, this));
-		thoughtPools.add(new ThoughtPool(350, 350, 70, 70, this));
-		thoughtPools.add(new ThoughtPool(400, 400, 60, 40, this));
-		thoughtPools.add(new ThoughtPool(450, 450, 20, 20, this));
+		// RIGHT BRAIN WALL
+		barriers.add(new Barrier(700-spacer-10, spacer+squareLength+spacer, 10, squareLength, this));
+				
+		drawSquare(100, 0);
+		drawSquare(100, (spacer + squareLength));
+		drawSquare(100, (spacer + squareLength) * 2);
+		
+		drawSquare(100 + (spacer + squareLength), 0);
+		drawSquare(100 + (spacer + squareLength), (spacer + squareLength));
+		drawSquare(100 + (spacer + squareLength), (spacer + squareLength) * 2);
+		
+		drawSquare(100 + (2*(spacer + squareLength)), 0);
+		drawSquare(100 + (2*(spacer + squareLength)), (spacer + squareLength));
+		drawSquare(100 + (2*(spacer + squareLength)), (spacer + squareLength)*2);
+	}
+	
+	public void generateRandomThoughtPool() {
+		int randY = (int)(Math.random() * 3 + 1);
+		int randX = (int)(Math.random() * 3 + 1);
+		int tpy = ((45 + 140) * randY) - 70 - 15;
+		int tpx = 100 + ((45 + 140)*randX) - 70 - 15;
+		thoughtPools.add(new ThoughtPool(tpx, tpy, 30, 30, this));
+	}
+	
+	public void drawSquare(int startX, int startY) {
+		
+		// top left corner
+		barriers.add(new Barrier(startX+spacer, startY+spacer, cornerLength, 10, this));
+		barriers.add(new Barrier(startX+spacer, startY+spacer, 10, cornerLength, this));
+		
+		// bottom left corner
+		barriers.add(new Barrier(startX+spacer, startY+spacer+squareLength-10, cornerLength, 10, this));
+		barriers.add(new Barrier(startX+spacer, startY+spacer+squareLength-cornerLength, 10, cornerLength, this));
+		
+		// top right corner
+		barriers.add(new Barrier(startX+spacer+squareLength-cornerLength, startY+spacer, cornerLength, 10, this));
+		barriers.add(new Barrier(startX+spacer+squareLength-10, startY+spacer, 10, cornerLength, this));
+				
+		// bottom right corner
+		barriers.add(new Barrier(startX+spacer+squareLength-cornerLength, startY+spacer+squareLength-10, cornerLength, 10, this));
+		barriers.add(new Barrier(startX+spacer+squareLength-10, startY+spacer+squareLength-cornerLength, 10, cornerLength, this));
 	}
 	
 	public void update() {
@@ -151,8 +185,13 @@ public class GameState implements Serializable {
 		{
 			t.update();
 		}
-
+		
 		updateGameClock();
+		
+		if (displayTime.contains(":59") || displayTime.contains(":20") || displayTime.contains(":40")) {
+			thoughtPools.clear();
+			generateRandomThoughtPool();
+		}
 	}
 
 	@Override
