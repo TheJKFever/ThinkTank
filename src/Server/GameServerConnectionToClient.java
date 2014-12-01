@@ -41,7 +41,7 @@ public class GameServerConnectionToClient extends ConnectionToClient {
 				gameServer.engine.eventQ.add(event);
 				break;
 			case "chat":
-				// sendMessage();
+				gameServer.broadcast(event);
 				break;
 			default:
 				Helper.log("COULD NOT RECOGNIZE EVENT: " + event);

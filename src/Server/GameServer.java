@@ -7,6 +7,7 @@ import java.util.Vector;
 import java.util.logging.Logger;
 
 import Engines.ServerEngine;
+import Game.Event;
 import Game.Helper;
 import Game.Player;
 import Global.Settings;
@@ -69,6 +70,14 @@ public class GameServer extends ServerSocket implements Runnable {
 		client.assignPlayer(p); // tells client which player is his
 		client.start();
 	}
+	
+	// go to ConnectionToClient
+	public void broadcast(Event event) {
+		for (GameServerConnectionToClient client:clients) {
+			client.send(event);
+		}
+	}
+	
 	
 	public void release(GameServerConnectionToClient thread) {
 		System.out.println("releasing connection to client from central server");
