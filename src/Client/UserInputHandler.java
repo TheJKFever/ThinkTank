@@ -17,32 +17,26 @@ public class UserInputHandler extends KeyAdapter {
 	}
 	
 	public void keyReleased(KeyEvent ke) {
-//		System.out.println("INPUT HANDLER: KEY RELEASED");
-		synchronized(gameScreen.engine.eventQ) {
-			try {
-				Event event = new Event("key event", new SimpleKeyEvent(ke));
-				gameScreen.engine.eventQ.put(event);
-				// TODO: add to gameConnection's send queue to avoid waiting
-				gameScreen.gameConnection.sendEvent(event);
-			} catch (InterruptedException ie) {
-				System.out.println("USER INPUT HANDLER: INTERRUPTED");
-				ie.printStackTrace();
-			}
-		}
+		System.out.println("INPUT HANDLER: KEY RELEASED");
+		sendKeyPressToClientAndServer(ke);
 	}
 	
 	public void keyPressed(KeyEvent ke) {
-//		System.out.println("INPUT HANDLER: KEY PRESSED");
+		System.out.println("INPUT HANDLER: KEY PRESSED");
+		sendKeyPressToClientAndServer(ke);
+	}
+	
+	private void sendKeyPressToClientAndServer(KeyEvent ke) {
+		Event event = new Event("key event", new SimpleKeyEvent(ke));
 		synchronized(gameScreen.engine.eventQ) {
 			try {
-				Event event = new Event("key event", new SimpleKeyEvent(ke));
-				gameScreen.engine.eventQ.put(new Event("key event", ke));
-				// TODO: add to gameConnection's send queue to avoid waiting
-				gameScreen.gameConnection.sendEvent(event);
+				gameScreen.engine.eventQ.put(event);
 			} catch (InterruptedException ie) {
-				ie.printStackTrace();
 				System.out.println("USER INPUT HANDLER: INTERRUPTED");
+				ie.printStackTrace();
 			}
 		}
+		gameScreen.gameConnection.sendEvent(event);
 	}
+	
 }

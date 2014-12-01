@@ -29,7 +29,7 @@ public class Tank extends Entity {
 
 	public static int TankCount = 0;
 
-	public int weaponType = Settings.DEFAULT_WEAPON;
+	public int weaponType;
 
 	Team team;
 	Player player;
@@ -38,7 +38,6 @@ public class Tank extends Entity {
 	public boolean mining;
 	public int thoughts;
 
-	// TODO: Allow tanks to detect collisions and tank damage from shots
 	// TODO: Allow tanks to die and re-spawn
 	// TODO: Create explosion animation tank dies
 	// TODO: Add waiting period between re-spawns
@@ -59,6 +58,7 @@ public class Tank extends Entity {
 		this.updateImagePath();
 		this.thoughts = 0;
 		this.mining = false;
+		this.weaponType = Settings.DEFAULT_WEAPON;
 	}
 
 	public void spawn() {
@@ -183,30 +183,11 @@ public class Tank extends Entity {
 	}
 
 	public void updateWeapon(int type) {
-
 		this.weaponType = type;
-
 	}
 
 	public void fireShot() {
-		int shotX = 0;
-		int shotY = 0;
-
-		if (theta == 0) {
-			shotX = x + width / 2 - Shot.SHOT_WIDTH_VERTICAL / 2;
-			shotY = y - Shot.SHOT_HEIGHT_VERTICAL;
-		} else if (theta == 90) {
-			shotX = x + width;
-			shotY = y + height / 2 - Shot.SHOT_HEIGHT_HORIZONTAL / 2;
-		} else if (theta == 180) {
-			shotX = x + width / 2 - Shot.SHOT_WIDTH_VERTICAL / 2;
-			shotY = y + height;
-		} else if (theta == 270) {
-			shotX = x - Shot.SHOT_WIDTH_HORIZONTAL;
-			shotY = y + height / 2 - Shot.SHOT_HEIGHT_HORIZONTAL / 2;
-		}
-
-		gs.shots.add(new Shot(shotX, shotY, theta, gs, this.weaponType));
+		gs.shots.add(new Shot(x, y, theta, gs, this.weaponType));
 		firing = false;
 	}
 }

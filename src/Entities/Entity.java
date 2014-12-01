@@ -1,12 +1,10 @@
 package Entities;
 
-import java.awt.Image;
 import java.io.Serializable;
 import java.util.Vector;
 
-import Game.Rect;
 import Game.GameState;
-import Global.Settings;
+import Game.Rect;
 
 public abstract class Entity implements Serializable {
 
@@ -28,17 +26,6 @@ public abstract class Entity implements Serializable {
 	public boolean bottomCollision = false;
 	public boolean leftCollision = false;
 	public boolean rightCollision = false;
-
-	public Image image;
-
-	public void setImage(Image image) {
-		this.image = image;
-	}
-
-	public Image getImage() {
-		return image;
-	}
-
 
 	public Entity() {
 		visible = true;

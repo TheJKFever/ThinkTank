@@ -32,6 +32,8 @@ public class ConnectionToGameServer extends ConnectionToServer {
 	
 	public void receive(Object obj) {		
 		Event event = (Event) obj;
+//		Helper.log("***EVENT RECEIVED***");
+//		Helper.log(event);
 		switch(event.type) {
 		case "assign player":
 			Helper.log("ConnectionToGameServer: RECEIVED ASSIGN PLAYER EVENT");
