@@ -69,8 +69,10 @@ public class Shot extends Entity {
 	}
 	
 	public void executeCollisionWith(Entity entity) {
-    	entity.hitBy(this);
-    	die();
+		if (entity.player != this.player) {
+	    	entity.hitBy(this);
+	    	die();
+		}
     }
 
 	public void updatePosition() {

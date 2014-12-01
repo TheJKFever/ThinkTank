@@ -18,25 +18,11 @@ public class UserInputHandler extends KeyAdapter {
 	
 	public void keyReleased(KeyEvent ke) {
 		System.out.println("INPUT HANDLER: KEY RELEASED");
-		sendKeyPressToClientAndServer(ke);
+		gameScreen.sendKeyPressToClientAndServer(new SimpleKeyEvent(ke));
 	}
 	
 	public void keyPressed(KeyEvent ke) {
 		System.out.println("INPUT HANDLER: KEY PRESSED");
-		sendKeyPressToClientAndServer(ke);
+		gameScreen.sendKeyPressToClientAndServer(new SimpleKeyEvent(ke));
 	}
-	
-	private void sendKeyPressToClientAndServer(KeyEvent ke) {
-		Event event = new Event("key event", new SimpleKeyEvent(ke));
-		synchronized(gameScreen.engine.eventQ) {
-			try {
-				gameScreen.engine.eventQ.put(event);
-			} catch (InterruptedException ie) {
-				System.out.println("USER INPUT HANDLER: INTERRUPTED");
-				ie.printStackTrace();
-			}
-		}
-		gameScreen.gameConnection.sendEvent(event);
-	}
-	
 }
