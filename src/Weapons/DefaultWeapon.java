@@ -11,8 +11,11 @@ public class DefaultWeapon extends Weapon implements Serializable {
 	public static final int HEIGHT_VERTICAL = 16;
 	public static final int WIDTH_HORIZONTAL = 16;
 	public static final int HEIGHT_HORIZONTAL = 13;
+
     
 	public DefaultWeapon(int theta) {
+		
+		this.theta = theta;
 
 		this.shotSpeed = 4;
 		this.damage = 1;

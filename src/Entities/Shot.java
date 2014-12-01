@@ -25,11 +25,11 @@ public class Shot extends Entity {
 		if (this.weaponType == Settings.DEFAULT_WEAPON) {
 			this.weapon = new DefaultWeapon(theta);
 		} else if (this.weaponType == Settings.DOUBLE_WEAPON) {
-			this.weapon = new DoubleStrengthWeapon();
+			this.weapon = new DoubleStrengthWeapon(theta);
 		} else if (this.weaponType == Settings.TRIPLE_WEAPON) {
-			this.weapon = new TripleStrengthWeapon();
+			this.weapon = new TripleStrengthWeapon(theta);
 		} else if (this.weaponType == Settings.SUPER_WEAPON) {
-			this.weapon = new SuperWeapon();
+			this.weapon = new SuperWeapon(theta);
 		}
 
 		setImagePath(this.weapon.imagePath);

@@ -11,7 +11,9 @@ public class DoubleStrengthWeapon extends Weapon implements Serializable {
 	public static final int WIDTH_HORIZONTAL = 12;
 	public static final int HEIGHT_HORIZONTAL = 12;
 	
-	public DoubleStrengthWeapon() {
+	public DoubleStrengthWeapon(int theta) {
+		
+		this.theta = theta;
 
 		this.shotSpeed = 8;
 		this.damage = 2;
