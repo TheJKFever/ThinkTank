@@ -183,6 +183,9 @@ public class ThinkTankGUI extends JFrame {
 	public void goTo(String page) {
 		Helper.log("GUI: Going to page: " + page);
 		cardLayout.show(mainPanel, page);
+		if (page.equals(createGame.getName())) {
+			createGame.gameNameTf.requestFocus();
+		}
 	}
 	
 	public class MainMenuListener implements ActionListener {

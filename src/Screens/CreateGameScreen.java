@@ -18,7 +18,7 @@ import java.awt.Rectangle;
 public class CreateGameScreen extends JPanel {
 	ThinkTankGUI gui;
 	JLabel gameNameLbl;
-	JTextField gameNameTf;
+	public JTextField gameNameTf;
 	JButton createGameBtn, cancelBtn;
 	private Component horizontalGlue;
 	private Component horizontalGlue_1;
@@ -50,7 +50,6 @@ public class CreateGameScreen extends JPanel {
 		gameNameTf = new JTextField();
 		gameNameTf.setPreferredSize(new Dimension(150, 20));
 		gameNameTf.setSize(new Dimension(26, 0));
-		gameNameTf.requestFocus();
 		panel.add(gameNameTf);
 		createGameBtn = new JButton("Create Game");
 		panel.add(createGameBtn);
