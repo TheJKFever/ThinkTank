@@ -174,23 +174,35 @@ public class GameState implements Serializable {
 		// Helper.log("GAMESTATE: UPDATE");
 		
 		// tanks
-		for (Tank t: tanks) {
-			t.update();
+		for (int i = (tanks.size() - 1); i >= 0; i--) {
+			Tank tank = tanks.get(i);
+			if (tank.isDying() && tank.dyingTime <= 0) {
+				Player p = tank.player;
+				tanks.remove(i);
+				Tank newTank = new Tank(p, this);
+				p.tank = newTank;
+			} else {
+				tank.update();
+			}
 		}
 		
 		// shots
 		for (int i = (shots.size() - 1); i >= 0; i--) {
 			Shot shot = shots.get(i);
-			if (!shot.isVisible()) {
+			if (shot.isDying() && shot.dyingTime <= 0) {
 				shots.remove(i);
 			} else {
 				shot.update();
 			}
 		}
 		
-		for (Turret t:turrets)
-		{
-			t.update();
+		for (int i = (turrets.size() - 1); i >= 0; i--) {
+			Turret turret = turrets.get(i);
+			if (turret.isDying() && turret.dyingTime <= 0) {
+				turrets.remove(i);
+			} else {
+				turret.update();
+			}
 		}
 		
 		updateGameClock();

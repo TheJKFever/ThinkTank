@@ -6,13 +6,12 @@ public class SuperWeapon extends Weapon implements Serializable {
 	
 	private static final long serialVersionUID = -3779413651701962445L;
 	
-	public static final int WIDTH_VERTICAL = 16;
-	public static final int HEIGHT_VERTICAL = 16;
-	public static final int WIDTH_HORIZONTAL = 16;
-	public static final int HEIGHT_HORIZONTAL = 16;
-	
 	public SuperWeapon(int theta) {
-
+		WIDTH_VERTICAL = 16;
+		HEIGHT_VERTICAL = 16;
+		WIDTH_HORIZONTAL = 16;
+		HEIGHT_HORIZONTAL = 16;
+		
 		this.theta = theta;
 		
 		this.shotSpeed = 8;

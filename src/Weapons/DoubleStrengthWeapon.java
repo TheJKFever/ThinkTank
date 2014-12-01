@@ -6,10 +6,10 @@ public class DoubleStrengthWeapon extends Weapon implements Serializable {
 
 	private static final long serialVersionUID = 4076791396132078903L;
 	
-	public static final int WIDTH_VERTICAL = 12;
-	public static final int HEIGHT_VERTICAL = 12;
-	public static final int WIDTH_HORIZONTAL = 12;
-	public static final int HEIGHT_HORIZONTAL = 12;
+	public int WIDTH_VERTICAL = 12;
+	public int HEIGHT_VERTICAL = 12;
+	public int WIDTH_HORIZONTAL = 12;
+	public int HEIGHT_HORIZONTAL = 12;
 	
 	public DoubleStrengthWeapon(int theta) {
 		

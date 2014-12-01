@@ -16,7 +16,7 @@ public class Turret extends Entity implements Serializable {
 	static final String IMAGE_TURRET_DOWN = imageDir + "turretDown";
 	static final String IMAGE_TURRET_RIGHT = imageDir + "turretRight";
 
-	private static final int MAX_TURRET_HEALTH = 15;
+	private static final int MAX_TURRET_HEALTH = 50;
 	private static final int RADIUS = 200;
 	
 	public boolean firing;
@@ -61,6 +61,7 @@ public class Turret extends Entity implements Serializable {
 	
     public void update()
     {
+    	super.update();
     	fireShot();
     	updateImagePath();
     }
@@ -131,7 +132,7 @@ public class Turret extends Entity implements Serializable {
 			}
 			else if (this.shootFrequency==15)
 			{
-				gs.shots.add(new Shot(shotX, shotY, this.theta, this.gs, player, Settings.DEFAULT_WEAPON));
+				gs.shots.add(new Shot(this, this.theta, this.gs, player, Settings.DEFAULT_WEAPON));
 				firing=false;
 				shootFrequency=0;
 			}
