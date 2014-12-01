@@ -5,7 +5,9 @@ import java.util.Vector;
 
 import Game.GameState;
 import Game.Helper;
+import Game.Player;
 import Game.Rect;
+import Game.Team;
 
 public abstract class Entity implements Serializable {
 
@@ -26,6 +28,9 @@ public abstract class Entity implements Serializable {
 	public boolean leftCollision = false;
 	public boolean rightCollision = false;
 
+	public Team team;
+	public Player player;
+	
 	public Entity() {
 		visible = true;
 		x = 0;
@@ -103,8 +108,11 @@ public abstract class Entity implements Serializable {
 
 	public void hitBy(Shot shot) {
 		this.health -= shot.weapon.damage;
+		shot.player.numHits++;
+		
 		if (this.health == 0) {
 			this.die();
+			shot.player.numKills++;
 		}
 	}
 

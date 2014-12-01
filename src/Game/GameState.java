@@ -1,6 +1,5 @@
 package Game;
 
-import java.awt.Color;
 import java.io.Serializable;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
@@ -10,6 +9,7 @@ import Entities.Brain;
 import Entities.Shot;
 import Entities.Tank;
 import Entities.ThoughtPool;
+import Entities.Turret;
 import Global.Settings;
 
 public class GameState implements Serializable {
@@ -23,7 +23,7 @@ public class GameState implements Serializable {
 	public Vector<Tank> tanks;
 	public Vector<Barrier> barriers;
 	public Vector<ThoughtPool> thoughtPools;
-//	public Vector<Turret> turrets; TODO: ADD TURRETS
+	public Vector<Turret> turrets;
 	public boolean inGame;
 	public long timeRemaining;
 	public long startTime;
@@ -57,6 +57,7 @@ public class GameState implements Serializable {
 	public void startGameClock() {
 		startTime = System.nanoTime();
 		updateGameClock();
+		new Turret(100, 500, this.players.get(0), this);
 	}
 	
 	

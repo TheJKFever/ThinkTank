@@ -65,7 +65,10 @@ public class GameServer extends ServerSocket implements Runnable {
 		System.out.println("GAMESERVER: ADDING A CLIENT");
 		GameServerConnectionToClient client = new GameServerConnectionToClient(this, socket);
 		clients.addElement(client);
-		Player p = engine.gameState.teams[team-1].newPlayer(); // Creates new player and adds to gameState
+		
+		//TODO: FIX USER X, ADD ACTUAL USERNAME
+		Player p = engine.gameState.teams[team-1].newPlayer("USERX"); // Creates new player and adds to gameState
+		
 		client.assignPlayer(p); // tells client which player is his
 		client.start();
 	}

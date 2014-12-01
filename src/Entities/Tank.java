@@ -13,12 +13,16 @@ public class Tank extends Entity {
 
 	private static final long serialVersionUID = 4397815103071777225L;
 
-	static final String imageDir = "images/tanks/";
-	static final String IMAGE_TANK_UP = imageDir + "blue/up1.png";
-	static final String IMAGE_TANK_RIGHT = imageDir + "blue/right1.png";
-	static final String IMAGE_TANK_DOWN = imageDir + "blue/down1.png";
-	static final String IMAGE_TANK_LEFT = imageDir + "blue/left1.png";
+	static final String IMAGE_TANK_UP_BLUE = "images/tanks/blue/up1.png";
+	static final String IMAGE_TANK_RIGHT_BLUE = "images/tanks/blue/right1.png";
+	static final String IMAGE_TANK_DOWN_BLUE = "images/tanks/blue/down1.png";
+	static final String IMAGE_TANK_LEFT_BLUE = "images/tanks/blue/left1.png";
 
+	static final String IMAGE_TANK_UP_RED = "images/tanks/red/up1.png";
+	static final String IMAGE_TANK_RIGHT_RED = "images/tanks/red/right1.png";
+	static final String IMAGE_TANK_DOWN_RED = "images/tanks/red/down1.png";
+	static final String IMAGE_TANK_LEFT_RED = "images/tanks/red/left1.png";
+	
 	static final int MAX_TANK_HEALTH = 10;
 	static final int TANK_HEIGHT = 16;
 	static final int TANK_WIDTH = 16;
@@ -30,8 +34,6 @@ public class Tank extends Entity {
 
 	public int weaponType;
 
-	Team team;
-	Player player;
 	public int tankID;
 	public boolean firing;
 	public boolean mining;
@@ -63,7 +65,7 @@ public class Tank extends Entity {
 	public void spawn() {
 		// TODO: Spawn tanks properly
 		this.x = 100;
-		// this.x = TANK_SPAWN_X + (50 * this.tankID);
+		 this.x = TANK_SPAWN_X + (50 * this.tankID/2);
 		if (team.num == 1) {
 			this.y = TANK_SPAWN_Y;
 		} else {
@@ -72,14 +74,27 @@ public class Tank extends Entity {
 	}
 
 	public void updateImagePath() {
-		if (theta == 0) {
-			this.imagePath = IMAGE_TANK_UP;
-		} else if (theta == 90) {
-			this.imagePath = IMAGE_TANK_RIGHT;
-		} else if (theta == 180) {
-			this.imagePath = IMAGE_TANK_DOWN;
-		} else if (theta == 270) {
-			this.imagePath = IMAGE_TANK_LEFT;
+		
+		if (team.num == 1) {
+			if (theta == 0) {
+				this.imagePath = IMAGE_TANK_UP_BLUE;
+			} else if (theta == 90) {
+				this.imagePath = IMAGE_TANK_RIGHT_BLUE;
+			} else if (theta == 180) {
+				this.imagePath = IMAGE_TANK_DOWN_BLUE;
+			} else if (theta == 270) {
+				this.imagePath = IMAGE_TANK_LEFT_BLUE;
+			}
+		} else {
+			if (theta == 0) {
+				this.imagePath = IMAGE_TANK_UP_RED;
+			} else if (theta == 90) {
+				this.imagePath = IMAGE_TANK_RIGHT_RED;
+			} else if (theta == 180) {
+				this.imagePath = IMAGE_TANK_DOWN_RED;
+			} else if (theta == 270) {
+				this.imagePath = IMAGE_TANK_LEFT_RED;
+			}
 		}
 	}
 
@@ -176,6 +191,7 @@ public class Tank extends Entity {
 	}
 
 	public void die() {
+		this.player.numDeaths++;
 		// TODO: TANK DEATH
 		visible = false;
 		exploding = true;
@@ -186,7 +202,8 @@ public class Tank extends Entity {
 	}
 
 	public void fireShot() {
-		gs.shots.add(new Shot(x, y, theta, gs, this.weaponType));
+		this.player.numShots++;
+		gs.shots.add(new Shot(x, y, theta, gs, this.player, this.weaponType));
 		firing = false;
 	}
 }
