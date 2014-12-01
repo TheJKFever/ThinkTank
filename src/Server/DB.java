@@ -74,9 +74,7 @@ public class DB {
 				throw new Exception("Incorrect username");
 			}
 		} catch (SQLException e) {
-			System.out.println(e);
-			e.printStackTrace();
-			return false;
+			throw new Exception("Unknown SQL Exception");
 		}
 	}
 	

@@ -38,7 +38,7 @@ public class Event implements Serializable {
 	
 
 	public String toString() {
-		return ("EVENT: { \n\ttimestamp: " + timestamp +",\n\t type: " + type + ",\n\t data: " + data + "\n}");
+		return ("EVENT: { \n\ttimestamp: " + timestamp +",\n\t type: " + type + ",\n\t data: " + data + ",\n\t result: " + result + "\n }");
 	}
 	
 }
