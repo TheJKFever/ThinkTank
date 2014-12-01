@@ -11,8 +11,8 @@ public class Brain extends Entity  {
 	int MAX_BRAIN_HEALTH = 100;
 	static String IMAGE_BRAIN_1 = "images/brains/brain1.png";
 	static String IMAGE_BRAIN_2 = "images/brains/brain2.png";
-	public static int BRAIN_WIDTH = 89;
-	public static int BRAIN_HEIGHT = 88;
+	public static int BRAIN_WIDTH = 76;
+	public static int BRAIN_HEIGHT = 70;
 	public Team team;
 	
 	//TODO: Create explosion animation brain when it dies
