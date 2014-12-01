@@ -3,7 +3,7 @@ package Screens;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import Entities.Tank;
+import Entities.*;
 
 
 
@@ -12,22 +12,23 @@ public class Hitbar
 	public static final int HITPOINTSIZE=30; 
 	public int topNumber;  
 	public int number;  
-	Tank tk;
+	Turret tk;
 
-	public Hitbar(int topNum,Tank tk)
+	public Hitbar(int topNum,Turret tk)
 	{
 		topNumber=topNum;
-		number=topNum;
 		this.tk=tk;
+		number=tk.health;
+
 	}
 
 	public void draw(Graphics g)
 	{
 		if(number>0){
 		g.setColor(Color.white);
-		g.drawRect(tk.x-8,tk.y-8,HITPOINTSIZE,5);
+		g.drawRect(tk.x,tk.y-8,HITPOINTSIZE,5);
 		g.setColor(Color.red);
-		g.fillRect(tk.x-7,tk.y-7,number*HITPOINTSIZE/topNumber-1,4);		
+		g.fillRect(tk.x-1,tk.y-7,number*HITPOINTSIZE/topNumber-1,4);		
 		}
 	}
 

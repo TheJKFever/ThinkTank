@@ -70,7 +70,6 @@ public class GamePanel extends JPanel {
 
 	static int RIGHT_HUD_X = Settings.BOARD_WIDTH - LEFT_HUD_X - BRAIN_HB_WIDTH;
 
-	public Hitbar hit;
 	
 	
 	public GamePanel(GameScreen gameScreen) {
@@ -96,7 +95,6 @@ public class GamePanel extends JPanel {
 		this.gameState = this.gameScreen.engine.gameState;
 		this.player = gameScreen.engine.player;
 		
-		hit = new Hitbar(10,player.tank);
 		
 		Helper.log(gameState);
 		if (gameState != null && gameState.inGame) {
@@ -125,7 +123,6 @@ public class GamePanel extends JPanel {
 		drawTanks(g2d);
 		drawShots(g2d);
 		drawBomb(g2d);
-		drawHitbar(g2d);
 		
 		// rotate screen back to normal before rendering HUD
 		if (this.player != null) {
@@ -143,15 +140,6 @@ public class GamePanel extends JPanel {
 		g.dispose();
 	}
 
-	public void drawHitbar(Graphics g){
-		
-		hit.number = player.tank.health;
-		
-		hit.draw(g);
-		
-		
-		
-	}
 
 
 	public void drawBomb(Graphics g) {
@@ -272,6 +260,12 @@ public class GamePanel extends JPanel {
 		for (Entity e : entities) {
 			if (e.isVisible()) {
 				g.drawImage(getImg(e.imagePath), e.x, e.y, this);
+				
+				if(e instanceof Entities.Turret){
+					
+					new Hitbar(50, (Entities.Turret)e).draw(g);;
+					
+				}
 			}
 			if (e.isDying()) {
 
