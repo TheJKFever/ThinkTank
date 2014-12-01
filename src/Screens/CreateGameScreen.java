@@ -57,7 +57,7 @@ public class CreateGameScreen extends JPanel {
 		cancelBtn = new JButton("Cancel");
 		cancelBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CreateGameScreen.this.gui.goTo(CreateGameScreen.this.gui.MainMenuPage);
+				CreateGameScreen.this.gui.goTo(ThinkTankGUI.MainMenuPage);
 			}
 		});
 		panel.add(cancelBtn);

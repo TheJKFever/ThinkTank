@@ -78,7 +78,7 @@ public class CentralServerConnectionToClient extends ConnectionToClient {
 				break;
 			case "get stats":
 				try {
-					DB.StatsObject stats = this.centralServer.getStatsFor((String)event.data);
+					StatsObject stats = this.centralServer.getStatsFor((String)event.data);
 					sendEvent(new Event("stats", stats, true));
 				} catch (Exception e) {
 					e.printStackTrace();

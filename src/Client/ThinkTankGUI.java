@@ -43,7 +43,7 @@ public class ThinkTankGUI extends JFrame {
 	private CardLayout cardLayout = new CardLayout();
 	private JPanel mainPanel;
 	public MainMenuScreen mainMenu;
-	StatsScreen stats;
+	public StatsScreen stats;
 	public CreateProfileScreen createProfile;
 	public CreateGameScreen createGame;
 	public WaitingScreen waiting;
@@ -124,7 +124,6 @@ public class ThinkTankGUI extends JFrame {
 			 * Game Over
 			 */
 			
-			
 			 mainMenu = new MainMenuScreen(this);
 			 mainMenu.setName(MainMenuPage);
 			 createGame = new CreateGameScreen(this);
@@ -137,8 +136,11 @@ public class ThinkTankGUI extends JFrame {
 			 gameScreen.setName(GameScreenPage);
 			 createProfile = new CreateProfileScreen(this); 
 			 login = new LoginScreen(this);
-//			 gameOver = new GameOverScreen(this); 
+			 login.setName(LoginPage);
+ //			 gameOver = new GameOverScreen(this); 
 			 stats = new StatsScreen(this); 
+			 stats.setName(StatsPage);
+			 
 
 			 mainPanel.add(MainMenuPage, mainMenu);
 			 mainPanel.add(CreateGamePage, createGame);
@@ -148,16 +150,15 @@ public class ThinkTankGUI extends JFrame {
 			 mainPanel.add(CreateProfilePage, createProfile);
 			 mainPanel.add(LoginPage, login);
 			 mainPanel.add(StatsPage, stats);
-			
 //			 mainPanel.add(gameOver);
 
 			 cardLayout.show(mainPanel, "mainMenu");
 
 			 Helper.log("Finished ThinkTankGUI Constructor");
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			Helper.log("Unable to connect to central server");
 		} catch (IOException e) {
-			e.printStackTrace();
+			Helper.log("Unable to connect to central server: " + e.getMessage());
 		}
 	}
 	

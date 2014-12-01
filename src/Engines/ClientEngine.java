@@ -3,6 +3,8 @@ package Engines;
 import java.awt.event.KeyEvent;
 import java.util.concurrent.ArrayBlockingQueue;
 
+
+import Client.ThinkTankGUI;
 //import Client.ConnectionToGameServer;
 import Client.UserInputHandler;
 import Game.Event;
@@ -74,6 +76,9 @@ public class ClientEngine extends Engine {
 			waitIfDoneEarly(beforeTime);
 			beforeTime = System.currentTimeMillis();
 		}
+		
+		// TODO: show end game and stats screen
+		gameScreen.gui.goTo(ThinkTankGUI.MainMenuPage);
 	}
 	
 	public void waitIfDoneEarly(long beforeTime) {
