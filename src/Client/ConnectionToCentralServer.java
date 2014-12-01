@@ -45,6 +45,8 @@ public class ConnectionToCentralServer extends ConnectionToServer {
 				break;
 			case "new profile":
 				gui.createProfile.createProfileResponse(event);
+				ProfileObject profile = (ProfileObject) event.data;
+				gui.gameScreen.chatPanel.name = profile.username;
 				break;
 			case "login":
 				gui.login.loginResponse(event);
