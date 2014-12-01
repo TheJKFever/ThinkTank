@@ -93,6 +93,8 @@ public class CreateProfileScreen extends JPanel {
 			usernameTf.setText("");
 			passwordTf.setText("");
 			gui.user = (ProfileObject) response.data;
+			gui.loggedIn = true;
+			gui.mainMenu.refresh();
 			gui.goTo(nextPage);
 		} else {
 			JOptionPane.showMessageDialog(null, response.data, "Error", JOptionPane.ERROR_MESSAGE);

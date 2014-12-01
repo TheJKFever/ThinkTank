@@ -27,6 +27,7 @@ public class CentralServerConnectionToClient extends ConnectionToClient {
 	public void receive(Object obj) {
 		Event event = (Event)obj;
 		int port;
+		ProfileObject profile;
 		switch(event.type) {
 			case "new game":
 				System.out.println("ATTEMPTING TO CREATE NEW GAME");
@@ -55,23 +56,20 @@ public class CentralServerConnectionToClient extends ConnectionToClient {
 				this.sendEvent(new Event("games info", centralServer.getGamesVector()));
 				break;
 			case "create profile":
-				System.out.println("CCTC: RECEIVED A CREATE PROFILE QUERY:" + event.data);
-				ProfileObject profile = (ProfileObject)event.data;
+				profile = (ProfileObject)event.data;
 				try {
-					boolean response = centralServer.newProfile(profile);
-					if (response) {
-						this.sendEvent(new Event("new profile", profile, true));
-					} else {
-//						this.sendEvent(new Event("new profile", "Creating profile did not work for some reason", false));
-					}
+					this.sendEvent(new Event("new profile", profile, centralServer.newProfile(profile)));
 				} catch (UserAlreadyExistsException e) {
 					this.sendEvent(new Event("new profile", e.getMessage(), false));
 				}
 				break;
 			case "login":
-				// TODO: Handle Login
-				// Login login = (Login)event.data;
-				// check Database if login.username and login.password exist
+				profile = (ProfileObject)event.data;
+				try {
+					this.sendEvent(new Event("login", profile, centralServer.login(profile)));
+				} catch (Exception e) {
+					this.sendEvent(new Event("login", e.getMessage(), false));
+				}
 				break;
 			case "logout":
 				// TODO: Handle login
