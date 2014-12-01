@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 import java.util.Vector;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import Entities.Turret;
 import Game.Event;
 import Game.GameState;
 import Game.Helper;
@@ -39,8 +40,12 @@ public class ServerEngine extends Engine {
 		beforeTime = System.currentTimeMillis();
 		
 		gameState.inGame = true;
+		
 		broadcastGameState();
 		startGame();
+		
+		// TODO: REMOVE THIS
+		new Turret(500, 500, this.gameState.players.get(0), this.gameState);
 		
 		while (gameState.inGame) {
 			processInput();

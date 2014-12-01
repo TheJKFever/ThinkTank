@@ -36,7 +36,7 @@ public class CentralServer extends ServerSocket {
 		clients = new Vector<CentralServerConnectionToClient>();
 		capacity = new Semaphore(MAX_CAPACITY);
 		games = new HashMap<Integer, GameServer>();
-		db = new DB(new ReentrantLock());
+//		db = new DB(new ReentrantLock());
 		listenForConnections();
 	}
 	

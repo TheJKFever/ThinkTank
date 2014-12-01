@@ -1,6 +1,5 @@
 package Game;
 
-import java.awt.Color;
 import java.io.Serializable;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
@@ -10,6 +9,7 @@ import Entities.Brain;
 import Entities.Shot;
 import Entities.Tank;
 import Entities.ThoughtPool;
+import Entities.Turret;
 import Global.Settings;
 
 public class GameState implements Serializable {
@@ -23,7 +23,7 @@ public class GameState implements Serializable {
 	public Vector<Tank> tanks;
 	public Vector<Barrier> barriers;
 	public Vector<ThoughtPool> thoughtPools;
-//	public Vector<Turret> turrets; TODO: ADD TURRETS
+	public Vector<Turret> turrets;
 	public boolean inGame;
 	public long timeRemaining;
 	public long startTime;
@@ -36,6 +36,7 @@ public class GameState implements Serializable {
 		
 		barriers = new Vector<Barrier>();
 		thoughtPools = new Vector<ThoughtPool>();
+		turrets = new Vector<Turret>();
 		brains = new Vector<Brain>();
 		shots = new Vector<Shot>();
 		players = new Vector<Player>();
@@ -136,9 +137,6 @@ public class GameState implements Serializable {
 			t.update();
 		}
 		
-//		for (Shot s: shots) {
-//			s.update();
-//		}
 		// shots
 		for (int i = (shots.size() - 1); i >= 0; i--) {
 			Shot shot = shots.get(i);
@@ -148,18 +146,7 @@ public class GameState implements Serializable {
 				shot.update();
 			}
 		}
-		// brains
-//		for (Brain b: brains) {
-//			b.update();
-//		}
-		// barriers 
-//		for (Barrier b: barriers) {
-//			b.update();
-//		}
-		// Thought Pools
-//		for (ThoughtPool tp: thoughtPools) {
-//			tp.update();
-//		}
+
 		updateGameClock();
 	}
 

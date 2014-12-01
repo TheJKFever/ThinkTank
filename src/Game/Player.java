@@ -13,11 +13,22 @@ public class Player implements Serializable  {
 	public Team team;
 	public GameState gs;
 	
-	public Player(Team team, GameState gs) {
+	public int numKills;
+	public int numDeaths;
+	public int numShots;
+	public int numHits;
+	public String username;
+	
+	public Player(Team team, GameState gs, String username) {
 		this.team = team;
 		this.gs = gs;
 		gs.players.add(this);
-		tank = new Tank(this, gs);
+		this.tank = new Tank(this, gs);
+		this.numKills = 0;
+		this.numDeaths = 0;
+		this.numShots = 0;
+		this.numHits = 0;
+		this.username = username;
 	}
 	
 	public Player() {

@@ -32,7 +32,7 @@ public class GameScreen extends JPanel {
 		super();
 		Helper.log("Creating new GameScreen");
 		this.gui = gui;
-		bar = new UtilityBar();
+		bar = new UtilityBar(this);
 		gamePanel = new GamePanel(this);
 		gamePanel.setPreferredSize(new Dimension(Settings.BOARD_WIDTH, Settings.BOARD_HEIGHT));
 		chatPanel = new ChatClient();
@@ -40,9 +40,7 @@ public class GameScreen extends JPanel {
 		sidePanel = new JPanel();
 		sidePanel.setPreferredSize(new Dimension(150, Settings.BOARD_HEIGHT));
 		sidePanel.add(chatPanel);
-		
-		bar.setPlayer(gamePanel.player);
-		
+				
 		add(gamePanel, BorderLayout.CENTER);
 		add(sidePanel, BorderLayout.EAST);
 		
