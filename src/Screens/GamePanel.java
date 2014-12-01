@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -107,6 +108,10 @@ public class GamePanel extends JPanel {
 
 		// rotate screen if player is on team 2
 		Graphics2D g2d = (Graphics2D) g;
+		g2d.setRenderingHint(
+		        RenderingHints.KEY_TEXT_ANTIALIASING,
+		        RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
+		
 		if (this.player != null) {
 			if (this.player.team.num == 2) {
 				int w2 = getWidth() / 2;
