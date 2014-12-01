@@ -44,12 +44,17 @@ public class MainMenuScreen extends JPanel {
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
-		add(Box.createVerticalGlue());
-		
 		startNewBtn.addActionListener(new GoToPageListener(gui, ThinkTankGUI.CreateGamePage));
 		joinGameBtn.addActionListener(new JoinGameListener(gui));
 		createProfileBtn.addActionListener(new GoToPageListener(gui, ThinkTankGUI.CreateProfilePage));
+		loginBtn.addActionListener(new GoToPageListener(gui, ThinkTankGUI.LoginPage));
+		refresh();
+	}
+	
+	public void refresh() {
+		this.removeAll();
 
+		add(Box.createVerticalGlue());
 		this.add(startNewBtn);
 		add(Box.createVerticalStrut(20));
 		this.add(joinGameBtn);
@@ -65,6 +70,7 @@ public class MainMenuScreen extends JPanel {
 			this.add(loginBtn);
 			add(Box.createVerticalGlue());
 		}
+		this.repaint();
 	}
 	
 	public class JoinGameListener implements ActionListener {

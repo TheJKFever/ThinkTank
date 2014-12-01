@@ -4,13 +4,15 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
 import Engines.ServerEngine;
 import Game.Event;
 import Game.Helper;
 import Game.Player;
-import Global.Settings;
 
 public class GameServer extends ServerSocket implements Runnable {
 	private static Logger logger = Logger.getLogger("GameServer.log");
@@ -19,7 +21,7 @@ public class GameServer extends ServerSocket implements Runnable {
 	public Vector<GameServerConnectionToClient> clients;
 	public String name;
 	public Thread thread;
-		
+			
 	public GameServer(String name, int port) throws IOException{
 		super(port);
 		this.name = name;
@@ -66,7 +68,9 @@ public class GameServer extends ServerSocket implements Runnable {
 		System.out.println("GAMESERVER: ADDING A CLIENT");
 		GameServerConnectionToClient client = new GameServerConnectionToClient(this, socket);
 		clients.addElement(client);
+		
 		Player p = engine.gameState.teams[team-1].newPlayer(); // Creates new player and adds to gameState
+
 		client.assignPlayer(p); // tells client which player is his
 		client.start();
 	}

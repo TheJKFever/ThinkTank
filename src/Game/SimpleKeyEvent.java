@@ -15,6 +15,11 @@ public class SimpleKeyEvent implements Serializable {
 		this.eventID = ke.getID();
 	}
 	
+	public SimpleKeyEvent(int keyCode, int id) {
+		this.keyCode = keyCode;
+		this.eventID = id;
+	}
+	
 	public int getKeyCode() {
 		return this.keyCode;
 	}

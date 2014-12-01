@@ -6,6 +6,7 @@ import Weapons.SuperWeapon;
 import Weapons.TripleStrengthWeapon;
 import Weapons.Weapon;
 import Game.GameState;
+import Game.Player;
 import Global.Settings;
 
 public class Shot extends Entity {
@@ -15,19 +16,20 @@ public class Shot extends Entity {
 	public Weapon weapon;
 	private int weaponType = Settings.DEFAULT_WEAPON;
 
-	public Shot(int tankX, int tankY, int theta, GameState gs, int weaponType) {
+	public Shot(int tankX, int tankY, int theta, GameState gs, Player shooter, int weaponType) {
 		this.gs = gs;
 		this.weaponType = weaponType;
 		this.theta = theta;
+		this.player = shooter;
 
 		if (this.weaponType == Settings.DEFAULT_WEAPON) {
 			this.weapon = new DefaultWeapon(theta);
 		} else if (this.weaponType == Settings.DOUBLE_WEAPON) {
-			this.weapon = new DoubleStrengthWeapon();
+			this.weapon = new DoubleStrengthWeapon(theta);
 		} else if (this.weaponType == Settings.TRIPLE_WEAPON) {
-			this.weapon = new TripleStrengthWeapon();
+			this.weapon = new TripleStrengthWeapon(theta);
 		} else if (this.weaponType == Settings.SUPER_WEAPON) {
-			this.weapon = new SuperWeapon();
+			this.weapon = new SuperWeapon(theta);
 		}
 
 		setImagePath(this.weapon.imagePath);
@@ -61,13 +63,16 @@ public class Shot extends Entity {
 		super.update();
     	updatePosition();
     	checkForCollisionWithEntities(gs.barriers);
+    	checkForCollisionWithEntities(gs.turrets);
         checkForCollisionWithEntities(gs.brains);
         checkForCollisionWithEntities(gs.tanks);
 	}
 	
 	public void executeCollisionWith(Entity entity) {
-    	entity.hitBy(this);
-    	die();
+		if (entity.player != this.player) {
+	    	entity.hitBy(this);
+	    	die();
+		}
     }
 
 	public void updatePosition() {

@@ -6,6 +6,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 
 import Entities.GameObject;
+import Entities.ProfileObject;
 import Game.Event;
 import Game.Helper;
 
@@ -44,7 +45,11 @@ public class ConnectionToCentralServer extends ConnectionToServer {
 				break;
 			case "new profile":
 				gui.createProfile.createProfileResponse(event);
+				ProfileObject profile = (ProfileObject) event.data;
+				gui.gameScreen.chatPanel.name = profile.username;
 				break;
+			case "login":
+				gui.login.loginResponse(event);
 			default:
 				ThinkTankGUI.logger.log(Level.INFO, "Parse error. did not understand message: " + event);
 		}

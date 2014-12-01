@@ -3,6 +3,9 @@ package Server;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
 import Game.Event;
@@ -12,9 +15,10 @@ import Global.Settings;
 
 public class GameServerConnectionToClient extends ConnectionToClient {
 	private static Logger logger = Logger.getLogger("GameServer.log");
-	private static int ID = 0;
 	public Player player;
 	public GameServer gameServer;
+	private Lock lock = new ReentrantLock();
+	private Condition callback = lock.newCondition();
 	
 	public GameServerConnectionToClient(GameServer game, Socket client) {
 		super(client);
@@ -26,14 +30,14 @@ public class GameServerConnectionToClient extends ConnectionToClient {
 	public void assignPlayer(Player p) {
 		Helper.log("GSCONNECTIONTOCLIENT: ASSIGNING PLAYER");
 		this.player = p;
-		sendEvent(new Event("assign player", p)); // TODO: figure out how to send p so that the client receives pertinent info
+		sendEvent(new Event("assign player", p));
 	}
 	
 	@Override
 	public void receive(Object obj) {
 		Helper.log("GSCONNECTIONTOCLIENT: RECEIVING");
 		Event event = (Event) obj;
-		System.out.println("RECEIVED EVENT:\n" + event);
+		Helper.log("RECEIVED EVENT:\n" + event);
 		event.player = player;
 		switch(event.type) {
 			case "key event":
@@ -43,6 +47,8 @@ public class GameServerConnectionToClient extends ConnectionToClient {
 			case "chat":
 				gameServer.broadcast(event);
 				break;
+			case "set username":
+				this.player.username = (String)event.data;
 			default:
 				Helper.log("COULD NOT RECOGNIZE EVENT: " + event);
 		}			

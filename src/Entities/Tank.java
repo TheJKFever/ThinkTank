@@ -7,31 +7,34 @@ import Game.Helper;
 import Game.Player;
 import Game.SimpleKeyEvent;
 import Game.Team;
+import Game.Upgrade;
 import Global.Settings;
 
 public class Tank extends Entity {
 
 	private static final long serialVersionUID = 4397815103071777225L;
 
-	static final String imageDir = "images/tanks/";
-	static final String IMAGE_TANK_UP = imageDir + "blue/up1.png";
-	static final String IMAGE_TANK_RIGHT = imageDir + "blue/right1.png";
-	static final String IMAGE_TANK_DOWN = imageDir + "blue/down1.png";
-	static final String IMAGE_TANK_LEFT = imageDir + "blue/left1.png";
+	static final String IMAGE_TANK_UP_BLUE = "images/tanks/blue/up1.png";
+	static final String IMAGE_TANK_RIGHT_BLUE = "images/tanks/blue/right1.png";
+	static final String IMAGE_TANK_DOWN_BLUE = "images/tanks/blue/down1.png";
+	static final String IMAGE_TANK_LEFT_BLUE = "images/tanks/blue/left1.png";
 
+	static final String IMAGE_TANK_UP_RED = "images/tanks/red/up1.png";
+	static final String IMAGE_TANK_RIGHT_RED = "images/tanks/red/right1.png";
+	static final String IMAGE_TANK_DOWN_RED = "images/tanks/red/down1.png";
+	static final String IMAGE_TANK_LEFT_RED = "images/tanks/red/left1.png";
+	
 	static final int MAX_TANK_HEALTH = 10;
 	static final int TANK_HEIGHT = 16;
 	static final int TANK_WIDTH = 16;
 
 	static final int TANK_SPAWN_X = 0;
-	static final int TANK_SPAWN_Y = 50;
+	static final int TANK_SPAWN_Y = 100;
 
 	public static int TankCount = 0;
 
 	public int weaponType;
 
-	Team team;
-	Player player;
 	public int tankID;
 	public boolean firing;
 	public boolean mining;
@@ -46,7 +49,8 @@ public class Tank extends Entity {
 		this.player = p;
 		this.team = player.team;
 		this.gs = gs;
-		this.gs.tanks.addElement(this);
+		//this.gs.tanks.addElement(this);
+		this.gs.tanks.add(this);
 		this.health = MAX_TANK_HEALTH;
 		this.setWidth(TANK_HEIGHT);
 		this.setHeight(TANK_WIDTH);
@@ -63,7 +67,7 @@ public class Tank extends Entity {
 	public void spawn() {
 		// TODO: Spawn tanks properly
 		this.x = 100;
-		// this.x = TANK_SPAWN_X + (50 * this.tankID);
+//		this.x = TANK_SPAWN_X + (50 * this.tankID/2);
 		if (team.num == 1) {
 			this.y = TANK_SPAWN_Y;
 		} else {
@@ -72,14 +76,27 @@ public class Tank extends Entity {
 	}
 
 	public void updateImagePath() {
-		if (theta == 0) {
-			this.imagePath = IMAGE_TANK_UP;
-		} else if (theta == 90) {
-			this.imagePath = IMAGE_TANK_RIGHT;
-		} else if (theta == 180) {
-			this.imagePath = IMAGE_TANK_DOWN;
-		} else if (theta == 270) {
-			this.imagePath = IMAGE_TANK_LEFT;
+		
+		if (team.num == 1) {
+			if (theta == 0) {
+				this.imagePath = IMAGE_TANK_UP_BLUE;
+			} else if (theta == 90) {
+				this.imagePath = IMAGE_TANK_RIGHT_BLUE;
+			} else if (theta == 180) {
+				this.imagePath = IMAGE_TANK_DOWN_BLUE;
+			} else if (theta == 270) {
+				this.imagePath = IMAGE_TANK_LEFT_BLUE;
+			}
+		} else {
+			if (theta == 0) {
+				this.imagePath = IMAGE_TANK_UP_RED;
+			} else if (theta == 90) {
+				this.imagePath = IMAGE_TANK_RIGHT_RED;
+			} else if (theta == 180) {
+				this.imagePath = IMAGE_TANK_DOWN_RED;
+			} else if (theta == 270) {
+				this.imagePath = IMAGE_TANK_LEFT_RED;
+			}
 		}
 	}
 
@@ -106,19 +123,50 @@ public class Tank extends Entity {
 		if (key == KeyEvent.VK_UP) {
 			dp = 0;
 		}
+		
 		if (key == KeyEvent.VK_DOWN) {
 			dp = 0;
 		}
+		
 		if (key == KeyEvent.VK_LEFT) {
 			dtheta -= 90;
 		}
+		
 		if (key == KeyEvent.VK_RIGHT) {
 			dtheta += 90;
 		}
+		
 		if (key == KeyEvent.VK_M) {
 			mining = false;
 		}
 
+		if (key == KeyEvent.VK_1) {
+			// Double strength weapon
+			Upgrade u = new Upgrade("weapon", 100, 1);
+			this.buyUpgrade(u);
+		}
+		
+		if (key == KeyEvent.VK_2) {
+			Upgrade u = new Upgrade("weapon", 200, 2);
+			this.buyUpgrade(u);
+		}
+		
+		if (key == KeyEvent.VK_3) {
+			Upgrade u = new Upgrade("weapon", 300, 3);
+			this.buyUpgrade(u);
+		}
+		
+		if (key == KeyEvent.VK_4) {
+			Upgrade u = new Upgrade("weapon", 500, 4);
+			this.buyUpgrade(u);
+		}
+		
+		if (key == KeyEvent.VK_5) {
+			// turret
+			Upgrade u = new Upgrade("turret", 1000, 5);
+			this.buyUpgrade(u);
+		}
+		
 		if (key == KeyEvent.VK_SPACE) {
 			this.firing = true;
 		}
@@ -134,6 +182,7 @@ public class Tank extends Entity {
 
 		// TODO: Subtract health when run into things?
 		checkForCollisionWithEntities(gs.barriers);
+		checkForCollisionWithEntities(gs.turrets);
 		checkForCollisionWithEntities(gs.brains);
 		checkForCollisionWithEntities(gs.tanks);
 
@@ -176,6 +225,7 @@ public class Tank extends Entity {
 	}
 
 	public void die() {
+		this.player.numDeaths++;
 		// TODO: TANK DEATH
 		visible = false;
 		exploding = true;
@@ -186,7 +236,28 @@ public class Tank extends Entity {
 	}
 
 	public void fireShot() {
-		gs.shots.add(new Shot(x, y, theta, gs, this.weaponType));
+		this.player.numShots++;
+		gs.shots.add(new Shot(x, y, theta, gs, this.player, this.weaponType));
 		firing = false;
 	}
+	
+	public void buyUpgrade(Upgrade upgrade) {
+		Helper.log("ATTEMPTING TO PURCHASE UPGRADE...");
+		
+		if (this.thoughts >= upgrade.price) {
+			Helper.log("PURCHASING UPGRADE...");
+			this.thoughts -= upgrade.price;
+			if (upgrade.type == "weapon") {
+				this.updateWeapon(upgrade.weaponType);
+			} else if (upgrade.type == "turret") {
+				new Turret(x, y, this.player, gs);
+			}
+			else {
+				// TODO: buy other things 
+			}
+		} else {
+			Helper.log("COULD NOT AFFORD UPGRADE...");
+		}
+	}
+		
 }
