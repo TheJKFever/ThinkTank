@@ -22,6 +22,7 @@ public interface Settings {
     public class Development {
     	public static final int SERVER_PORT = 3000;
     	public static final String HOST = "localhost";
+//    	public static final String HOST = "10.120.74.242";
 
     	public class DB {
         	public static final String ADDRESS = "jdbc:mysql://localhost/";
