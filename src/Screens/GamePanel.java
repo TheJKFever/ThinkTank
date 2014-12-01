@@ -213,7 +213,7 @@ public class GamePanel extends JPanel {
 		Helper.log("GAMEPANEL: DRAW BRAINS");
 		for (Brain brain: gameState.brains) {
 			if (brain.isVisible()) {
-				System.out.println("path is: " + brain.imagePath);
+				//System.out.println("path is: " + brain.imagePath);
 				g.drawImage(getImg(brain.imagePath), brain.x, brain.y, this);
 			}
 			if (brain.isDying()) {
