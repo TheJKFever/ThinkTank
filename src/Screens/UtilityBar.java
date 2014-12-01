@@ -1,3 +1,4 @@
+package Screens;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -9,21 +10,22 @@ import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
 import Entities.Tank;
-import Game.GameState;
+import Game.Player;
+import Global.Settings;
 
 public class UtilityBar extends JPanel {
 
-	public Tank tank;
+	public Player player;
 
-	public void setTank(Tank tank) {
+	public void setPlayer(Player player) {
 
-		this.tank = tank;
+		this.player = player;
 
 	}
 
-	public Tank getTank() {
+	public Player getPlayer() {
 
-		return this.tank;
+		return this.player;
 
 	}
 
@@ -49,9 +51,8 @@ public class UtilityBar extends JPanel {
 
 			public void actionPerformed(ActionEvent e) {
 
-				GameScreen.tank.updateWeapon(Globals.DOUBLE_WEAPON);
-				ThinkTank.mainPanel.setFocusable(true);
-				ThinkTank.mainPanel.requestFocusInWindow();
+				player.tank.updateWeapon(Settings.DOUBLE_WEAPON);
+				
 
 
 			}
@@ -67,10 +68,8 @@ public class UtilityBar extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 
 
-				GameScreen.tank.updateWeapon(Globals.TRIPLE_WEAPON);
-				ThinkTank.mainPanel.setFocusable(true);
-
-				ThinkTank.mainPanel.requestFocusInWindow();
+				player.tank.updateWeapon(Settings.TRIPLE_WEAPON);
+				
 
 			}
 
@@ -82,10 +81,8 @@ public class UtilityBar extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 
 
-				GameScreen.tank.updateWeapon(Globals.SUPER_WEAPON);
-				ThinkTank.mainPanel.setFocusable(true);
-
-				ThinkTank.mainPanel.requestFocusInWindow();
+				player.tank.updateWeapon(Settings.SUPER_WEAPON);
+				
 
 			}
 
@@ -97,9 +94,8 @@ public class UtilityBar extends JPanel {
 
 			public void actionPerformed(ActionEvent e) {
 
-				GameState.brains.get(0).setHealth(1);
-				ThinkTank.mainPanel.setFocusable(true);
-				ThinkTank.mainPanel.requestFocusInWindow();
+				player.team.brain.setHealth(1);
+				
 
 
 			}
@@ -112,9 +108,8 @@ public class UtilityBar extends JPanel {
 
 			public void actionPerformed(ActionEvent e) {
 
-				GameState.brains.get(0).setHealth(2);
-				ThinkTank.mainPanel.setFocusable(true);
-				ThinkTank.mainPanel.requestFocusInWindow();
+				player.team.brain.setHealth(2);
+				
 
 
 			}
@@ -127,9 +122,8 @@ public class UtilityBar extends JPanel {
 
 			public void actionPerformed(ActionEvent e) {
 
-				GameState.brains.get(0).setHealth(3);
-				ThinkTank.mainPanel.setFocusable(true);
-				ThinkTank.mainPanel.requestFocusInWindow();
+				player.team.brain.setHealth(3);
+				
 
 
 			}
@@ -142,9 +136,8 @@ public class UtilityBar extends JPanel {
 
 			public void actionPerformed(ActionEvent e) {
 
-				GameState.brains.get(0).setHealth(4);
-				ThinkTank.mainPanel.setFocusable(true);
-				ThinkTank.mainPanel.requestFocusInWindow();
+				player.team.brain.setHealth(4);
+				
 
 
 			}

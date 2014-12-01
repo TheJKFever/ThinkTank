@@ -12,6 +12,11 @@ public interface Settings {
 	
     public static final boolean DEBUG = true;
     
+	public static final int DEFAULT_WEAPON = 1;
+	public static final int DOUBLE_WEAPON = 2;
+	public static final int TRIPLE_WEAPON = 3;
+	public static final int SUPER_WEAPON = 4;
+    
 	public int CHAT_PORT = 6789;
     
     public class Development {
