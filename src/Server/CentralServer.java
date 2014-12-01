@@ -128,8 +128,10 @@ public class CentralServer extends ServerSocket {
 	}
 
 	public void broadcast(Event event) {
-		for (CentralServerConnectionToClient client:clients) {
-			client.send(event);
+		synchronized(clients) {
+			for (CentralServerConnectionToClient client:clients) {
+				client.send(event);
+			}
 		}
 	}
 

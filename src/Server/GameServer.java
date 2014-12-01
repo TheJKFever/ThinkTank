@@ -80,19 +80,23 @@ public class GameServer extends ServerSocket implements Runnable {
 	
 	// go to ConnectionToClient
 	public void broadcast(Event event) {
-		for (GameServerConnectionToClient client:clients) {
-			client.send(event);
+		synchronized(clients) {
+			for (GameServerConnectionToClient client:clients) {
+				client.send(event);
+			}
 		}
 	}	
 	
 	public void release(GameServerConnectionToClient thread) {
-		System.out.println("releasing connection to client from central server");
-		thread.interrupt();
-		System.out.println("interupted thread");
-		boolean removed = clients.remove(thread);
-		System.out.println("removed thread from vector: " + removed);
-		// TODO: released client, now needs to validate that game is still playable
-		// if so do nothing, if not, then signal to all players that the game has ended.
+		synchronized(clients) {
+			System.out.println("releasing connection to client from central server");
+			thread.interrupt();
+			System.out.println("interupted thread");
+			boolean removed = clients.remove(thread);
+			System.out.println("removed thread from vector: " + removed);
+			// TODO: released client, now needs to validate that game is still playable
+			// if so do nothing, if not, then signal to all players that the game has ended.
+		}
 	}
 
 	public void saveStats(GameState gameState) {

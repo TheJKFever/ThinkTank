@@ -84,8 +84,10 @@ public class ServerEngine extends Engine {
 	private void startGame() {
 		Helper.log("GAMESERVER: START GAME");
 		gameState.startGameClock();
-		for (GameServerConnectionToClient client:clients) {
-			client.sendEvent(new Event("start game"));
+		synchronized(clients) {
+			for (GameServerConnectionToClient client:clients) {
+				client.sendEvent(new Event("start game"));
+			}
 		}
 	}
 
