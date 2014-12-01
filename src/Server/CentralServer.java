@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,6 +14,7 @@ import Entities.GameObject;
 import Entities.ProfileObject;
 import Exceptions.PortNotAvailableException;
 import Game.Event;
+import Game.GameState;
 import Game.Helper;
 import Global.Settings;
 import Server.DB.UserAlreadyExistsException;
@@ -72,7 +72,7 @@ public class CentralServer extends ServerSocket {
 		GameServer gameServer;
 		try {
 			Helper.log("ABOUT TO CREATE GAME SERVER");
-			gameServer = new GameServer(name, port);
+			gameServer = new GameServer(this, name, port);
 			Helper.log("CREATED GAME SERVER");
 			gameServer.thread.start();
 			Helper.log("STARTED GAME SERVER THREAD");
@@ -140,6 +140,14 @@ public class CentralServer extends ServerSocket {
 		return db.attemptLogin(profile);
 	}
 	
+	public void saveStats(GameState gameState) {
+		db.saveStats(gameState);
+	}
+	
+	public DB.StatsObject getStatsFor(String username) {
+		return db.getStatsFor(username);
+	}
+
 	public static void main(String[] args) {
 		try {
 			CentralServer server = new CentralServer(Settings.Development.SERVER_PORT);
@@ -148,6 +156,5 @@ public class CentralServer extends ServerSocket {
 			e.printStackTrace();
 		}
 	}
-
 }
 

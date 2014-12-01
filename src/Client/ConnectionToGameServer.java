@@ -36,6 +36,7 @@ public class ConnectionToGameServer extends ConnectionToServer {
 		case "assign player":
 			Helper.log("ConnectionToGameServer: RECEIVED ASSIGN PLAYER EVENT");
 			gameScreen.engine.player = (Player) event.data;
+			gameScreen.engine.player.username = gameScreen.gui.user.username;
 			Helper.log("Assigned Player: " + gameScreen.engine.player);
 			this.sendEvent(new Event("set username", gameScreen.gui.user.username));
 			break;

@@ -26,16 +26,16 @@ public class Brain extends Entity  {
 		this.setHeight(BRAIN_HEIGHT);
 		
 		// center brain horizontally
-        this.x = (Settings.BOARD_WIDTH/2) - (getWidth()/2);
+        this.y = (Settings.BOARD_HEIGHT/2) - (height/2);
         
         // set brain's vertical position based on team
         // TODO: position brain more precisely
 		if (team.num == 1) {
 			this.setImagePath(IMAGE_BRAIN_1); 
-			this.y = Settings.BOARD_HEIGHT - this.getHeight() - 20;
+			this.x = 20;
 		} else if (team.num == 2) {
 			this.setImagePath(IMAGE_BRAIN_2);
-	        this.y = 20;
+	        this.x = Settings.BOARD_WIDTH - this.height - 20;
 		}
 		gs.brains.addElement(this);
 	}

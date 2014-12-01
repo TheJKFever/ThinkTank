@@ -65,13 +65,11 @@ public class Tank extends Entity {
 	}
 
 	public void spawn() {
-		// TODO: Spawn tanks properly
-		this.x = 100;
-//		this.x = TANK_SPAWN_X + (50 * this.tankID/2);
+		this.y = Settings.BOARD_HEIGHT/2 - 8;
 		if (team.num == 1) {
-			this.y = TANK_SPAWN_Y;
+			this.x = 80;
 		} else {
-			this.y = Settings.BOARD_HEIGHT - TANK_SPAWN_Y;
+			this.x = Settings.BOARD_WIDTH - 80;
 		}
 	}
 

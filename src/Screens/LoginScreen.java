@@ -88,10 +88,10 @@ public class LoginScreen extends JPanel {
 	}
 	
 	public void loginResponse(Event response) {
-		System.out.println("received a login response");
+		System.out.println("received a login response: " + response.data);
 		if (response.result) {
 			// create profile success
-			gui.user = (ProfileObject) response.data;
+			gui.user = (ProfileObject)response.data;
 			gui.loggedIn = true;
 			gui.mainMenu.refresh();
 			gui.goTo(ThinkTankGUI.MainMenuPage);
