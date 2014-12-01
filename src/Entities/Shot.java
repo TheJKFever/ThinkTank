@@ -1,90 +1,68 @@
 package Entities;
 
-import javax.swing.ImageIcon;
-
+import Weapons.DefaultWeapon;
+import Weapons.DoubleStrengthWeapon;
+import Weapons.SuperWeapon;
+import Weapons.TripleStrengthWeapon;
+import Weapons.Weapon;
 import Game.GameState;
 import Global.Settings;
 
 public class Shot extends Entity {
-	/*
-	 * static final String IMAGE_SHOT_UP = "images/bulletUp.png"; static final
-	 * String IMAGE_SHOT_RIGHT = "images/bulletRight.png"; static final String
-	 * IMAGE_SHOT_DOWN = "images/bulletDown.png"; static final String
-	 * IMAGE_SHOT_LEFT = "images/bulletLeft.png";
-	 */
-	// int shotSpeed = 4;
-	// int damage = 1;
-	// boolean exploding = false;
 
 	private static final long serialVersionUID = 5824474896043889830L;
-	static final int SHOT_WIDTH_VERTICAL = 13;
-    static final int SHOT_HEIGHT_VERTICAL = 16;
-    static final int SHOT_WIDTH_HORIZONTAL = 16;
-    static final int SHOT_HEIGHT_HORIZONTAL = 13;
-    
-	// ADDED STUFF
+	
 	public Weapon weapon;
 	private int weaponType = Settings.DEFAULT_WEAPON;
 
-	// ADDED STUFF
-
-	public Weapon getWeapon() {
-
-		return weapon;
-
-	}
-
-	public void upgradeWeapon(int weapontype) {
-
-		this.weaponType = weapontype;
-
-	}
-
-	
-
-	public Shot(int x, int y, int theta, GameState gs,int weaponType) {
+	public Shot(int tankX, int tankY, int theta, GameState gs, int weaponType) {
 		this.gs = gs;
-		this.setX(x);
-		this.y = y;
 		this.weaponType = weaponType;
 		this.theta = theta;
 
-		ImageIcon ii = null;
-
 		if (this.weaponType == Settings.DEFAULT_WEAPON) {
-
 			this.weapon = new DefaultWeapon(theta);
-
 		} else if (this.weaponType == Settings.DOUBLE_WEAPON) {
-
 			this.weapon = new DoubleStrengthWeapon();
-
 		} else if (this.weaponType == Settings.TRIPLE_WEAPON) {
-
 			this.weapon = new TripleStrengthWeapon();
-
 		} else if (this.weaponType == Settings.SUPER_WEAPON) {
-
 			this.weapon = new SuperWeapon();
-
 		}
 
-		ii = new ImageIcon(this.weapon.getImagePath());
+		setImagePath(this.weapon.imagePath);
+		this.setWidth(this.weapon.width);
+		this.setHeight(this.weapon.height);
+		
+		if (theta == 0) {
+			this.x = tankX + 16/2 - this.weapon.WIDTH_VERTICAL/2;
+			this.y = tankY - this.weapon.HEIGHT_VERTICAL;
+		} else if (theta == 90) {
+			this.x= tankX + 16;
+			this.y = tankY + 16 / 2 - this.weapon.HEIGHT_HORIZONTAL / 2;
+		} else if (theta == 180) {
+			this.x = tankX + width / 2 -  this.weapon.WIDTH_VERTICAL / 2;
+			this.y = tankY + 16;
+		} else if (theta == 270) {
+			this.x = tankX -  this.weapon.WIDTH_HORIZONTAL;
+			this.y = tankY + 16/2 - this.weapon.HEIGHT_VERTICAL/2;
+		}
+	}
 
-		setImage(ii.getImage());
-		this.setWidth(ii.getImage().getWidth(null));
-		this.setHeight(ii.getImage().getHeight(null));
+	public Weapon getWeapon() {
+		return weapon;
+	}
+
+	public void upgradeWeapon(int weapontype) {
+		this.weaponType = weapontype;
 	}
 
 	public void update() {
 		super.update();
     	updatePosition();
-    	// TODO: replace this will barriers at the walls of the map
-//    	checkForCollisionWithWalls();
     	checkForCollisionWithEntities(gs.barriers);
         checkForCollisionWithEntities(gs.brains);
         checkForCollisionWithEntities(gs.tanks);
-    
 	}
 	
 	public void executeCollisionWith(Entity entity) {

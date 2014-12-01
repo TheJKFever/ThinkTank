@@ -35,7 +35,7 @@ public class LobbyScreen extends JPanel {
 
 		createGameBtn = new JButton("Create Game");
 		createGameBtn.setBounds(20, 700, 120, 25);
-		createGameBtn.addActionListener(new GoToPageListener(gui, "createGame"));
+		createGameBtn.addActionListener(new GoToPageListener(gui, gui.createGame));
 		this.add(createGameBtn);
 //		RefreshGamesBtn = new JButton("Refresh");
 //		RefreshGamesBtn.setBounds(120, 700, 120, 25);

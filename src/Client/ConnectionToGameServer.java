@@ -32,6 +32,7 @@ public class ConnectionToGameServer extends ConnectionToServer {
 	
 	public void receive(Object obj) {		
 		Event event = (Event) obj;
+
 		switch(event.type) {
 		case "assign player":
 			Helper.log("ConnectionToGameServer: RECEIVED ASSIGN PLAYER EVENT");
@@ -52,7 +53,6 @@ public class ConnectionToGameServer extends ConnectionToServer {
 			break;
 		case "chat":
 			System.out.println("ConnectionToGameServer: RECEIVED CHAT EVENT");
-//			gui.chatPanel.
 			break;
 		default:
 			Helper.log("ConnectionToGameServer: DIDN'T UNDERSTAND EVENT");

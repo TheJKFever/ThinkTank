@@ -33,7 +33,7 @@ public abstract class ConnectionToClient extends Thread {
 		} catch (SocketException se) {
 			try {				
 				in.close();
-				this.yield();
+				Thread.yield();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -45,8 +45,8 @@ public abstract class ConnectionToClient extends Thread {
 	}
 
 	public void sendEvent(Event event) {
-		// Helper.log("ServerThread: Sending event co client:");
-		// Helper.log(event);
+//		 Helper.log("ServerThread: Sending event to client:");
+//		 Helper.log(event);
 		send(event);
 	}
 

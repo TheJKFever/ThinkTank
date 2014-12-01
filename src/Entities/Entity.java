@@ -1,6 +1,5 @@
 package Entities;
 
-import java.awt.Image;
 import java.io.Serializable;
 import java.util.Vector;
 
@@ -21,24 +20,11 @@ public abstract class Entity implements Serializable {
 
 	public boolean yCollision = false;
 	public boolean xCollision = false;
-	//public boolean xCollisionPrev = false;
-	//public boolean yCollisionPrev = false;
 
 	public boolean topCollision = false;
 	public boolean bottomCollision = false;
 	public boolean leftCollision = false;
 	public boolean rightCollision = false;
-
-	public Image image;
-
-	public void setImage(Image image) {
-		this.image = image;
-	}
-
-	public Image getImage() {
-		return image;
-	}
-
 
 	public Entity() {
 		visible = true;
@@ -117,7 +103,6 @@ public abstract class Entity implements Serializable {
 
 	public void hitBy(Shot shot) {
 		this.health -= shot.weapon.damage;
-		//		log(this.getClass().getName() + " HEALTH = " + health);
 		if (this.health == 0) {
 			this.die();
 		}
@@ -133,8 +118,6 @@ public abstract class Entity implements Serializable {
 	}
 
 	public boolean checkForCollisionWith(Rect other) {
-		Helper.log(this.getClass().getName() + ": collidesWith()");
-
 		// reset values
 		yCollision = false;
 		xCollision = false;
@@ -171,8 +154,8 @@ public abstract class Entity implements Serializable {
 	}
 
 	public void resetPositionOnCollision(Rect rect) {
-		Helper.log(this.getClass().getName() + ": resetPositionOnCollision()");
-		Helper.log("xCollision: " + xCollision + " yCollision: " + yCollision);
+//		Helper.log(this.getClass().getName() + ": resetPositionOnCollision()");
+//		Helper.log("xCollision: " + xCollision + " yCollision: " + yCollision);
 
 		boolean movedUp = false;
 		boolean movedDown = false;

@@ -26,7 +26,6 @@ public class ClientEngine extends Engine {
 	public ClientEngine(GameScreen gameScreen) {
 		this.gameScreen = gameScreen;
 		this.gamePanel = gameScreen.gamePanel;
-		this.gameState = new GameState();
 		engineThread = new Thread(this);
 		Helper.log("Created new ClientEngine");
 	}
@@ -39,8 +38,6 @@ public class ClientEngine extends Engine {
 		Helper.log("CLIENT ENGINE: GETTING GAME STATE FROM SERVER");
 		
 		GameState newGameState = gameScreen.gameConnection.getGameStateFromServer();
-//		if (newGameState!=null) {
-//			gameState = newGameState;
 		while (newGameState == null) {
 			Helper.log("CLIENT ENGINE: GAME STATE == NULL, TRYING AGAIN in a few");
 			newGameState = gameScreen.gameConnection.getGameStateFromServer();
@@ -51,26 +48,15 @@ public class ClientEngine extends Engine {
 			}
 		}
 		
-//		while (newGameState == null) {
-//			Helper.log("CLIENT ENGINE: GAME STATE == NULL, TRYING AGAIN in a few");
-//			newGameState = gameScreen.gameConnection.getGameStateFromServer();
-//			try {
-//				Thread.sleep(Globals.DELAY/5);
-//			} catch (InterruptedException ie) {
-//				Helper.log("CLIENT ENGINE: INTERRUPTED WHILE WAITING FOR GAME STATE");
-//			}
-//		}
-//		gameState = newGameState;
-		// Helper.log("CLIENT ENGINE: GOT GAME STATE");
-		// Helper.log(gameState);
+		gameState = newGameState;
 	}
 	
 	public void run() {
 		Helper.log("CLIENT ENGINE: THREAD STARTED");
-		long beforeTime, timeDiff, sleep;
+		long beforeTime;
 		beforeTime = System.currentTimeMillis();
 		
-//		getGameStateFromServer();
+		getGameStateFromServer();
 		
 		Helper.log("CLIENT ENGINE: About to paint gamePanel for the first time");
 		gamePanel.repaint();
@@ -78,19 +64,15 @@ public class ClientEngine extends Engine {
 		Helper.log("CLIENT ENGINE: Adding UserInputHandler");
 		gamePanel.addKeyListener(new UserInputHandler(this.gameScreen));
 
-
 		while (gameState.inGame) {
 			getGameStateFromServer();
 			processInput();
 			this.player.tank = gameState.tankForThisClient;
 			gameState.update();
 			gamePanel.repaint();
+
 			waitIfDoneEarly(beforeTime);
 			beforeTime = System.currentTimeMillis();
-			Helper.log("Thoughts: " + player.tank.thoughts);
-			Helper.log("Health: " + player.tank.health + "/10");
-			Helper.log("Tank.y: " + player.tank.y);
-			Helper.log("Tank.x: " + player.tank.x);
 		}
 	}
 	
@@ -116,7 +98,7 @@ public class ClientEngine extends Engine {
 		synchronized(eventQ) {
 			for (Event event: eventQ) {
 				if (event.type == "key event") {
-					SimpleKeyEvent ke = ((SimpleKeyEvent)event.data);
+					SimpleKeyEvent ke = (SimpleKeyEvent)(event.data);
 					if (ke.getID() == KeyEvent.KEY_RELEASED) {
 						player.tank.keyReleased(ke);
 					} else if (ke.getID() == KeyEvent.KEY_PRESSED) {

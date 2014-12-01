@@ -46,7 +46,7 @@ public class MainMenuScreen extends JPanel {
 		
 		add(Box.createVerticalGlue());
 		
-		startNewBtn.addActionListener(new GoToPageListener(gui, "createGame"));
+		startNewBtn.addActionListener(new GoToPageListener(gui, gui.createGame));
 		joinGameBtn.addActionListener(new JoinGameListener(gui));
 
 		

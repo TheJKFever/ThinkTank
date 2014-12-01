@@ -66,6 +66,7 @@ public class ServerEngine extends Engine {
 	public void broadcastGameState() {
 		// Helper.log("GAMESERVER: BROADCAST GAME STATE");
 		// Helper.log(gameState.toString());
+		
 		Event e;
 		for (GameServerConnectionToClient client: clients) {
 			gameState.tankForThisClient = client.player.tank;
