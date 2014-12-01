@@ -1,6 +1,14 @@
 package Client;
 
 import java.awt.CardLayout;
+
+/*
+ * Jon Koehsmtedt
+ * Kevin
+ * Shiyao
+ * David Gershuni
+ * Woye Lin
+ */
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;

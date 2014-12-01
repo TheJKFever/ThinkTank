@@ -54,8 +54,8 @@ public class UtilityBar extends JPanel {
 		button1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SimpleKeyEvent ke = new SimpleKeyEvent(KeyEvent.VK_1, KeyEvent.KEY_RELEASED);
-				gameScreen.sendKeyPressToClientAndServer(ke);
-				gameScreen.gamePanel.requestFocusInWindow();
+				UtilityBar.this.gameScreen.sendKeyPressToClientAndServer(ke);
+				UtilityBar.this.gameScreen.gamePanel.requestFocusInWindow();
 			}
 		});
 
@@ -64,8 +64,8 @@ public class UtilityBar extends JPanel {
 		button2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SimpleKeyEvent ke = new SimpleKeyEvent(KeyEvent.VK_2, KeyEvent.KEY_RELEASED);
-				gameScreen.sendKeyPressToClientAndServer(ke);
-				gameScreen.gamePanel.requestFocusInWindow();
+				UtilityBar.this.gameScreen.sendKeyPressToClientAndServer(ke);
+				UtilityBar.this.gameScreen.gamePanel.requestFocusInWindow();
 			}
 		});
 		
@@ -74,8 +74,8 @@ public class UtilityBar extends JPanel {
 		button3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SimpleKeyEvent ke = new SimpleKeyEvent(KeyEvent.VK_3, KeyEvent.KEY_RELEASED);
-				gameScreen.sendKeyPressToClientAndServer(ke);
-				gameScreen.gamePanel.requestFocusInWindow();
+				UtilityBar.this.gameScreen.sendKeyPressToClientAndServer(ke);
+				UtilityBar.this.gameScreen.gamePanel.requestFocusInWindow();
 			}
 		});
 		
@@ -84,8 +84,8 @@ public class UtilityBar extends JPanel {
 		button4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SimpleKeyEvent ke = new SimpleKeyEvent(KeyEvent.VK_4, KeyEvent.KEY_RELEASED);
-				gameScreen.sendKeyPressToClientAndServer(ke);
-				gameScreen.gamePanel.requestFocusInWindow();
+				UtilityBar.this.gameScreen.sendKeyPressToClientAndServer(ke);
+				UtilityBar.this.gameScreen.gamePanel.requestFocusInWindow();
 			}
 		});
 		
@@ -94,8 +94,8 @@ public class UtilityBar extends JPanel {
 		button5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SimpleKeyEvent ke = new SimpleKeyEvent(KeyEvent.VK_5, KeyEvent.KEY_RELEASED);
-				gameScreen.sendKeyPressToClientAndServer(ke);
-				gameScreen.gamePanel.requestFocusInWindow();
+				UtilityBar.this.gameScreen.sendKeyPressToClientAndServer(ke);
+				UtilityBar.this.gameScreen.gamePanel.requestFocusInWindow();
 			}
 		});
 		
@@ -104,8 +104,8 @@ public class UtilityBar extends JPanel {
 		button6.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SimpleKeyEvent ke = new SimpleKeyEvent(KeyEvent.VK_6, KeyEvent.KEY_RELEASED);
-				gameScreen.sendKeyPressToClientAndServer(ke);
-				gameScreen.gamePanel.requestFocusInWindow();
+				UtilityBar.this.gameScreen.sendKeyPressToClientAndServer(ke);
+				UtilityBar.this.gameScreen.gamePanel.requestFocusInWindow();
 			}
 		});
 		
@@ -114,8 +114,8 @@ public class UtilityBar extends JPanel {
 		button7.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SimpleKeyEvent ke = new SimpleKeyEvent(KeyEvent.VK_7, KeyEvent.KEY_RELEASED);
-				gameScreen.sendKeyPressToClientAndServer(ke);
-				gameScreen.gamePanel.requestFocusInWindow();
+				UtilityBar.this.gameScreen.sendKeyPressToClientAndServer(ke);
+				UtilityBar.this.gameScreen.gamePanel.requestFocusInWindow();
 			}
 		});
 		
