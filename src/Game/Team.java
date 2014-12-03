@@ -26,6 +26,7 @@ public class Team implements Serializable  {
 	public Player newPlayer() {
 		Player player = new Player(this, gs);
 		players.addElement(player);
+		// player has no username at this point
 		return player;
 	}
 

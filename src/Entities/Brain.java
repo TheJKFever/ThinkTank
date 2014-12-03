@@ -52,13 +52,13 @@ public void setHealth(int type){
 			else
 				health = 100;
 			
-		}else if(type == 2){
+		} else if(type == 2){
 			
 			if(health+40<100)
 				health += 40;
 			else
 				health = 100;			
-		}else if(type == 3){
+		} else if(type == 3){
 			
 			if(health+60<100)
 				health += 60;
@@ -80,6 +80,7 @@ public void setHealth(int type){
 	
 	public void die() {
     	// TODO: BRAIN DEATH
+		super.die();
     	visible = false;
     	exploding = true;
     	gs.endGame();

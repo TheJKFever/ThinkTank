@@ -2,8 +2,10 @@ package Client;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.Vector;
 import java.util.logging.Level;
 
+import Chat.ChatObject;
 import Game.Event;
 import Game.GameState;
 import Game.Helper;
@@ -36,16 +38,16 @@ public class ConnectionToGameServer extends ConnectionToServer {
 		case "assign player":
 			Helper.log("ConnectionToGameServer: RECEIVED ASSIGN PLAYER EVENT");
 			gameScreen.engine.player = (Player) event.data;
-			gameScreen.engine.player.username = gameScreen.gui.user.username;
-			Helper.log("Assigned Player: " + gameScreen.engine.player);
+			if (gameScreen.gui.user.username.equals(ThinkTankGUI.GUEST_ACCOUNT)) {
+				gameScreen.gui.user.username = gameScreen.engine.player.username;
+			} else {
+				gameScreen.engine.player.username = gameScreen.gui.user.username;
+			}
 			this.sendEvent(new Event("set username", gameScreen.gui.user.username));
+			Helper.log("Assigned Player: " + gameScreen.engine.player);
 			break;
 		case "game update":
-			// Helper.log("ConnectionToGameServer: RECEIVED GAME UPDATE EVENT, raw");
-			// Helper.log((GameState) event.data);
 			this.gameState = (GameState) event.data;
-			// Helper.log("ConnectionToGameServer: this.gameState = ");
-			// Helper.log(this.gameState);
 			break;
 		case "start game":
 			Helper.log("ConnectionToGameServer: RECEIVED START GAME EVENT");
@@ -54,7 +56,17 @@ public class ConnectionToGameServer extends ConnectionToServer {
 			break;
 		case "chat":
 			System.out.println("ConnectionToGameServer: RECEIVED CHAT EVENT");
-			gameScreen.chatPanel.ta.append("\n"+(String)event.data);
+			gameScreen.chatPanel.ta.append("\n"+((ChatObject)event.data).message);
+			break;
+		case "new player":
+			gameScreen.chatPanel.addPlayer((String)event.data);
+			break;
+		case "player list":
+			Vector<Player> players = (Vector<Player>)event.data;
+			for (Player player:players) {
+				if (!gameScreen.gui.user.username.equals(player.username))
+					gameScreen.chatPanel.addPlayer(player.username);
+			}
 			break;
 		default:
 			Helper.log("ConnectionToGameServer: DIDN'T UNDERSTAND EVENT");

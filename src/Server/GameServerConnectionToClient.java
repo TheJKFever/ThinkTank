@@ -9,6 +9,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
+import Chat.ChatObject;
 import Game.Event;
 import Game.Helper;
 import Game.Player;
@@ -45,13 +46,23 @@ public class GameServerConnectionToClient extends ConnectionToClient {
 				gameServer.engine.eventQ.add(event);
 				break;
 			case "chat":
-				gameServer.broadcast(event);
+				ChatObject chat = (ChatObject)event.data;
+				if (chat.to.equals("all")) {
+					gameServer.broadcast(event);
+				} else if (chat.to.equals("team")) {
+					gameServer.teamBroadcast(chat.from.team, event);
+				} else {
+					gameServer.sendTo(chat.to, event);
+				}
 				break;
-			case "team chat":
-				Player player = (Player)event.player;
-				gameServer.teamBroadcast(player, (String)event.data);
 			case "set username":
 				this.player.setUsername((String)event.data);
+				if (gameServer.engine.gameState.inGame) {
+					gameServer.broadcast(new Event("new player", this.player.username));
+				} else if (gameServer.engine.gameState.ready()) {
+					gameServer.broadcast(new Event("player list", gameServer.engine.gameState.players));
+					gameServer.engine.start();
+				}
 				break;
 			default:
 				Helper.log("COULD NOT RECOGNIZE EVENT: " + event);

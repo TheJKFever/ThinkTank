@@ -26,7 +26,7 @@ public class GameScreen extends JPanel {
 	public JPanel sidePanel;
 	public UtilityBar bar;
 	public ThinkTankGUI gui;
-	public ChatClient chat; //	TODO: <-- fix this
+//	public ChatClient chat; //	TODO: <-- fix this
 	public ClientEngine engine;
 	public ConnectionToGameServer gameConnection;
 	public GamePanel gamePanel;

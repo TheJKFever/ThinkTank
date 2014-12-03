@@ -8,10 +8,11 @@ import Entities.Tank;
 public class Player implements Serializable  {
 	
 	private static final long serialVersionUID = 8546860096571379783L;
-	
+	private static int playerCount=0;
 	public Tank tank;
 	public Team team;
 	public GameState gs;
+	private boolean usernameIsSet = false;
 	
 	public int numKills;
 	public int numDeaths;
@@ -32,6 +33,15 @@ public class Player implements Serializable  {
 	}
 	
 	public void setUsername(String username) {
+		System.out.println("\nSETTING USERNAME\n");
+		if (username.equals("guest")) {
+			username += ""+(playerCount++);
+		}
 		this.username = username;
+		usernameIsSet = true;
+	}
+
+	public boolean usernameSet() {
+		return usernameIsSet;
 	}
 }

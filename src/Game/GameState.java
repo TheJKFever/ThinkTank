@@ -244,4 +244,21 @@ public class GameState implements Serializable {
 			return String.format("%02d:%02d", 10, 0);
 		}
 	}
+
+	public boolean ready() {
+		if (playable() && usernamesSet()) return true;
+		return false;
+	}
+
+	private boolean usernamesSet() {
+		for (Player player:players) {
+			System.out.println(player.usernameSet());
+			if (!player.usernameSet()) {
+				System.out.println("GAME NOT READY");
+				return false;
+			}
+		}
+		System.out.println("GAME READY");
+		return true;
+	}
 }

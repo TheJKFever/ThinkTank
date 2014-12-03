@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
 import Engines.ServerEngine;
@@ -14,6 +11,7 @@ import Game.Event;
 import Game.GameState;
 import Game.Helper;
 import Game.Player;
+import Game.Team;
 
 public class GameServer extends ServerSocket implements Runnable {
 	private static Logger logger = Logger.getLogger("GameServer.log");
@@ -43,7 +41,7 @@ public class GameServer extends ServerSocket implements Runnable {
 	private void listenForClients() {
 		Helper.log("GAMESERVER: LISTENING FOR CLIENTS");
 		int teamNumber = 0;
-		while(!engine.gameState.playable()) {
+		while(!engine.gameState.ready()) {
 			try {
 				Socket client = this.accept();
 				addPlayer(client, (teamNumber % 2) + 1);
@@ -74,7 +72,8 @@ public class GameServer extends ServerSocket implements Runnable {
 		clients.addElement(client);
 		
 		Player p = engine.gameState.teams[team-1].newPlayer(); // Creates new player and adds to gameState
-
+		p.username = "guest" + clients.indexOf(client);
+		System.out.println("assigning player");
 		client.assignPlayer(p); // tells client which player is his
 		client.start();
 		return client;
@@ -89,11 +88,21 @@ public class GameServer extends ServerSocket implements Runnable {
 		}
 	}
 	
-	public void teamBroadcast(Player player, String data) {
+	public void teamBroadcast(Team team, Event event) {
 		synchronized(clients) {
 			for (GameServerConnectionToClient client:clients) {
-				if (client.player.team.num == player.team.num) {
-					client.send(new Event("chat", data));
+				if (client.player.team.num == team.num) {
+					client.send(event);
+				}
+			}
+		}
+	}
+	
+	public void sendTo(String playerName, Event event) {
+		synchronized(clients) {
+			for (GameServerConnectionToClient client:clients) {
+				if (client.player.username.equals(playerName)) {
+					client.send(event);
 				}
 			}
 		}

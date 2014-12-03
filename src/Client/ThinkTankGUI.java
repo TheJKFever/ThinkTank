@@ -39,6 +39,17 @@ import Screens.WaitingScreen;
 
 public class ThinkTankGUI extends JFrame {
 	public static Logger logger = Logger.getLogger("ThinkTankClient.log");
+	public static final String GUEST_ACCOUNT = "guest";
+	public static final String MainMenuPage = "mainMenu", 
+			CreateGamePage = "createGame", 
+			WaitingPage = "waiting",
+			LobbyPage = "lobby",
+			GameScreenPage = "gameScreen",
+			StatsPage = "stats",
+			CreateProfilePage = "createProfile",
+			GameOverPage = "gameOver",
+			LoginPage = "login";
+
 	public ConnectionToCentralServer centralConnection;
 	private CardLayout cardLayout = new CardLayout();
 	private JPanel mainPanel;
@@ -55,17 +66,7 @@ public class ThinkTankGUI extends JFrame {
 	private JMenu menu;
 	private JMenuItem mainMenuItem, exitItem;
 	public boolean loggedIn = false;
-	public ProfileObject user = new ProfileObject("guest", null);
-	
-	public static final String MainMenuPage = "mainMenu", 
-			CreateGamePage = "createGame", 
-			WaitingPage = "waiting",
-			LobbyPage = "lobby",
-			GameScreenPage = "gameScreen",
-			StatsPage = "stats",
-			CreateProfilePage = "createProfile",
-			GameOverPage = "gameOver",
-			LoginPage = "login";
+	public ProfileObject user = new ProfileObject(GUEST_ACCOUNT, null);
 	
 	public ThinkTankGUI(String host, int port) {
 		try {

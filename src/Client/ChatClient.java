@@ -2,19 +2,27 @@ package Client;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
+import Chat.ChatObject;
 import Game.Event;
+import Game.Player;
 import Screens.GameScreen;
 
 public class ChatClient extends JPanel {
@@ -30,8 +38,10 @@ public class ChatClient extends JPanel {
 	JTextField tf;
 	JLabel chatLabel;
 	JTextArea ta;
-	JButton sendAllBtn, sendTeamBtn;
+	JButton sendAllBtn, sendTeamBtn, sendPlayerBtn;
+	DefaultListModel<String> listModel;
 	private GameScreen gameScreen;
+	public JList<String> list;
 		
 	public ChatClient(GameScreen gameScreen) {
 		this.gameScreen = gameScreen;
@@ -46,7 +56,7 @@ public class ChatClient extends JPanel {
 		
 		// center part
 		ta = new JTextArea();
-		ta.setBorder(new EmptyBorder(5,3,3,5));
+		ta.setBorder(new EmptyBorder(0,3,3,5));
 		ta.setWrapStyleWord(true);
 		ta.setLineWrap(true);
 		ta.setMaximumSize(new Dimension(300, 500));
@@ -55,7 +65,14 @@ public class ChatClient extends JPanel {
 		centerPanel = new JPanel();
 		add(centerPanel, BorderLayout.CENTER);
 		centerPanel.setLayout(new BorderLayout(0, 0));
-		centerPanel.add(scroll);
+		
+		listModel = new DefaultListModel<String>();
+		list = new JList<String>(listModel);		
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list.addListSelectionListener(new ChatPlayersSelectionHandler(this));
+		
+		centerPanel.add(list, BorderLayout.NORTH);
+		centerPanel.add(scroll, BorderLayout.CENTER);
 		
 		// bottom part
 		buttonPanel = new JPanel();
@@ -65,13 +82,27 @@ public class ChatClient extends JPanel {
 		tf = new JTextField(12);
 		inputPanel.add(tf, BorderLayout.NORTH);
 		sendAllBtn = new JButton("All");
+		sendAllBtn.setMargin(new Insets(2, 4, 2, 4));
 		sendTeamBtn = new JButton("Team");
+		sendTeamBtn.setMargin(new Insets(2, 4, 2, 4));
+		sendPlayerBtn = new JButton("Player");
+		sendPlayerBtn.setMargin(new Insets(2, 4, 2, 4));
 		buttonPanel.add(sendAllBtn);
 		buttonPanel.add(sendTeamBtn);
+		buttonPanel.add(sendPlayerBtn);
 		inputPanel.add(buttonPanel);
 		sendAllBtn.setEnabled(false);
 		sendTeamBtn.setEnabled(false);
+		sendPlayerBtn.setEnabled(false);
+	}
 	
+	public void addPlayer(String playerName) {
+		
+		listModel.addElement(playerName);
+	}
+	
+	public void removePlayer(Player player) {
+		listModel.remove(listModel.indexOf(player.username));
 	}
 
 	public void setConnection(ConnectionToGameServer gameConnection) {
@@ -79,6 +110,7 @@ public class ChatClient extends JPanel {
 		sendAllBtn.setEnabled(true);
 		sendTeamBtn.addActionListener(new SendTeamBtnListener(gameConnection));
 		sendTeamBtn.setEnabled(true);
+		sendPlayerBtn.addActionListener(new SendPlayerBtnListener(this, gameConnection));
 	}
 	
 	public class SendBtnListener implements ActionListener {
@@ -91,7 +123,7 @@ public class ChatClient extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			String message = "["+ChatClient.this.gameScreen.gui.user.username +"] "+tf.getText();
 			tf.setText("");
-			gameConnection.sendEvent(new Event("chat", message));
+			gameConnection.sendEvent(new Event("chat", new ChatObject("all", gameScreen.engine.player, message)));
 		}
 	}
 	public class SendTeamBtnListener implements ActionListener {
@@ -103,7 +135,41 @@ public class ChatClient extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			String message = "["+ChatClient.this.gameScreen.gui.user.username +"] "+tf.getText();
 			tf.setText("");
-			gameConnection.sendEvent(new Event("team chat", message, gameScreen.engine.player));
+			gameConnection.sendEvent(new Event("chat", new ChatObject("team", gameScreen.engine.player, message)));
 		}
+	}
+	public class SendPlayerBtnListener implements ActionListener {
+		private ChatClient chatWindow;
+		private ConnectionToGameServer gameConnection;
+		public SendPlayerBtnListener(ChatClient chatWindow, ConnectionToGameServer gameConnection) {
+			this.chatWindow = chatWindow;
+			this.gameConnection = gameConnection;
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			String message = "["+ChatClient.this.gameScreen.gui.user.username +"] "+tf.getText();
+			tf.setText("");
+			gameConnection.sendEvent(new Event("chat", new ChatObject(chatWindow.list.getSelectedValue(), gameScreen.engine.player, message), gameScreen.engine.player));
+		}
+	}
+	class ChatPlayersSelectionHandler implements ListSelectionListener {
+	    private ChatClient chatWindow;
+		public ChatPlayersSelectionHandler(ChatClient chatWindow) {
+	    	this.chatWindow = chatWindow;
+	    }
+		public void valueChanged(ListSelectionEvent e) {
+	        if (list.getSelectedIndex() == -1) {
+	        	chatWindow.sendPlayerBtn.setEnabled(false);
+	        } else {
+	        	chatWindow.sendPlayerBtn.setEnabled(true);
+	        }
+	    }
+	}
+	public static void main(String[] args) {
+		JFrame frame = new JFrame("fdsafdsfdsadfs");
+		frame.setVisible(true);
+		frame.setSize(150, 750);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.add(new ChatClient(null));
 	}
 }
